@@ -1,0 +1,35 @@
+// $backgroundColor: #eaf1f2;
+// $subTextColor: #4b4f5d;
+// $importantTextColor: #12486b;
+
+// @mixin centerHorizontal {
+//   display: flex;
+//   justify-content: center;
+// }
+
+// @mixin centerVertical {
+//   display: flex;
+//   align-items: center;
+// }
+
+// @mixin spaceBetween($dir) {
+//   display: flex;
+//   justify-content: space-between;
+//   flex-direction: $dir;
+// }
+
+// @mixin dropDownShadow {
+//   filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
+// }
+
+// @mixin noScrollbar {
+//     overflow-y: auto;
+//     scrollbar-width: none; /* Firefox */
+//     -ms-overflow-style: none; /* Internet Explorer 10+ */
+// }
+
+// @mixin contentLayout($row) {
+//     display: grid;
+//     grid-template-columns: 75% 1fr;
+//     grid-template-areas: $row;
+// }

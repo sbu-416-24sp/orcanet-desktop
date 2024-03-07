@@ -1,0 +1,100 @@
+// @use "helper";
+
+// .dashboard-page {
+//   @include helper.contentLayout("metric user-info");
+//   overflow: hidden;
+//   color: helper.$subTextColor;
+
+//   .metric {
+//     @include helper.noScrollbar;
+//     grid-area: metric;
+//     padding: 40px;
+//     background-color: helper.$backgroundColor;
+//   }
+
+//   .metric::-webkit-scrollbar {
+//     display: none;
+//   }
+
+//   .user-info-panel {
+//     @include helper.noScrollbar;
+//     grid-area: user-info;
+//     padding: 20px 40px;
+//   }
+// }
+
+// .dashboard-page .metric {
+//   :is(.bandwidth-graph, .traffic-meter) {
+//     @include helper.centerHorizontal;
+//     flex-direction: column;
+//   }
+
+//   :is(.bandwidth-graph, .traffic-meter) img {
+//     border-radius: 8px;
+//   }
+
+//   .bandwidth-graph {
+//     margin-bottom: 1.5em;
+//   }
+
+//   h3 {
+//     margin-bottom: 20px;
+//   }
+// }
+
+// .dashboard-page .user-info-panel {
+//   h2 {
+//     font-size: 25px;
+//     margin: 10px 0 20px;
+//   }
+
+//   p {
+//     word-break: break-all;
+//     margin: 0;
+//   }
+
+//   div {
+//     margin-bottom: 2em;
+//   }
+
+//   h3:not(.balance h3) {
+//     margin-bottom: 10px;
+//   }
+
+//   :is(h2, p, span) {
+//     color: helper.$importantTextColor;
+//     font-weight: bolder;
+//   }
+
+//   .balance {
+//     margin-top: 2.5em;
+//   }
+
+//   :is(.balance, .balance span) {
+//     @include helper.centerVertical;
+//   }
+
+//   .balance img {
+//     margin: 0 5px 0 7px;
+//   }
+
+//   .balance span {
+//     font-size: 18.75px;
+//   }
+
+//   .logo {
+//     @include helper.centerHorizontal;
+//     margin-top: 3.5em;
+//   }
+
+//   .logo svg {
+//     width: 170px;
+//     height: 170px;
+//   }
+// }
+
+// @media screen and (max-width: 1300px) {
+//   .dashboard-page {
+//     grid-template-columns: 70% 1fr;
+//   }
+// }

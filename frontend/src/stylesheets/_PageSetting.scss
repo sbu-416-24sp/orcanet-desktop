@@ -1,0 +1,67 @@
+// @use "helper";
+
+// .setting {
+//   @include helper.contentLayout("main-setting orca-coin-connection");
+
+//   overflow: hidden;
+
+//   color: helper.$subTextColor;
+
+//   .main-setting {
+//     @include helper.noScrollbar;
+//     grid-area: main-setting;
+//     padding: 40px;
+//     background-color: helper.$backgroundColor;
+//   }
+
+//   .orca-coin-connection {
+//     grid-area: orca-coin-connection;
+//   }
+// }
+
+// .main-setting .access-key-generator {
+//   margin-top: 3em;
+
+//   h3 {
+//     margin-bottom: 20px;
+//   }
+
+//   p {
+//     margin: 0 0 1em;
+//     color: helper.$importantTextColor;
+//     font-weight: bolder;
+//   }
+
+//   :is(input, button) {
+//     height: 50px;
+//     border-radius: 8px;
+
+//   }
+
+//   input {
+//     width: 92%;
+//     border: 1px solid #ccc;
+//     padding: 7px;
+//   }
+
+//   input:focus {
+//     outline: none;
+//   }
+
+//   button {
+//     background-color: helper.$importantTextColor;
+//     border: none;
+//     color: white;
+//     padding: 7px 10px;
+//   }
+
+//   .key-box {
+//     @include helper.spaceBetween(row);
+//   }
+
+//   .generator {
+//     background-color: white;
+//     border-radius: 8px;
+//     padding: 20px;
+//   }
+// }

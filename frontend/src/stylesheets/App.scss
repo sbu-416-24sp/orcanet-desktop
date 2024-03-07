@@ -1,0 +1,49 @@
+/*
+Use @import "scss filename" to append other scss files to this one
+
+Partial scss files must start with a underscore.
+*/
+// Pages import
+// @import "menu";
+// @import "PageDashBoard";
+// @import "PageFileUpload";
+// @import "PagePeer";
+// @import "PageSetting";
+
+// Components import
+
+// @import "searchBar";
+// @import "timeBar";
+// @import "header";
+// Tailwind import
+
+// @mixin fullscreen {
+//   width: 100%;
+//   height: 100%;
+//   margin: 0;
+//   padding: 0;
+// }
+
+// :is(html, body, #root) {
+//   @include fullscreen;
+// }
+
+// #root {
+//   .content {
+//     grid-area: content;
+//   }
+
+//   .menu {
+//     grid-area: menu;
+//   }
+
+//   h3 {
+//     font-size: 20px;
+//     font-weight: bolder;
+//   }
+
+//   display: grid;
+//   grid-template-areas: "menu content";
+//   grid-template-columns: 185px 1fr;
+//   font-family: Arial, Helvetica, sans-serif;
+// }

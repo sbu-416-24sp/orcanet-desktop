@@ -1,0 +1,41 @@
+// @use "helper";
+
+// .menu {
+//   display: flex;
+//   flex-direction: column;
+//   gap: 40px;
+//   height: 100%;
+//   background-color: #12486b;
+//   opacity: 85%;
+
+//   .logo {
+//     @include helper.centerHorizontal;
+//     margin-top: 30px;
+
+//     svg {
+//       width: 100px;
+//       height: 100px;
+//     }
+//   }
+// }
+
+// .menu .tabs {
+//   .tab {
+//     @include helper.centerVertical;
+//     margin: 0 1.5em 40px;
+//     column-gap: 10px;
+//   }
+
+//   .tab-text {
+//     font-weight: bold;
+//     color: white;
+//   }
+
+//   a {
+//     text-decoration: none;
+//   }
+
+//   a:hover .tab-text {
+//     text-decoration: underline;
+//   }
+// }
