@@ -14,3 +14,15 @@ nav a {
 
   align-self: center;
 }
+
+.sidebar {
+  @apply fixed top-0 left-0 h-full w-64 overflow-y-auto;
+}
+
+.home {
+  @apply h-screen overflow-y-scroll;
+}
+
+.checkbox-purple:focus {
+  outline: 2px solid purple;
+}
