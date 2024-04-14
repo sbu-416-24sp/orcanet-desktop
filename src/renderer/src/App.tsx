@@ -16,26 +16,28 @@ import { Toaster } from "./shadcn/components/ui/toaster"
 function App() {
   return (
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-      <div id="App" className="flex overflow-hidden">
-        <Router>
+      <Router>
+        <div className="flex h-screen">
           <Sidebar />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/store" element={<StorePage />} />
-            <Route path="/market" element={<MarketPage />} />
-            <Route path="/wallet" element={<WalletPage />} />
-            <Route path="/settings" element={<SettingsPage />}>
-              <Route path="profile" element={<ProfilePage />} />
-              <Route path="account" element={<AccountPage />} />
-              <Route path="appearance" element={<AppearancePage />} />
-              <Route path="notifications" element={<NotificationsPage />} />
-              <Route path="display" element={<DisplayPage />} />
-              <Route path="transfer" element={<TransferPage />} />
-            </Route>
-          </Routes>
-        </Router>
+          <main className="flex-1 overflow-y-auto">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/store" element={<StorePage />} />
+              <Route path="/market" element={<MarketPage />} />
+              <Route path="/wallet" element={<WalletPage />} />
+              <Route path="/settings" element={<SettingsPage />}>
+                <Route path="profile" element={<ProfilePage />} />
+                <Route path="account" element={<AccountPage />} />
+                <Route path="appearance" element={<AppearancePage />} />
+                <Route path="notifications" element={<NotificationsPage />} />
+                <Route path="display" element={<DisplayPage />} />
+                <Route path="transfer" element={<TransferPage />} />
+              </Route>
+            </Routes>
+          </main>
+        </div>
         <Toaster />
-      </div>
+      </Router>
     </ThemeProvider>
   );
 }
