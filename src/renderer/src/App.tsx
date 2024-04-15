@@ -3,6 +3,7 @@ import StorePage from "./store/StorePage";
 import MarketPage from "./market/MarketPage";
 import WalletPage from "./wallet/WalletPage";
 import Sidebar from "./sidebar/Sidebar";
+import PeersPage from "./peers/PeersPage";
 import SettingsPage from "./settings/SettingsPage";
 import ProfilePage from "./settings/profile/ProfilePage";
 import AccountPage from "./settings/account/AccountPage";
@@ -25,6 +26,7 @@ function App() {
               <Route path="/store" element={<StorePage />} />
               <Route path="/market" element={<MarketPage />} />
               <Route path="/wallet" element={<WalletPage />} />
+              <Route path="/peers" element={<PeersPage />} />
               <Route path="/settings" element={<SettingsPage />}>
                 <Route path="profile" element={<ProfilePage />} />
                 <Route path="account" element={<AccountPage />} />

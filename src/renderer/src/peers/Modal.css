@@ -1,0 +1,129 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6); /* Dim the background */
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it's on top of other elements */
+  }
+  
+  .modal {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 600px; /* Set a fixed width or use max-width for responsive width */
+    animation: modalFadeIn 0.3s;
+  }
+  
+  @keyframes modalFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e5e5e5; /* Light grey border */
+  }
+  
+  .modal-title {
+    margin: 0;
+    font-size: 1.5rem; /* Larger font size for the title */
+  }
+  
+  .modal-close-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+  
+  .modal-body {
+    padding: 20px 0;
+  }
+  
+  .modal-content {
+    font-size: 1rem;
+    line-height: 1.6; /* More readable line spacing */
+    color: #333; /* Darker text for readability */
+  }
+  
+  .modal-input {
+    box-sizing: border-box; /* Padding doesn't affect width */
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .modal-footer {
+    display: flex;
+    justify-content: space-between; /* Space out buttons */
+    padding-top: 20px;
+    border-top: 1px solid #e5e5e5; /* Light grey border */
+  }
+  
+  .modal-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin: 0 5px; /* Small margin between buttons */
+  }
+  
+  .modal-button-primary {
+    background-color: #0056b3; /* Example primary color */
+    color: #fff;
+  }
+  
+  .modal-button-secondary {
+    background-color: #f8f9fa; /* Light grey background */
+    color: #333;
+  }
+
+  .modal-checkbox {
+    user-select: none; 
+    display: flex;
+    align-items: center;
+    margin-top: 15px; 
+   }
+
+   .modal-checkbox input {
+    margin-right: 5px;
+    }
+    
+    .modal-checkbox label {
+        margin: 0;
+        cursor: pointer;
+    }
+    
+    .modal-example {
+        font-size: 0.85rem;
+        color: #6c757d; /* A muted color for the example text */
+        margin-bottom: 10px;
+    }
+    .modal-feedback {
+        color: #28a745; /* Green for success */
+        margin-top: 10px;
+      }
+      
+      /* You might want to add additional styling to handle error messages, e.g. */
+      .modal-feedback.error {
+        color: #dc3545; /* Red for error */
+      }
