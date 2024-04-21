@@ -80,6 +80,14 @@ const Sidebar = () => {
                 alert={false}
               />
             </Link>
+            <Link to="/stats">
+              <SidebarItem
+                icon={<Network />}
+                text="Stats"
+                active={isActive("/stats")}
+                alert={false}
+              />
+            </Link>
             <Link to="/market">
               <SidebarItem
                 icon={<BarChart2 />}
@@ -93,6 +101,14 @@ const Sidebar = () => {
                 icon={<Receipt />}
                 text="Wallet"
                 active={isActive("/wallet")}
+                alert={false}
+              />
+            </Link>
+            <Link to="/mining">
+              <SidebarItem
+                icon={<Network />}
+                text="Mining"
+                active={isActive("/mining")}
                 alert={false}
               />
             </Link>

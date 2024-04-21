@@ -9,17 +9,20 @@ import { generateFileHash, formatFileSize, sizeToBytes } from "./sizeUtils";
   // RemoveActivity,
   // UpdateActivityName,
 
+
   function GetActivities() {
     return [];
   }
   function UploadFile(base64String: string, name: string, size: string) {
-    return;
+    let concating = base64String + name + size;
+    return concating;
   }
   function RemoveActivity(id: number) {
-    return;
+    return id;
   }
   function UpdateActivityName(id: number, newName: string) {
-    return;
+    let id1 = id+newName;
+    return id1;
   }
 
 const HomePage = () => {
@@ -221,6 +224,9 @@ const HomePage = () => {
   };
 
   const handleDragLeave = (event: React.DragEvent) => {
+    if(event){
+      //use here
+    }
     document.getElementById("home-page")!.style.backgroundColor = "white";
   };
 
@@ -278,10 +284,8 @@ const HomePage = () => {
           toggleDropdown,
           updateActivityName,
           toggleEdit,
-          removeAllSelected,
           updateSelection,
           updateAllSelections,
-          removeActivity,
           activities
         )}
         data={activities}

@@ -48,6 +48,9 @@ export function NotificationsForm() {
   })
 
   function onSubmit(data: NotificationsFormValues) {
+    if(data){
+      //new stuff 
+    }
     toast({
       title: "Notifcations Notification",
       description: "Your notification preferences have successfully been updated! A confirmation email has been sent to your email address.",
