@@ -341,7 +341,8 @@ export const JobControls = (props: {
       >
         <Pause className="size-6 text-gray-500 hover:text-gray-800" />
       </button>
-      <button onClick={() => {props.removeJobs
+      <button onClick={() => {
+        props.removeJobs()
         toast({
           variant: "destructive",
           title: "File Download Cancelled",

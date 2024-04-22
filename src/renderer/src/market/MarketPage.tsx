@@ -43,6 +43,7 @@ const MarketPage = () => {
     setJobInfoList((prevJobInfoList) =>
       prevJobInfoList.filter((job) => !selectedJobs.includes(job.id))
     );
+    setSelectedJobs([])
   };
   const addJob = (hash: string) => {
     setJobInfoList((prev) => {
