@@ -67,6 +67,9 @@ export function TransferForm() {
     })
   
     function onSubmit(data: AccountFormValues) {
+      if(data){
+        //new stuff
+      }
       toast({
         title: "Transfer Notification",
         description: "Your transfer settings have successfully been updated! A confirmation email has been sent to your email address.",
