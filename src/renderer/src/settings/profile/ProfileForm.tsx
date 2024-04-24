@@ -16,13 +16,6 @@ import {
   FormMessage,
 } from "../../shadcn/components/ui/form"
 import { Input } from "../../shadcn/components/ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../../shadcn/components/ui/select"
 import { Textarea } from "../../shadcn/components/ui/textarea"
 import { toast } from "../../shadcn/components/ui/use-toast"
 
@@ -35,19 +28,19 @@ const profileFormSchema = z.object({
     .max(30, {
       message: "Username must not be longer than 30 characters.",
     }),
-  email: z
-    .string({
-      required_error: "Please select an email to display.",
-    })
-    .email(),
+  // email: z
+  //   .string({
+  //     required_error: "Please select an email to display.",
+  //   })
+  //   .email(),
   bio: z.string().max(160).min(4),
-  urls: z
-    .array(
-      z.object({
-        value: z.string().url({ message: "Please enter a valid URL." }),
-      })
-    )
-    .optional(),
+  // urls: z
+  //   .array(
+  //     z.object({
+  //       value: z.string().url({ message: "Please enter a valid URL." }),
+  //     })
+  //   )
+  //   .optional(),
 })
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>
@@ -55,10 +48,10 @@ type ProfileFormValues = z.infer<typeof profileFormSchema>
 // This can come from your database or API.
 const defaultValues: Partial<ProfileFormValues> = {
   bio: "My name is Bubble Guppies and I'm a computer science student at Stony Brook University. I love to code and learn new things! 🚀",
-  urls: [
-    { value: "https://www.stonybrook.edu/" }, 
-    { value: "https://www.cs.stonybrook.edu/" },
-  ],
+  // urls: [
+  //   { value: "https://www.stonybrook.edu/" }, 
+  //   { value: "https://www.cs.stonybrook.edu/" },
+  // ],
 }
 
 export function ProfileForm() {
@@ -68,10 +61,10 @@ export function ProfileForm() {
     mode: "onChange",
   })
 
-  const { fields, append } = useFieldArray({
-    name: "urls",
-    control: form.control,
-  })
+  // const { fields, append } = useFieldArray({
+  //   name: "urls",
+  //   control: form.control,
+  // })
 
   function onSubmit(data: ProfileFormValues) {
     if(data){
@@ -103,7 +96,7 @@ export function ProfileForm() {
             </FormItem>
           )}
         />
-        <FormField
+        {/* <FormField
           defaultValue="bubble.guppies@stonybrook.edu"
           control={form.control}
           name="email"
@@ -129,7 +122,7 @@ export function ProfileForm() {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
         <FormField
           control={form.control}
           name="bio"
@@ -150,7 +143,7 @@ export function ProfileForm() {
             </FormItem>
           )}
         />
-        <div>
+        {/* <div>
           {fields.map((field, index) => (
             <FormField
               control={form.control}
@@ -181,7 +174,7 @@ export function ProfileForm() {
           >
             Add URL
           </Button>
-        </div>
+        </div> */}
         <Button type="submit">Update profile</Button>
       </form>
     </Form>

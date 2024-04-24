@@ -24,14 +24,7 @@ const appearanceFormSchema = z.object({
   theme: z.enum(["light", "dark"], {
     required_error: "Please select a theme.",
   }),
-  font: z.enum(
-    ["Default", "Times New Roman", "Arial", "Sans Serif", "system"],
-    {
-      invalid_type_error: "Select a font",
-      required_error: "Please select a font.",
-    }
-  ),
-  pasteJSONThemeConfiguration: z.string(),
+  // pasteJSONThemeConfiguration: z.string(),
 });
 
 type AppearanceFormValues = z.infer<typeof appearanceFormSchema>;
@@ -58,38 +51,6 @@ export function AppearanceForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="font"
-          defaultValue="Default"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Font</FormLabel>
-              <div className="relative w-max">
-                <FormControl>
-                  <select
-                    className={cn(
-                      buttonVariants({ variant: "outline" }),
-                      "w-[200px] appearance-none font-normal"
-                    )}
-                    {...field}
-                  >
-                    <option value="Default">Default</option>
-                    <option value="Times New Roman">Times New Roman</option>
-                    <option value="Arial">Arial</option>
-                    <option value="Sans Serif">Sans Serif</option>
-                    <option value="system">system</option>
-                  </select>
-                </FormControl>
-                <ChevronDown className="absolute right-3 top-2.5 h-4 w-4 opacity-50" />
-              </div>
-              <FormDescription>
-                Set the font you want to use for OrcaNet Program.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <FormField
           control={form.control}
           name="theme"
@@ -162,7 +123,7 @@ export function AppearanceForm() {
           )}
         />
 
-          <FormField
+          {/* <FormField
             defaultValue="Insert JSON theme here"
             control={form.control}
             name="pasteJSONThemeConfiguration"
@@ -178,7 +139,7 @@ export function AppearanceForm() {
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
 
         <Button type="submit">Update preferences</Button>
       </form>

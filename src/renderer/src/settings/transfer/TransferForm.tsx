@@ -4,9 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { CalendarIcon, ChevronDown, Check } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-
+import { Button, buttonVariants } from "../../shadcn/components/ui/button";
 import { cn } from "../../shadcn/lib/utils"
-import { Button } from "../../shadcn/components/ui/button"
 import { Calendar } from "../../shadcn/components/ui/calendar"
 import {
   Command,
@@ -34,22 +33,29 @@ import { toast } from "../../shadcn/components/ui/use-toast"
 import { Textarea } from "../../shadcn/components/ui/textarea";
 
 const accountFormSchema = z.object({
+  backend: z.enum(
+    ["Go", "JS", "Rust"],
+    {
+      invalid_type_error: "Select a backend",
+      required_error: "Please select a backend.",
+    }
+  ),
     defaultSaveFolder: z.string(),
-    uploadRateLimit: z.string()
-        .transform((val) => parseFloat(val))
-        .refine(val => !isNaN(val) && val >= 2, { 
-            message: "Upload rate limit must be at least 2 KiB/s.",
-        }),
-    downloadRateLimit: z.string()
-        .transform((val) => parseFloat(val))
-        .refine(val => !isNaN(val) && val >= 2, { 
-            message: "Download rate limit must be at least 2 KiB/s.",
-        }),
-    seedingRatioLimit: z.string()
-        .transform((val) => parseFloat(val))
-        .refine(val => !isNaN(val) && val >= 2, { 
-            message: "Seeding ratio limit must be at least 2.",
-        }),
+    // uploadRateLimit: z.string()
+    //     .transform((val) => parseFloat(val))
+    //     .refine(val => !isNaN(val) && val >= 2, { 
+    //         message: "Upload rate limit must be at least 2 KiB/s.",
+    //     }),
+    // downloadRateLimit: z.string()
+    //     .transform((val) => parseFloat(val))
+    //     .refine(val => !isNaN(val) && val >= 2, { 
+    //         message: "Download rate limit must be at least 2 KiB/s.",
+    //     }),
+    // seedingRatioLimit: z.string()
+    //     .transform((val) => parseFloat(val))
+    //     .refine(val => !isNaN(val) && val >= 2, { 
+    //         message: "Seeding ratio limit must be at least 2.",
+    //     }),
     //pasteJSONThemeConfiguration: z.string(),
 })
 
@@ -79,6 +85,36 @@ export function TransferForm() {
     return (
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <FormField
+          control={form.control}
+          name="backend"
+          defaultValue="Go"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Backend</FormLabel>
+              <div className="relative w-max">
+                <FormControl>
+                  <select
+                    className={cn(
+                      buttonVariants({ variant: "outline" }),
+                      "w-[200px] appearance-none font-normal"
+                    )}
+                    {...field}
+                  >
+                    <option value="Go">Go</option>
+                    <option value="JS">JS</option>
+                    <option value="Rust">Rust</option>
+                  </select>
+                </FormControl>
+                <ChevronDown className="absolute right-3 top-2.5 h-4 w-4 opacity-50" />
+              </div>
+              <FormDescription>
+                Set the backend you want to use for OrcaNet Program.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <div className="grid grid-cols-2 gap-4">    
           <FormField
             control={form.control}
@@ -96,7 +132,7 @@ export function TransferForm() {
               </FormItem>
             )}
           />
-        <FormField
+        {/* <FormField
             control={form.control}
             name="seedingRatioLimit"
             render={({ field }) => (
@@ -142,7 +178,7 @@ export function TransferForm() {
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
         </div>
 
         {/* <FormField
