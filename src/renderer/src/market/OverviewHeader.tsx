@@ -9,8 +9,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../shadcn/components/ui/dialog"
-import * as DialogPrimitive from "@radix-ui/react-dialog"
+} from "../shadcn/components/ui/dialog";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { DataTable } from "./DataTable";
 import fakeSeeds from "./fakeSeeds";
 import { Seed2, columns2 } from "./columns";
@@ -84,10 +84,10 @@ const FilterInput = (props: {
 };
 
 const fakeData: Seed2[] = [
-  { name: "Alice", price: "20 ORC", reputation: 30},
-  { name: "Bob", price: "35 ORC", reputation: 60}
-]
-const DialogClose = DialogPrimitive.Close
+  { name: "Alice", price: "20 ORC", reputation: 30 },
+  { name: "Bob", price: "35 ORC", reputation: 60 },
+];
+const DialogClose = DialogPrimitive.Close;
 const AddJob = (props: { addJob: (hash: string) => void }) => {
   const [buffer, setBuffer] = useState("");
   const [validHash, setValidHash] = useState(0);
@@ -98,28 +98,26 @@ const AddJob = (props: { addJob: (hash: string) => void }) => {
   const resetAddJob = () => {
     setBuffer("");
     setValidHash(0);
-    setSelectedPeer([])
-  }
+    setSelectedPeer([]);
+  };
 
   const handleSearchHash = () => {
     if (buffer === hash) {
       setValidHash(1);
-    }
-    else{
+    } else {
       setValidHash(-1);
     }
   };
 
-
   const handleAddJob = () => {
     props.addJob(buffer);
-    console.log(buffer)
-    console.log(selectedPeer)
+    console.log(buffer);
+    console.log(selectedPeer);
     toast({
       title: "Job Successfully Added!",
       description: "Your job has been successfully added!",
-    })
-  }
+    });
+  };
 
   return (
     <div>
@@ -140,18 +138,25 @@ const AddJob = (props: { addJob: (hash: string) => void }) => {
             }}
             placeholder="File hash..."
           />
-          {validHash !== 1 && <Button onClick={handleSearchHash}>Search Hash</Button>}
+          {validHash !== 1 && (
+            <Button onClick={handleSearchHash}>Search Hash</Button>
+          )}
           {validHash === -1 && <p>No files match this hash</p>}
           {validHash === 1 && (
-          <>
-            <div>Select a Peer</div>
-            <DataTable data={fakeData} columns={columns2} setSelectedPeer={setSelectedPeer}></DataTable>
-            {selectedPeer.length === 1 && (
+            <>
+              <div>Select a Peer</div>
+              <DataTable
+                data={fakeData}
+                columns={columns2}
+                setSelectedPeer={setSelectedPeer}
+              ></DataTable>
+              {selectedPeer.length === 1 && (
                 <DialogClose>
                   <Button onClick={handleAddJob}>Select Peer</Button>
                 </DialogClose>
               )}
-          </>)}
+            </>
+          )}
         </DialogContent>
       </Dialog>
     </div>

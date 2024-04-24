@@ -231,7 +231,7 @@ export const JobList = (props: {
     return 0;
   });
   return (
-    <ScrollArea className="h-[25rem]">
+    <ScrollArea className="h-[35vh]">
       <ul className="w-[calc(100%-1rem)]">
         {filteredJobs.map((e) => (
           <Job key={e.id} {...e} />
@@ -325,30 +325,32 @@ export const JobControls = (props: {
           toast({
             title: "File Download Resumed",
             description: "The file download has been resumed.",
-          })
+          });
         }}
       >
         <Play className="size-6 text-gray-500 hover:text-gray-800" />
       </button>
       <button
         onClick={() => {
-          props.updateJobStatuses("paused")
+          props.updateJobStatuses("paused");
           toast({
             title: "File Download Paused",
             description: "The file download has been paused.",
-          })
+          });
         }}
       >
         <Pause className="size-6 text-gray-500 hover:text-gray-800" />
       </button>
-      <button onClick={() => {
-        props.removeJobs()
-        toast({
-          variant: "destructive",
-          title: "File Download Cancelled",
-          description: "The file download has been cancelled.",
-        })
-      }}>
+      <button
+        onClick={() => {
+          props.removeJobs();
+          toast({
+            variant: "destructive",
+            title: "File Download Cancelled",
+            description: "The file download has been cancelled.",
+          });
+        }}
+      >
         <Trash2 className="size-6 text-gray-500 hover:text-destructive" />
       </button>
     </div>

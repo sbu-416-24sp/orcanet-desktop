@@ -14,14 +14,14 @@ import TransferPage from "./settings/transfer/TransferPage";
 import MiningPage from "./mining/Mining";
 import { ThemeProvider } from "./shadcn/components/ui/ThemeProvider";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import { Toaster } from "./shadcn/components/ui/toaster"
+import { Toaster } from "./shadcn/components/ui/toaster";
 function App() {
   return (
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
       <Router>
-        <div className="flex h-screen">
+        <div id="App" className="flex overflow-hidden w-screen h-screen">
           <Sidebar />
-          <main className="flex-1 overflow-y-auto">
+          <main className="flex-1">
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/stats" element={<StatsPage />} />

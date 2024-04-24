@@ -1,4 +1,9 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../shadcn/components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../shadcn/components/ui/tabs";
 import {
   Accordion,
   AccordionContent,
@@ -15,7 +20,7 @@ import { JobInfo } from "./MarketPage";
 
 const Details = (props: { jobInfo: JobInfo }) => {
   return (
-    <div className="grid grid-cols-[minmax(0,_1fr)_minmax(0,_2fr)] gap-4">
+    <div className="grid grid-cols-[minmax(0,_1fr)_minmax(0,_2fr)] gap-4 h-[calc(65vh-15rem)]">
       <GeneralInfoPanel jobInfo={props.jobInfo} />
       <PeerPanel />
     </div>
