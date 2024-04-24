@@ -17,7 +17,7 @@ export const JobListHeader = (props: {
     <div className="flex items-center justify-between w-[calc(100%-1rem)] p-2 mb-2 rounded border">
       <div
         className="w-48 flex items-center justify-center"
-        onClick={(e) => {
+        onClick={() => {
           props.setSortOrder((prev) => {
             const poppedSort = prev.splice(
               prev.findIndex((e) => {
@@ -51,7 +51,7 @@ export const JobListHeader = (props: {
       </div>
       <div
         className="w-[4.5rem] flex items-center justify-center"
-        onClick={(e) => {
+        onClick={() => {
           props.setSortOrder((prev) => {
             const poppedSort = prev.splice(
               prev.findIndex((e) => {
@@ -85,7 +85,7 @@ export const JobListHeader = (props: {
       </div>
       <div
         className="w-16 flex items-center justify-center"
-        onClick={(e) => {
+        onClick={() => {
           props.setSortOrder((prev) => {
             const poppedSort = prev.splice(
               prev.findIndex((e) => {
@@ -119,7 +119,7 @@ export const JobListHeader = (props: {
       </div>
       <div
         className="w-[9.5rem] flex items-center justify-center"
-        onClick={(e) => {
+        onClick={() => {
           props.setSortOrder((prev) => {
             const poppedSort = prev.splice(
               prev.findIndex((e) => {

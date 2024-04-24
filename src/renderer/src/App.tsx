@@ -1,5 +1,5 @@
 import HomePage from "./home/HomePage";
-import StorePage from "./store/StorePage";
+import StatsPage from "./stats/StatsPage";
 import MarketPage from "./market/MarketPage";
 import WalletPage from "./wallet/WalletPage";
 import Sidebar from "./sidebar/Sidebar";
@@ -11,6 +11,7 @@ import AppearancePage from "./settings/appearance/AppearancePage";
 import NotificationsPage from "./settings/notifications/NotificationPage";
 import DisplayPage from "./settings/display/DisplayPage";
 import TransferPage from "./settings/transfer/TransferPage";
+import MiningPage from "./mining/Mining";
 import { ThemeProvider } from "./shadcn/components/ui/ThemeProvider";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { Toaster } from "./shadcn/components/ui/toaster"
@@ -23,9 +24,10 @@ function App() {
           <main className="flex-1 overflow-y-auto">
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/store" element={<StorePage />} />
+              <Route path="/stats" element={<StatsPage />} />
               <Route path="/market" element={<MarketPage />} />
               <Route path="/wallet" element={<WalletPage />} />
+              <Route path="/mining" element={<MiningPage />} />
               <Route path="/peers" element={<PeersPage />} />
               <Route path="/settings" element={<SettingsPage />}>
                 <Route path="profile" element={<ProfilePage />} />
