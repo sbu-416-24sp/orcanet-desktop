@@ -75,7 +75,7 @@ const FilterInput = (props: {
       {/* <span className="absolute left-2 top-2">Filter</span> */}
       <Filter
         className="absolute right-2 top-2"
-        onClick={(e) => props.setFilter(buffer)}
+        onClick={() => props.setFilter(buffer)}
       />
     </div>
   );

@@ -74,6 +74,9 @@ export function ProfileForm() {
   })
 
   function onSubmit(data: ProfileFormValues) {
+    if(data){
+      //new stuff
+    }
     toast({
       title: "Profile Notification",
       description: "Your profile information have successfully been updated! A confirmation email has been sent to your email address.",

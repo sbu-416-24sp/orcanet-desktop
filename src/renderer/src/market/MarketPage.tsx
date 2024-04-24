@@ -45,6 +45,9 @@ const MarketPage = () => {
     );
   };
   const addJob = (hash: string) => {
+    if(hash){
+      //new stuff with hash
+    }
     setJobInfoList((prev) => {
       const newList = [...prev];
       // console.log(newList[prev.length-1]);

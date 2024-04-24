@@ -18,10 +18,8 @@ export const getColumns = (
   toggleDropdown: (id: number) => void,
   updateActivityName: (id: number, newName: string) => void,
   toggleEdit: (id: number) => void,
-  removeAllSelected: () => void,
   updateSelection: (id: number, isSelected: boolean) => void,
   updateAllSelections: (isSelected: boolean) => void,
-  removeActivity: (id: number) => void,
   activities: Activity[]
 ): ColumnDef<Activity>[] => {
   const [isModalOpen, setIsModalOpen] = useState(false);

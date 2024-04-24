@@ -17,7 +17,7 @@ export const GeneralInfoPanel = (props: { jobInfo: JobInfo }) => {
       <div className="flex justify-between rounded-t-lg bg-gray-300 text-gray-800">
         <div className="ml-2">{props.jobInfo.hash}</div>
         <CopyIcon
-          onClick={async (e) => {
+          onClick={async () => {
             try {
               await navigator.clipboard.writeText(props.jobInfo.hash);
               alert("Text copied to clipboard!");

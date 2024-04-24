@@ -37,9 +37,7 @@ interface DataTableProps {
 export function DataTable({
   columns,
   data,
-  totalSize,
   onFileAdded,
-  activities,
 }: DataTableProps) {
   const [globalFilter, setGlobalFilter] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -70,9 +68,7 @@ export function DataTable({
 
   const fuzzyTextFilterFn: FilterFnOption<Activity> = (
     row,
-    columnId,
     value,
-    addMeta
   ) => {
     const cellValue = row.original["hash"];
     return cellValue && typeof cellValue === "string"
