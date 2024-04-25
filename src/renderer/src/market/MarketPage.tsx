@@ -29,7 +29,9 @@ export const MarketPageContext = createContext<JobSelectionContext>(
 
 const MarketPage = () => {
   const [selectedJobs, setSelectedJobs] = useState<string[]>([]);
-  const [jobInfoList, setJobInfoList] = useState<JobInfo[]>(memory);
+  const jobs = memory
+  const [jobInfoList, setJobInfoList] = useState<JobInfo[]>(jobs.filter(job => job.status !== "completed"));
+  const [completedJobs, setCompletedJobs] = useState<JobInfo[]>(jobs.filter(job => job.status === "completed"))
   const updateJobStatuses = (newStatus: JobStatus) => {
     setJobInfoList((prevJobInfoList) => {
       return prevJobInfoList.map((job) => {
@@ -108,6 +110,8 @@ const MarketPage = () => {
                     projectedCost: "-1 USD",
                   }
             }
+            completedJobs={completedJobs}
+            setCompletedJobs={setCompletedJobs}
           />
         </div>
       </ScrollArea>

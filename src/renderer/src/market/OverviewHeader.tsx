@@ -42,12 +42,6 @@ const OverviewHeader = (props: {
         <Button className="ml-2" onClick={() => props.setStatusFilter("error")}>
           Error
         </Button>
-        <Button
-          className="ml-2"
-          onClick={() => props.setStatusFilter("completed")}
-        >
-          Completed
-        </Button>
       </div>
       <div className="text-right">
         <AddJob addJob={props.addJob} />

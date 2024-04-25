@@ -1,147 +1,85 @@
 import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "../shadcn/components/ui/tabs";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "../shadcn/components/ui/accordion";
-import { Pause, Play, Trash2 } from "lucide-react";
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
-import { DataTable } from "./DataTable";
-import { columns } from "./columns";
-import fakeSeeds from "./fakeSeeds";
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../shadcn/components/ui/table";
+import { Trash2 } from "lucide-react";
+import { ScrollArea } from "../shadcn/components/ui/scroll-area";
+import { Button } from "../shadcn/components/ui/button";
 import { GeneralInfoPanel } from "./GeneralInfoPanel";
 import { JobInfo } from "./MarketPage";
 
-const Details = (props: { jobInfo: JobInfo }) => {
+const Details = (props: {
+  jobInfo: JobInfo;
+  completedJobs: JobInfo[];
+  setCompletedJobs: React.Dispatch<React.SetStateAction<JobInfo[]>>;
+}) => {
   return (
     <div className="grid grid-cols-[minmax(0,_1fr)_minmax(0,_2fr)] gap-4 h-[calc(65vh-15rem)]">
       <GeneralInfoPanel jobInfo={props.jobInfo} />
-      <PeerPanel />
+      <History
+        completedJobs={props.completedJobs}
+        setCompletedJobs={props.setCompletedJobs}
+      />
     </div>
   );
 };
 
-export default Details;
-
-const PeerPanel = () => {
-  return (
-    <div>
-      <Tabs defaultValue="selected_peers">
-        <TabsList>
-          <TabsTrigger value="selected_peers">Selected Peers</TabsTrigger>
-          <TabsTrigger value="more_peers">More Peers</TabsTrigger>
-        </TabsList>
-        <TabsContent value="selected_peers">
-          <SelectedPeers />
-        </TabsContent>
-        <TabsContent value="more_peers">
-          <MorePeers />
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
-};
-const SelectedPeers = () => {
-  const selectedPeersInfoList = [
-    {
-      id: "1",
-      ipAddress: "127.0.0.1",
-      region: "North America",
-      price: "0.1 USD/MiB",
-      amountDownloaded: "2 MiB",
-      status: "active",
-      speed: "10 KiB/s",
-      speedGraph: [
-        { time: 0, speed: 0 },
-        { time: 1, speed: 4 },
-        { time: 2, speed: 6 },
-        { time: 3, speed: 7 },
-        { time: 4, speed: 7 },
-        { time: 5, speed: 7 },
-      ],
-    },
-    {
-      id: "2",
-      ipAddress: "127.0.0.1",
-      region: "North America",
-      price: "0.1 USD/MiB",
-      amountDownloaded: "2 MiB",
-      status: "active",
-      speed: "10 KiB/s",
-      speedGraph: [
-        { time: 0, speed: 0 },
-        { time: 1, speed: 4 },
-        { time: 2, speed: 6 },
-        { time: 3, speed: 7 },
-        { time: 4, speed: 7 },
-        { time: 5, speed: 7 },
-      ],
-    },
-  ];
-  return (
-    <>
-      <div className="flex justify-between">
-        <div>Status</div>
-        <div>IP Address</div>
-        <div>Price</div>
-        <div>Total Storage</div>
-        <div className="flex invisible">
-          <Play /> <Pause />
-          <Trash2 />
-        </div>
-      </div>
-      <ul>
-        {selectedPeersInfoList.map((e) => (
-          <SelectedPeer key={e.id} {...e} />
-        ))}
-      </ul>
-    </>
-  );
-};
-const SelectedPeer = (props: {
-  id: string;
-  ipAddress: string;
-  region: string;
-  price: string;
-  amountDownloaded: string;
-  status: string;
-  speed: string;
-  speedGraph: { time: number; speed: number }[];
+const History = (props: {
+  completedJobs: JobInfo[];
+  setCompletedJobs: React.Dispatch<React.SetStateAction<JobInfo[]>>;
 }) => {
+  const handleClearHistory = () => {
+    props.setCompletedJobs([]);
+  };
+  const handleDeleteJob = (jobId: string) => {
+    props.setCompletedJobs(
+      props.completedJobs.filter((job) => job.id !== jobId)
+    );
+  };
   return (
-    <Accordion type="single" collapsible>
-      <AccordionItem value="item-1">
-        <AccordionTrigger className="bg-card">
-          <div className="w-full flex justify-between">
-            <div>{props.status}</div>
-            <div>{props.ipAddress}</div>
-            <div>{props.price}</div>
-            <div>{props.amountDownloaded}</div>
-            <div className="flex">
-              <Play className="hover:text-accent" />
-              <Pause className="hover:text-accent" />
-              <Trash2 className="hover:text-destructive" />
-            </div>
-          </div>
-        </AccordionTrigger>
-        <AccordionContent>
-          <LineChart width={300} height={100} data={props.speedGraph}>
-            <Line type="monotone" dataKey="speed" stroke="var(--primary)" />
-            <CartesianGrid stroke="#ccc" />
-            <XAxis />
-            <YAxis />
-          </LineChart>
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
+    <div className="grid overflow-hidden">
+      <div className="flex justify-between mb-2">
+        <p className="pt-1 text-lg font-bold">History</p>
+        <Button className="text-right" onClick={handleClearHistory}>
+          Clear History
+        </Button>
+      </div>
+      {props.completedJobs.length === 0 ? (
+        <p>No previous jobs</p>
+      ) : (
+        <>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[300px]">File Name</TableHead>
+                <TableHead>Date Finished</TableHead>
+              </TableRow>
+            </TableHeader>
+          </Table>
+          <Table>
+            <TableBody>
+              <ScrollArea>
+                {props.completedJobs.map((job) => (
+                  <TableRow key={job.id}>
+                    <TableCell className="w-[300px]">{job.fileName}</TableCell>
+                    <TableCell>{job.timeQueued}</TableCell>
+                    <TableCell className="text-right">
+                      <button onClick={() => handleDeleteJob(job.id)}>
+                        <Trash2 className="size-6 text-gray-500 hover:text-destructive" />
+                      </button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </ScrollArea>
+            </TableBody>
+          </Table>
+        </>
+      )}
+    </div>
   );
 };
-const MorePeers = () => {
-  return <DataTable columns={columns} data={fakeSeeds} />;
-};
+export default Details;
