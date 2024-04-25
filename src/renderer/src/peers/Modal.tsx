@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import {useState} from 'react';
 import { Button } from "../shadcn/components/ui/button";
 import "./Modal.css"; // make sure to create this CSS file
 
