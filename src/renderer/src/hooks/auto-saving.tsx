@@ -1,13 +1,9 @@
-// import { MDXEditorMethods } from '@mdxeditor/editor'
-// import { saveNoteAtom, selectedNoteAtom } from '@renderer/store'
-// import { autoSavingTime } from '@shared/constants'
-// import { NoteContent } from '@shared/models'
-// import { useAtomValue, useSetAtom } from 'jotai'
-// import { throttle } from 'lodash'
-// import { useRef } from 'react'
+
 
 //We can use throttle to do some auto update!
-
+//
+//Check this page out for auto-saving using throttle
+//
 
 
 

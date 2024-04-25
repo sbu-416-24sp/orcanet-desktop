@@ -122,6 +122,8 @@ export const getPeers: GetPeers = async () => {
 }
 
 // for delete, we can use something similar
+// dialog can show options 
+//
 // export const deleteNote: DeleteNote = async (filename) => {
 //     const rootDir = getRootDir()
   
