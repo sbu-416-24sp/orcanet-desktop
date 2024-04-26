@@ -7,20 +7,20 @@ const MiningPage = () => {
     await navigator.clipboard.writeText(e.currentTarget.innerText);
   }
 
-  function MiningPageHeader() {
-    return (
-      <div className="bg-white w-full py-5 px-7 flex justify-between items-center drop-shadow-md">
-        <div className="flex items-center gap-2">
-          <h1 className="font-bold text-xl">Mining</h1>
-        </div>
-      </div>
-    );
-  }
+  // function MiningPageHeader() {
+  //   return (
+  //     <div className="bg-white w-full py-5 px-7 flex justify-between items-center drop-shadow-md">
+  //       <div className="flex items-center gap-2">
+  //         <h1 className="font-bold text-xl">Mining</h1>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   function MiningDashBoard() {
     return (
       <div className="grid grid-cols-4 gap-7 mb-7">
-        <div className="flex justify-between bg-stone-950 text-white rounded-lg p-5">
+        <div className="flex justify-between bg-stone-950 text-white rounded-lg p-5 border">
           <div>
             <h1 className="text-lg mb-3 font-bold">Balance</h1>
             <p className="font-semibold">100.00 ORC</p>
@@ -31,7 +31,7 @@ const MiningPage = () => {
             </div>
           </div>
         </div>
-        <div className="flex justify-between border rounded-lg p-5">
+        <div className="flex justify-between bg-white rounded-lg p-5 border">
           <div className="w-9/12">
             <h1 className="text-lg mb-3 font-bold">Total Hash Power</h1>
             <p className="w-full break-words font-semibold">175.24 MH/s</p>
@@ -42,7 +42,7 @@ const MiningPage = () => {
             </div>
           </div>
         </div>
-        <div className="flex justify-between border rounded-lg p-5">
+        <div className="flex justify-between bg-white rounded-lg p-5 border">
           <div className="w-9/12">
             <h1 className="text-lg mb-3 font-bold">Unpaid Balance</h1>
             <p className="w-full break-words font-semibold">3.65 ORC</p>
@@ -56,7 +56,7 @@ const MiningPage = () => {
             </div>
           </div>
         </div>
-        <div className="flex justify-between border rounded-lg p-5">
+        <div className="flex justify-between bg-white rounded-lg p-5 border">
           <div className="w-9/12">
             <h1 className="text-lg mb-3 font-bold">Devices Mining</h1>
             <p className="w-full break-words font-semibold">4/5</p>
@@ -73,7 +73,7 @@ const MiningPage = () => {
 
   return (
     <div id="mining-page" className="flex flex-col grow size-full text-black">
-      <MiningPageHeader />
+      {/* <MiningPageHeader /> */}
       <div className="size-full px-10 py-7 overflow-y-auto">
         <MiningDashBoard />
         <MiningDevices />
