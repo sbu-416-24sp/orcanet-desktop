@@ -12,7 +12,6 @@ import {
 } from "../shadcn/components/ui/dialog";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { DataTable } from "./DataTable";
-import fakeSeeds from "./fakeSeeds";
 import { Seed2, columns2 } from "./columns";
 import { toast } from "../shadcn/components/ui/use-toast";
 const OverviewHeader = (props: {
@@ -105,8 +104,6 @@ const AddJob = (props: { addJob: (hash: string) => void }) => {
 
   const handleAddJob = () => {
     props.addJob(buffer);
-    console.log(buffer);
-    console.log(selectedPeer);
     toast({
       title: "Job Successfully Added!",
       description: "Your job has been successfully added!",

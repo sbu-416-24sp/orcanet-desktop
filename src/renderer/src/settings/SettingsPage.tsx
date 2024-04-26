@@ -12,12 +12,8 @@ import {
 
 const sidebarNavItems = [
   {
-    title: "Profile",
-    href: "/settings/profile",
-  },
-  {
-    title: "Account",
-    href: "/settings/account",
+    title: "Transfer",
+    href: "/settings/transfer",
   },
   {
     title: "Appearance",
@@ -26,14 +22,6 @@ const sidebarNavItems = [
   {
     title: "Notifications",
     href: "/settings/notifications",
-  },
-  // {
-  //   title: "Display",
-  //   href: "/settings/display",
-  // },
-  {
-    title: "Transfer",
-    href: "/settings/transfer",
   },
 ];
 
@@ -49,9 +37,6 @@ export default function SettingsPage() {
           <h2 className="text-2xl font-bold tracking-tight">
             OrcaNet Settings
           </h2>
-          <p className="text-muted-foreground">
-            Manage your account settings and set e-mail preferences.
-          </p>
         </div>
         <Separator className="my-6" />
         <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">

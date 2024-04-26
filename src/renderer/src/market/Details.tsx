@@ -11,7 +11,7 @@ import { ScrollArea } from "../shadcn/components/ui/scroll-area";
 import { Button } from "../shadcn/components/ui/button";
 import { GeneralInfoPanel } from "./GeneralInfoPanel";
 import { JobInfo } from "./MarketPage";
-
+import { toast } from "../shadcn/components/ui/use-toast";
 const Details = (props: {
   jobInfo: JobInfo;
   completedJobs: JobInfo[];
@@ -34,6 +34,11 @@ const History = (props: {
 }) => {
   const handleClearHistory = () => {
     props.setCompletedJobs([]);
+    toast({
+      variant: "destructive",
+      title: "History Cleared!",
+      description: "Your download history has been cleared.",
+    });
   };
   const handleDeleteJob = (jobId: string) => {
     props.setCompletedJobs(

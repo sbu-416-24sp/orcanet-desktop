@@ -1,12 +1,9 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronDown } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Textarea } from "../../shadcn/components/ui/textarea";
-import { cn } from "../../shadcn/lib/utils";
-import { Button, buttonVariants } from "../../shadcn/components/ui/button";
+import { Button } from "../../shadcn/components/ui/button";
 import {
   Form,
   FormControl,
@@ -44,7 +41,7 @@ export function AppearanceForm() {
     setTheme(data.theme);
     toast({
       title: "Appearance Notification",
-      description: "Your appearance preferences have successfully been updated! A confirmation email has been sent to your email address.",
+      description: "Your appearance preferences have successfully been updated!",
     })
   }
 
@@ -122,25 +119,6 @@ export function AppearanceForm() {
             </FormItem>
           )}
         />
-
-          {/* <FormField
-            defaultValue="Insert JSON theme here"
-            control={form.control}
-            name="pasteJSONThemeConfiguration"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Paste JSON Theme Configuration</FormLabel>
-                <FormControl>
-                    <Textarea placeholder="Insert JSON theme here" {...field} /> 
-                </FormControl> 
-                <FormDescription>
-                  Paste your JSON Theme Configuration here.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          /> */}
-
         <Button type="submit">Update preferences</Button>
       </form>
     </Form>

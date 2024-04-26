@@ -5,11 +5,8 @@ import WalletPage from "./wallet/WalletPage";
 import Sidebar from "./sidebar/Sidebar";
 import PeersPage from "./peers/PeersPage";
 import SettingsPage from "./settings/SettingsPage";
-import ProfilePage from "./settings/profile/ProfilePage";
-import AccountPage from "./settings/account/AccountPage";
 import AppearancePage from "./settings/appearance/AppearancePage";
 import NotificationsPage from "./settings/notifications/NotificationPage";
-import DisplayPage from "./settings/display/DisplayPage";
 import TransferPage from "./settings/transfer/TransferPage";
 import MiningPage from "./mining/Mining";
 import { ThemeProvider } from "./shadcn/components/ui/ThemeProvider";
@@ -30,12 +27,9 @@ function App() {
               <Route path="/mining" element={<MiningPage />} />
               <Route path="/peers" element={<PeersPage />} />
               <Route path="/settings" element={<SettingsPage />}>
-                <Route path="profile" element={<ProfilePage />} />
-                <Route path="account" element={<AccountPage />} />
+                <Route path="transfer" element={<TransferPage />} />
                 <Route path="appearance" element={<AppearancePage />} />
                 <Route path="notifications" element={<NotificationsPage />} />
-                <Route path="display" element={<DisplayPage />} />
-                <Route path="transfer" element={<TransferPage />} />
               </Route>
             </Routes>
           </main>
