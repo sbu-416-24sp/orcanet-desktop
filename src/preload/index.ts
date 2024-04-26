@@ -1,4 +1,5 @@
-import { contextBridge } from 'electron'
+import { GetActivity, GetActivities , GetPeers} from '@shared/types'
+import { contextBridge, ipcRenderer } from 'electron'
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise
 // just add to the DOM global.
@@ -8,6 +9,11 @@ if (!process.contextIsolated) {
 
 try{
   contextBridge.exposeInMainWorld('context',{
+    locale: navigator.language,
+    // getActivity : (...args: Parameters<GetActivity>) =>  ipcRenderer.invoke('getActivity', ...args),
+    // getActivities : (...args: Parameters<GetActivities>) =>  ipcRenderer.invoke('getActivities', ...args),
+    getPeers : (...args: Parameters<GetPeers>) =>  ipcRenderer.invoke('getPeers', ...args),
+    // deleteActivity : (...args: Parameters<DeleteActivity>) =>  ipcRenderer.invoke('deleteActivity', ...args),
     //TODO
   })
 }catch(error){

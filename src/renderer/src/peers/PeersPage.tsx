@@ -17,7 +17,12 @@ import { DataTable } from "./DataTable";
 import { columns } from "./columns";
 import fakeSeeds from "./fakeSeeds";
 import MarkerPoints from './MarkerPoints';
+import {usePeersList} from "../hooks/usePeersList"
+import AddConnection from "./addConnection";
 
+// import {GetAllPeers,AddPeer} from "../../wailsjs/go/backend/PeerStorage";
+import { FormEvent } from "react";
+import { PeerInfo } from "@shared/models";
 type MapData = {
   rank: number;
   country_code: number;
@@ -45,27 +50,32 @@ const RadialGradient = () => (
 );
 
 const PeersPage = () => {
+  const {peers} = usePeersList();
   const [data, setData] = useState<MapData[]>([]);
   const [maxValue, setMaxValue] = useState(0);
 
   useEffect(() => {
-  try{
-    const sortedCities = sortBy(mapData.data, (o: MapData) => -o.population);
-      setMaxValue(sortedCities[0].population);
-      setData(sortedCities);
-  } catch(err:any){
-    console.log("err-", err);
-  }
+    try{
+      const sortedCities = sortBy(mapData.data, (o: MapData) => -o.population);
+        setMaxValue(sortedCities[0].population);
+        setData(sortedCities);
+        
+    } catch(err:any){
+      console.log("err-", err);
+    }
   }, []);
 
+
+  
   const popScale = useMemo(
     () => scaleLinear().domain([0, maxValue]).range([0, 24]),
     [maxValue]
   );
 
   return (
-    <div className="p-2 pb-0 block w-auto overflow-y-scroll">
+    <div className="p-2 pb-0 block w-auto">
       <div id="peers-page" className="container p-8 pt-0 pl-12 justify-self-center">
+        <AddConnection/>
         <RadialGradient />
         <ComposableMap>
         <Sphere stroke="#E4E5E6" strokeWidth={0.5} fill="transparent" id="sphere"/>
@@ -117,9 +127,9 @@ const PeersPage = () => {
        <h1 className="text-center font-bold text-gray-400 text-base">PEERS</h1>
         
         <MarkerPoints />
-
+          
        <div className="mt-9 w-auto">
-          <DataTable columns={columns} data={fakeSeeds} />
+          {peers ? <DataTable columns={columns} data={peers} /> : <p>No data available</p>}
        </div>
 
       </div>

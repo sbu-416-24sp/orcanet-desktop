@@ -1,19 +1,22 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, ipcMain,net } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { GetActivity,GetActivities,GetPeers } from '@shared/types'
+import { getPeers} from "@/lib"
+import { exec } from 'child_process'
 
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
-    show: false,
+    show: true,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     center : true,
     title : 'OrcaNet',
-    frame : false,
+    frame : true,
     vibrancy : 'under-window',
     visualEffectState : 'active',
     titleBarStyle : 'hidden',
@@ -49,7 +52,14 @@ function createWindow(): void {
 app.whenReady().then(() => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
-
+  exec('make all', { cwd: '/Users/joannelu/PeerNode/orcanet-go-new/peer' }, (error, stdout, stderr) => {
+    if (error) {
+        console.error(`Server error: ${error}`);
+        return;
+    }
+    console.log(`Server stdout: ${stdout}`);
+    console.error(`Server stderr: ${stderr}`);
+});
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
   // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
@@ -59,6 +69,10 @@ app.whenReady().then(() => {
 
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
+
+  // ipcMain.handle('getActivity', (_, ...args: Parameters<GetActivity>) => getActivity(...args))
+  // ipcMain.handle('getActivities', (_, ...args: Parameters<GetActivities>) => getActivities(...args))
+  ipcMain.handle('getPeers', (_, ...args: Parameters<GetPeers>) => getPeers(...args))
 
   createWindow()
 
