@@ -16,8 +16,6 @@ import {
   TableRow,
 } from "../shadcn/components/ui/table";
 
-import { ChevronsRight } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
 import { Switch } from "../shadcn/components/ui/switch";
 
 export let DevicesData = [
@@ -84,7 +82,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="rounded-md bg-white">
+    <div className="rounded-lg border p-5">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -186,10 +184,7 @@ export const columns = [
   {
     accessorKey: "switch",
     header: () => <div className="text-right">Off / On</div>,
-    cell: ({ row }: { row: any }) => {
-      if(row){
-        //in case we need this
-      }
+    cell: () => {
       return (
         <div>
           <div className={`text-right font-medium`}>
@@ -207,20 +202,9 @@ export const columns = [
 ];
 
 export default function MiningDevices() {
-  const { page } = useParams();
-
   return (
-    <div className="rounded-md bg-white p-5 border">
-      <div className="flex justify-between font-bold mb-2">
-        <h3 className="text-stone-900 text-xl">Devices</h3>
-        {page !== "transactions" && (
-          <div className=" flex gap-2 text-sm items-center hover:cursor-pointer">
-            <h3>All</h3>
-            <Switch />
-          </div>
-        )}
-      </div>
+    <>
       <DataTable columns={columns} data={DevicesData} />
-    </div>
+    </>
   );
 }
