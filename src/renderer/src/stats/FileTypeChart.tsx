@@ -36,7 +36,7 @@ export default function FileTypeChart() {
   };
 
   return (
-    <div className="bg-white p-5 rounded-lg">
+    <div className="border p-5 rounded-lg">
       <h3 className="text-stone-900 text-xl font-bold">File Types</h3>
       <div>
         <ReactApexChart
