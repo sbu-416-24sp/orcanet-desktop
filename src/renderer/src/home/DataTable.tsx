@@ -66,11 +66,6 @@ export function DataTable({
     };
   }, []);
 
-  useEffect(() => {
-    console.log("globalFilter", globalFilter)
-    console.log("globalFilter substring", globalFilter.substring(1, globalFilter.length-1))
-  }, [globalFilter])
-
   const fuzzyTextFilterFn: FilterFnOption<Activity> = (
     row,
     value,

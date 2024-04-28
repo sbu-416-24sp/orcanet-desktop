@@ -102,10 +102,16 @@ const HomePage = () => {
     }
   };
 
-  const updateActivityName = async (id: number, newName: string) => {
+  const updateActivityName = (id: number, newName: string) => {
     try {
-      await UpdateActivityName(id, newName);
-      await fetchActivities(); // Refresh the activities list to reflect the updated name
+      UpdateActivityName(id, newName);
+      let index = activities.findIndex((a) => a.id === id);
+
+      let arr = [...activities]; 
+      arr[index].name = newName;
+
+      console.log("id of edited", arr)
+      setActivities(arr);
     } catch (error) {
       console.error("Failed to update activity name:", error);
     }
