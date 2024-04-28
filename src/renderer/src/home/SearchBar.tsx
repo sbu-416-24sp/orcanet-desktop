@@ -13,7 +13,9 @@ export default function SearchBar({ onChange }: SearchBarProps) {
         type="text"
         placeholder="Hash"
         className="w-full"
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => {
+          onChange(e.target.value)
+        }}
       />
     </div>
   );

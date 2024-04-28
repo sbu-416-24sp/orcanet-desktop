@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-
+import { PeerInfo } from "@shared/models";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -35,6 +35,8 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  console.log(columns)
+  console.log(data)
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -57,15 +59,15 @@ export function DataTable<TData, TValue>({
       rowSelection,
     },
   });
-
+  console.log(table.getRowModel().rows);
   return (
     <div>
       <div className="items-center py-4 flex">
         <Input
           placeholder="Filter peers..."
-          value={(table.getColumn("location")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("Location")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("location")?.setFilterValue(event.target.value)
+            table.getColumn("Location")?.setFilterValue(event.target.value)
           }
           className="w-5/6 inline"
         />

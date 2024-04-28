@@ -16,6 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "../shadcn/components/ui/table";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -128,13 +129,13 @@ export const columns = [
     cell: ({ row }: { row: any }) => {
       const status = row.getValue("status") as string;
       const color =
-        status === "pending"
+        status === "Pending"
           ? "text-yellow-500"
-          : status === "processing"
-          ? "text-blue-500"
-          : status === "success"
-          ? "text-green-500"
-          : "text-red-500";
+          : status === "Processing"
+            ? "text-blue-500"
+            : status === "Success"
+              ? "text-green-500"
+              : "text-red-500";
       return (
         <div>
           <div className={`font-medium ${color}`}>{status}</div>
@@ -201,13 +202,11 @@ export const columns = [
 ];
 
 export default function TransactionTable({ path }: { path: string }) {
-  // const { page } = useParams();
   const page = path;
   const top5Data = WalletData.slice(0, 5);
-  const data = WalletData;
 
   return (
-    <div className="rounded-md bg-white p-5 border">
+    <div className={`rounded-md p-5 ${page !== "transactions" && "border"}`}>
       <div className="flex justify-between font-bold mb-2">
         <h3 className="text-stone-900 text-xl">Transactions</h3>
         {page !== "transactions" && (
