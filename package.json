@@ -50,6 +50,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "cmdk": "^1.0.0",
+    "jotai": "^2.8.0",
     "lucide-react": "^0.340.0",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.1",
