@@ -1,3 +1,7 @@
 build/
 node_modules/
 dist/
+out/
+/out
+src/main/.DS_Store
+

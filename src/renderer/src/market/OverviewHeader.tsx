@@ -9,10 +9,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../shadcn/components/ui/dialog"
-import * as DialogPrimitive from "@radix-ui/react-dialog"
+} from "../shadcn/components/ui/dialog";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { DataTable } from "./DataTable";
-import fakeSeeds from "./fakeSeeds";
 import { Seed2, columns2 } from "./columns";
 import { toast } from "../shadcn/components/ui/use-toast";
 const OverviewHeader = (props: {
@@ -42,14 +41,10 @@ const OverviewHeader = (props: {
         <Button className="ml-2" onClick={() => props.setStatusFilter("error")}>
           Error
         </Button>
-        <Button
-          className="ml-2"
-          onClick={() => props.setStatusFilter("completed")}
-        >
-          Completed
-        </Button>
       </div>
-      <AddJob addJob={props.addJob} />
+      <div className="text-right">
+        <AddJob addJob={props.addJob} />
+      </div>
     </div>
   );
 };
@@ -82,27 +77,27 @@ const FilterInput = (props: {
 };
 
 const fakeData: Seed2[] = [
-  { name: "Alice", price: "30 USD", rate: "30 Mb/s"},
-  { name: "Bob", price: "35 USD", rate: "50 Mb/s"}
-]
-const DialogClose = DialogPrimitive.Close
+  { name: "Alice", price: "20 ORC", reputation: 30 },
+  { name: "Bob", price: "35 ORC", reputation: 60 },
+];
+const DialogClose = DialogPrimitive.Close;
 const AddJob = (props: { addJob: (hash: string) => void }) => {
   const [buffer, setBuffer] = useState("");
   const [validHash, setValidHash] = useState(0);
-  //const [selectedPeer, setSelectedPeer] = useState(false)
-  const hash = "f26811862f6ba50908850f61ad73fb5d8d86754cd2acb9ef";
+  const [selectedPeer, setSelectedPeer] = useState([]);
+
+  const hash = "a";
 
   const resetAddJob = () => {
     setBuffer("");
     setValidHash(0);
-  }
+    setSelectedPeer([]);
+  };
 
   const handleSearchHash = () => {
     if (buffer === hash) {
       setValidHash(1);
-      console.log("Hello");
-    }
-    else{
+    } else {
       setValidHash(-1);
     }
   };
@@ -112,14 +107,14 @@ const AddJob = (props: { addJob: (hash: string) => void }) => {
     toast({
       title: "Job Successfully Added!",
       description: "Your job has been successfully added!",
-    })
-  }
+    });
+  };
 
   return (
     <div>
       <Dialog>
         <DialogTrigger>
-          <Button onClick={resetAddJob} className="ml-20">Add Job</Button>
+          <Button onClick={resetAddJob}>Add Job</Button>
         </DialogTrigger>
         <DialogContent>
           <DialogTitle>Add Job</DialogTitle>
@@ -134,15 +129,25 @@ const AddJob = (props: { addJob: (hash: string) => void }) => {
             }}
             placeholder="File hash..."
           />
-          {validHash !== 1 && <Button onClick={handleSearchHash}>Search Hash</Button>}
+          {validHash !== 1 && (
+            <Button onClick={handleSearchHash}>Search Hash</Button>
+          )}
           {validHash === -1 && <p>No files match this hash</p>}
           {validHash === 1 && (
-          <>
-           <DataTable data={fakeData} columns={columns2}></DataTable>
-            <DialogClose>
-              <Button onClick={handleAddJob}>Select Peer</Button>
-            </DialogClose>
-          </>)}
+            <>
+              <div>Select a Peer</div>
+              <DataTable
+                data={fakeData}
+                columns={columns2}
+                setSelectedPeer={setSelectedPeer}
+              ></DataTable>
+              {selectedPeer.length === 1 && (
+                <DialogClose>
+                  <Button onClick={handleAddJob}>Select Peer</Button>
+                </DialogClose>
+              )}
+            </>
+          )}
         </DialogContent>
       </Dialog>
     </div>

@@ -13,37 +13,60 @@ export const GeneralInfoPanel = (props: { jobInfo: JobInfo }) => {
     { time: 5, speed: 14 },
   ];
   return (
-    <Card className="">
+    <div className="rounded-lg border bg-gray-50 dark:bg-gray-900">
       <div className="flex justify-between rounded-t-lg bg-gray-300 text-gray-800">
         <div className="ml-2">{props.jobInfo.hash}</div>
         <CopyIcon
           onClick={async () => {
             try {
               await navigator.clipboard.writeText(props.jobInfo.hash);
-              alert("Text copied to clipboard!");
+              alert("Hash copied to clipboard!");
             } catch (err) {
-              alert("Failed to copy text");
+              alert("Failed to copy hash");
             }
           }}
-          className="mr-2"
+          className="mr-2 p-1"
         />
       </div>
-      <div className="p-3 text-lg">
-        <div className="mb-1">{props.jobInfo.fileName}</div>
-        <div>
+      <div className="relative flex flex-col justify-between h-[calc(100%-4rem)] mt-2 mb-3 pt-3 pb-3 pl-4 pr-4">
+        <div className="text-lg">{props.jobInfo.fileName}</div>
+        <div className="">
           <span className="text-blue-600">{props.jobInfo.accumulatedData}</span>{" "}
           / {props.jobInfo.fileSize}
         </div>
-        <div>
+        <div className="">
           Running Cost:{" "}
           <span className="text-blue-600">{props.jobInfo.runningCost}</span>
         </div>
-        <div>Projected Cost: {props.jobInfo.projectedCost}</div>
+        <div className="">Projected Cost: {props.jobInfo.projectedCost}</div>
         <div>ETA: {props.jobInfo.remainingTime}</div>
+        <svg
+          width={80}
+          height={80}
+          className="absolute top-1 right-3 text-xl fill-black dark:fill-gray-50 stroke-black dark:stroke-gray-50"
+        >
+          <circle
+            cx={40}
+            cy={40}
+            r={38}
+            strokeWidth={1}
+            strokeMiterlimit={10}
+            className="fill-none"
+          ></circle>
+          <text x="50%" y="50%" textAnchor="middle" dy=".3em" className="">
+            {Math.round(
+              (parseInt(props.jobInfo.accumulatedData) /
+                parseInt(props.jobInfo.fileSize.slice(0, -4))) *
+                10000
+            ) /
+              100 +
+              "%"}
+          </text>
+        </svg>
       </div>
       <div className="text-right text-sm rounded-b-lg bg-gray-500 text-gray-100">
         <div className="mr-2">{props.jobInfo.timeQueued}</div>
       </div>
-    </Card>
+    </div>
   );
 };

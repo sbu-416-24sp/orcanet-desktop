@@ -26,11 +26,8 @@ const Sidebar = () => {
   const isSettingsActive = () => {
     const paths = [
       "/settings",
-      "/settings/profile",
-      "/settings/account",
       "/settings/appearance",
       "/settings/notifications",
-      "/settings/display",
       "/settings/transfer",
     ];
     return paths.some((path) => isActive(path));
@@ -112,7 +109,7 @@ const Sidebar = () => {
                 alert={false}
               />
             </Link>
-            <Link to="/settings/profile">
+            <Link to="/settings/transfer">
               <SidebarItem
                 icon={<Settings />}
                 text="Settings"

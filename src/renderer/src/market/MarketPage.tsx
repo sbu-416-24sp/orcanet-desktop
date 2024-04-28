@@ -2,6 +2,7 @@ import { createContext, useState } from "react";
 import Overview from "./Overview";
 import Details from "./Details";
 import memory from "./fakeJobs";
+import { ScrollArea } from "@shadcn/components/ui/scroll-area";
 
 export interface JobInfo {
   id: string;
@@ -28,7 +29,9 @@ export const MarketPageContext = createContext<JobSelectionContext>(
 
 const MarketPage = () => {
   const [selectedJobs, setSelectedJobs] = useState<string[]>([]);
-  const [jobInfoList, setJobInfoList] = useState<JobInfo[]>(memory);
+  const jobs = memory
+  const [jobInfoList, setJobInfoList] = useState<JobInfo[]>(jobs.filter(job => job.status !== "completed"));
+  const [completedJobs, setCompletedJobs] = useState<JobInfo[]>(jobs.filter(job => job.status === "completed"))
   const updateJobStatuses = (newStatus: JobStatus) => {
     setJobInfoList((prevJobInfoList) => {
       return prevJobInfoList.map((job) => {
@@ -43,6 +46,7 @@ const MarketPage = () => {
     setJobInfoList((prevJobInfoList) =>
       prevJobInfoList.filter((job) => !selectedJobs.includes(job.id))
     );
+    setSelectedJobs([]);
   };
   const addJob = (hash: string) => {
     if(hash){
@@ -79,33 +83,38 @@ const MarketPage = () => {
     <MarketPageContext.Provider
       value={{ selectedJobs: selectedJobs, setSelectedJobs: setSelectedJobs }}
     >
-      <div id="market-page" className="relative grow bg-background p-6">
-        <Overview
-          jobInfoList={jobInfoList}
-          updateJobStatuses={updateJobStatuses}
-          removeJobs={removeJobs}
-          addJob={addJob}
-        />
-        <Details
-          jobInfo={
-            selectedJobs.length > 0
-              ? jobInfoList.filter((e) => e.id === selectedJobs[0])[0]
-              : {
-                  id: "-1",
-                  fileName: "MissingNo",
-                  fileSize: "-1 KiB",
-                  status: "completed",
-                  remainingTime: "-1 s",
-                  timeQueued: "9999-99-99 99:99:99",
+      <ScrollArea className="h-full grow">
+        <div id="market-page" className="bg-background p-6 h-full">
+          <Overview
+            jobInfoList={jobInfoList}
+            updateJobStatuses={updateJobStatuses}
+            removeJobs={removeJobs}
+            addJob={addJob}
+          />
+          <hr className="border mt-4 mb-4" />
+          <Details
+            jobInfo={
+              selectedJobs.length > 0
+                ? jobInfoList.filter((e) => e.id === selectedJobs[0])[0]
+                : {
+                    id: "-1",
+                    fileName: "MissingNo",
+                    fileSize: "-1 KiB",
+                    status: "completed",
+                    remainingTime: "-1 s",
+                    timeQueued: "9999-99-99 99:99:99",
 
-                  hash: "OnGnIsSiM",
-                  accumulatedData: "-1",
-                  runningCost: "-1 USD",
-                  projectedCost: "-1 USD",
-                }
-          }
-        />
-      </div>
+                    hash: "OnGnIsSiM",
+                    accumulatedData: "-1",
+                    runningCost: "-1 USD",
+                    projectedCost: "-1 USD",
+                  }
+            }
+            completedJobs={completedJobs}
+            setCompletedJobs={setCompletedJobs}
+          />
+        </div>
+      </ScrollArea>
     </MarketPageContext.Provider>
   );
 };
