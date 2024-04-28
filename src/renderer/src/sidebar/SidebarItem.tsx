@@ -52,7 +52,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({path, icon, text, active }) =>
           relative flex items-center p-2 mb-4
           font-medium rounded-md cursor-pointer
           transition-colors group justify-center
-          transition duration-400
+          duration-400
           ${
             active
               ? "bg-indigo-50"
