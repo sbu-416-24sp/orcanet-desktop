@@ -123,12 +123,16 @@ const HomePage = () => {
 
   const removeAllSelected = async () => {
     const selectedActivities = activities
-      .filter((activity) => activity.isSelected)
-      .map((activity) => activity.id);
-    for (const id of selectedActivities) {
-      await RemoveActivity(id);
-    }
-    await fetchActivities();
+      .filter((activity) => !activity.isSelected)
+      .map((activity) => activity);
+    
+    
+    console.log("selectedActivities", selectedActivities)
+    setActivities(selectedActivities);
+    // for (const id of selectedActivities) {
+    //   RemoveActivity(id);
+    // }
+    // await fetchActivities();
   };
   const updateSelection = (id: number, isSelected: boolean) => {
     setActivities((currentActivities) =>
