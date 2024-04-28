@@ -66,13 +66,19 @@ export function DataTable({
     };
   }, []);
 
+  useEffect(() => {
+    console.log("globalFilter", globalFilter)
+    console.log("globalFilter substring", globalFilter.substring(1, globalFilter.length-1))
+  }, [globalFilter])
+
   const fuzzyTextFilterFn: FilterFnOption<Activity> = (
     row,
     value,
   ) => {
     const cellValue = row.original["hash"];
+    console.log("cellValue", cellValue)
     return cellValue && typeof cellValue === "string"
-      ? cellValue.toLowerCase().includes(value.toLowerCase())
+      ? cellValue.toLowerCase().startsWith(globalFilter.toLowerCase())
       : false;
   };
 
@@ -98,6 +104,7 @@ export function DataTable({
             value={globalFilter}
             onChange={(value) => setGlobalFilter(String(value))}
           />
+
         </div>
         <div className="w-1/2 flex justify-end relative">
           <button
@@ -153,12 +160,10 @@ export function DataTable({
                 }}
               />
             </label>
-            <div className="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 cursor-pointer">
-              New folder
-            </div>
           </div>
         </div>
       </div>
+
       <div className="rounded-md border overflow-visible bg-white">
         <Table>
           <TableHeader>
@@ -179,6 +184,7 @@ export function DataTable({
               </TableRow>
             ))}
           </TableHeader>
+          
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (

@@ -126,14 +126,16 @@ const HomePage = () => {
       .filter((activity) => !activity.isSelected)
       .map((activity) => activity);
     
-    
-    console.log("selectedActivities", selectedActivities)
     setActivities(selectedActivities);
-    // for (const id of selectedActivities) {
-    //   RemoveActivity(id);
-    // }
-    // await fetchActivities();
   };
+  const downLoadSelected = async () => {
+    const selectedActivities = activities
+      .filter((activity) => activity.isSelected)
+      .map((activity) => activity);
+
+    console.log("selectedActivities", selectedActivities)
+  }
+
   const updateSelection = (id: number, isSelected: boolean) => {
     setActivities((currentActivities) =>
       currentActivities.map((activity) =>
@@ -335,7 +337,9 @@ const HomePage = () => {
               <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 text-sm rounded transition ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
                 Share link
               </button>
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 text-sm rounded transition ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 text-sm rounded transition ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                onClick={downLoadSelected}
+              >
                 Download
               </button>
               <button
