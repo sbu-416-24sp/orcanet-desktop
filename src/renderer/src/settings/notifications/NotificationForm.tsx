@@ -1,12 +1,10 @@
 "use client"
 
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 import { Button } from "../../shadcn/components/ui/button"
-import { Checkbox } from "../../shadcn/components/ui/checkbox"
 import {
   Form,
   FormControl,
@@ -17,11 +15,10 @@ import {
   FormMessage,
 } from "../../shadcn/components/ui/form"
 import { RadioGroup, RadioGroupItem } from "../../shadcn/components/ui/radio-group"
-import { Switch } from "../../shadcn/components/ui/switch"
 import { toast } from "../../shadcn/components/ui/use-toast"
 
 const notificationsFormSchema = z.object({
-  type: z.enum(["all", "mentions", "none"], {
+  type: z.enum(["all", "urgent", "none"], {
     required_error: "You need to select a notification type.",
   }),
   mobile: z.boolean().default(false).optional(),
@@ -53,7 +50,7 @@ export function NotificationsForm() {
     }
     toast({
       title: "Notifcations Notification",
-      description: "Your notification preferences have successfully been updated! A confirmation email has been sent to your email address.",
+      description: "Your notification preferences have successfully been updated!",
     })
   }
 
@@ -82,7 +79,7 @@ export function NotificationsForm() {
                   </FormItem>
                   <FormItem className="flex items-center space-x-3 space-y-0">
                     <FormControl>
-                      <RadioGroupItem value="mentions" />
+                      <RadioGroupItem value="urgent" />
                     </FormControl>
                     <FormLabel className="font-normal">
                       Urgent activity or messages only
@@ -97,120 +94,6 @@ export function NotificationsForm() {
                 </RadioGroup>
               </FormControl>
               <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div>
-          <h3 className="mb-4 text-lg font-medium">Email Notifications</h3>
-          <div className="grid grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="communication_emails"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                  <div className="space-y-0.5">
-                    <FormLabel className="text-base">
-                      Communication emails
-                    </FormLabel>
-                    <FormDescription>
-                      Receive emails about your account activity.
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="market_emails"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                  <div className="space-y-0.5">
-                    <FormLabel className="text-base">
-                      Market emails
-                    </FormLabel>
-                    <FormDescription>
-                      Receive emails about the current market and news.
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="transaction_emails"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                  <div className="space-y-0.5">
-                    <FormLabel className="text-base">Transaction emails</FormLabel>
-                    <FormDescription>
-                      Receive emails about your current transactions activity.
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="security_emails"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                  <div className="space-y-0.5">
-                    <FormLabel className="text-base">Security emails</FormLabel>
-                    <FormDescription>
-                      Receive emails about your account security activity.
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      disabled
-                      aria-readonly
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-          </div>
-        </div>
-        <FormField
-          control={form.control}
-          name="mobile"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>
-                  Use username instead of email address in communications
-                </FormLabel>
-                <FormDescription>
-                  You can manage your name in the{" "}
-                  <Link to="/settings/account" style={{ textDecoration: 'underline' }}>account settings</Link> page.
-                </FormDescription>
-              </div>
             </FormItem>
           )}
         />

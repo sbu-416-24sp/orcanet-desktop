@@ -1,0 +1,9 @@
+[submodule "orcanet-rust"]
+	path = orcanet-rust
+	url = https://github.com/sbu-416-24sp/orcanet-rust
+[submodule "orcanet-go"]
+	path = orcanet-go
+	url = https://github.com/sbu-416-24sp/orcanet-go
+[submodule "orcanet-js"]
+	path = orcanet-js
+	url = https://github.com/sbu-416-24sp/orcanet-js
