@@ -56,7 +56,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({path, icon, text, active }) =>
           ${
             active
               ? "bg-indigo-50"
-              : "hover:bg-indigo-50"
+              : "hover:bg-indigo-50 text-gray-600"
           }
       `}
       >
