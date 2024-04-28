@@ -35,7 +35,7 @@ function StatsCard({
   traffic,
 }: StatsCardProps) {
   return (
-    <div className="bg-white rounded-lg px-5 py-7 border">
+    <div className="border rounded-lg px-5 py-7">
       {icon && <CardIcon icon={icon} backgroundColor={backgroundColor} />}
       <CardInfo
         title={title}

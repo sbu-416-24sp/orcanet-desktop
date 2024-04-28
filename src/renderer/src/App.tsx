@@ -5,37 +5,32 @@ import WalletPage from "./wallet/WalletPage";
 import Sidebar from "./sidebar/Sidebar";
 import PeersPage from "./peers/PeersPage";
 import SettingsPage from "./settings/SettingsPage";
-import ProfilePage from "./settings/profile/ProfilePage";
-import AccountPage from "./settings/account/AccountPage";
 import AppearancePage from "./settings/appearance/AppearancePage";
 import NotificationsPage from "./settings/notifications/NotificationPage";
-import DisplayPage from "./settings/display/DisplayPage";
 import TransferPage from "./settings/transfer/TransferPage";
 import MiningPage from "./mining/Mining";
 import { ThemeProvider } from "./shadcn/components/ui/ThemeProvider";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import { Toaster } from "./shadcn/components/ui/toaster"
+import { Toaster } from "./shadcn/components/ui/toaster";
 function App() {
   return (
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
       <Router>
-        <div className="flex h-screen">
+        <div id="App" className="flex overflow-hidden w-screen h-screen">
           <Sidebar />
-          <main className="flex-1 overflow-y-auto">
+          <main className="flex-1">
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/stats" element={<StatsPage />} />
               <Route path="/market" element={<MarketPage />} />
-              <Route path="/wallet" element={<WalletPage />} />
+              <Route path="/wallet" element={<WalletPage path="wallet"/>} />
+              <Route path="/wallet/transactions" element={<WalletPage path="transactions"/>} />
               <Route path="/mining" element={<MiningPage />} />
               <Route path="/peers" element={<PeersPage />} />
               <Route path="/settings" element={<SettingsPage />}>
-                <Route path="profile" element={<ProfilePage />} />
-                <Route path="account" element={<AccountPage />} />
+                <Route path="transfer" element={<TransferPage />} />
                 <Route path="appearance" element={<AppearancePage />} />
                 <Route path="notifications" element={<NotificationsPage />} />
-                <Route path="display" element={<DisplayPage />} />
-                <Route path="transfer" element={<TransferPage />} />
               </Route>
             </Routes>
           </main>

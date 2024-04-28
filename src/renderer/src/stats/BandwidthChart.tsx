@@ -60,7 +60,7 @@ const Bandwidth: React.FC = () => {
   };
 
   return (
-    <div className="2xl:col-span-3 xl:col-span-2 bg-white rounded-lg p-5 border">
+    <div className="2xl:col-span-3 xl:col-span-2 border rounded-lg p-5">
       <h3 className="text-stone-900 text-xl font-bold">Bandwidth Overtime</h3>
       <div>
         <ReactApexChart

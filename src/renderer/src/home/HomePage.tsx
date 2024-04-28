@@ -4,6 +4,7 @@ import { getColumns } from "./columns";
 import "./HomePage.css";
 import { generateFileHash, formatFileSize, sizeToBytes } from "./sizeUtils";
 
+
   // GetActivities,
   // UploadFile,
   // RemoveActivity,
@@ -13,10 +14,7 @@ import { generateFileHash, formatFileSize, sizeToBytes } from "./sizeUtils";
   function GetActivities() {
     return [];
   }
-  function UploadFile(base64String: string, name: string, size: string) {
-    let concating = base64String + name + size;
-    return concating;
-  }
+  
   function RemoveActivity(id: number) {
     return id;
   }
@@ -44,8 +42,25 @@ const HomePage = () => {
     ERROR = "Error",
     PUBLISHED = "Published",
   }
+
+  function UploadFile(base64String: string, name: string, size: string, filePath:string) : Activity{
+    const newActivity = {
+      id: 1,
+      stringId: base64String,
+      name, 
+      size, 
+      hash: filePath, 
+      status: Status.UPLOADED
+    }
+
+    console.log("newActivity", newActivity.id)
+    setActivities(p => [...p, newActivity])
+
+    return newActivity; 
+  }
   
   const [activities, setActivities] = useState<Activity[]>([]);
+
   const [updateTrigger, setUpdateTrigger] = useState(false);
 
   const fetchActivities = async () => {
@@ -87,10 +102,16 @@ const HomePage = () => {
     }
   };
 
-  const updateActivityName = async (id: number, newName: string) => {
+  const updateActivityName = (id: number, newName: string) => {
     try {
-      await UpdateActivityName(id, newName);
-      await fetchActivities(); // Refresh the activities list to reflect the updated name
+      UpdateActivityName(id, newName);
+      let index = activities.findIndex((a) => a.id === id);
+
+      let arr = [...activities]; 
+      arr[index].name = newName;
+
+      console.log("id of edited", arr)
+      setActivities(arr);
     } catch (error) {
       console.error("Failed to update activity name:", error);
     }
@@ -108,13 +129,19 @@ const HomePage = () => {
 
   const removeAllSelected = async () => {
     const selectedActivities = activities
-      .filter((activity) => activity.isSelected)
-      .map((activity) => activity.id);
-    for (const id of selectedActivities) {
-      await RemoveActivity(id);
-    }
-    await fetchActivities();
+      .filter((activity) => !activity.isSelected)
+      .map((activity) => activity);
+    
+    setActivities(selectedActivities);
   };
+  const downLoadSelected = async () => {
+    const selectedActivities = activities
+      .filter((activity) => activity.isSelected)
+      .map((activity) => activity);
+
+    console.log("selectedActivities", selectedActivities)
+  }
+
   const updateSelection = (id: number, isSelected: boolean) => {
     setActivities((currentActivities) =>
       currentActivities.map((activity) =>
@@ -133,39 +160,28 @@ const HomePage = () => {
   };
 
   const addFileToActivities = async (file: File) => {
-    try {
-      // Read the file and convert it to a Base64 string
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = async () => {
-        const base64String = reader.result?.toString().split(",")[1]; // Remove the data URL part
-        if (base64String) {
-          const fileSizeInBytes = file.size;
-          const fileSizeFormatted = formatFileSize(fileSizeInBytes); // Format the file size
-          await UploadFile(base64String, file.name, fileSizeFormatted);
-          await fetchActivities();
-          setUpdateTrigger((prev) => !prev);
-        }
-      };
-      reader.onerror = (error) => {
-        console.error("Error converting file to Base64:", error);
-      };
-    } catch (error) {
-      console.error("Failed to upload file:", error);
-    }
+    const hash = await generateFileHash(file);
+
+    const newActivity: Activity = {
+      id: activities.length + 1 + hash.length + hash.charCodeAt(0) + hash.charCodeAt(1) + hash.charCodeAt(hash.length-1),
+      name: file.name,
+      size: formatFileSize(file.size),
+      hash: hash,
+      status: Status.UPLOADED,
+      showDropdown: false,
+    };
+
+    setActivities((currentActivities) => [...currentActivities, newActivity]);
   };
 
-  const removeActivity = async (id: number) => {
-    try {
-      await RemoveActivity(id);
-      await fetchActivities();
-    } catch (error) {
-      console.error("Failed to remove activity:", error);
-    }
+  const removeActivity = (id: number) => {
+    setActivities((currentActivities) =>
+      currentActivities.filter((activity) => activity.id !== id)
+    );
   };
 
   const handleDrop = async (event: React.DragEvent) => {
-    document.getElementById("home-page")!.style.backgroundColor = "white";
+    document.getElementById("home-page")!.style.backgroundColor = "";
     event.preventDefault();
     const items = event.dataTransfer.items;
     const files: File[] = [];
@@ -178,21 +194,24 @@ const HomePage = () => {
       }
     }
 
-    for (const file of files) {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = async () => {
-        const base64String = reader.result?.toString().split(",")[1];
-        if (base64String) {
-          const fileSizeInBytes = file.size;
-          const fileSizeFormatted = formatFileSize(fileSizeInBytes);
-          await UploadFile(base64String, file.name, fileSizeFormatted);
-
-          // Fetch the updated activities after each file upload
-          await fetchActivities();
-        }
+    const newActivitiesPromises = files.map(async (file, index) => {
+      const hash = await generateFileHash(file);
+      return {
+        id: activities.length + index + 1,
+        name: file.name,
+        size: formatFileSize(file.size),
+        hash: hash,
+        status: "Uploaded",
+        showDropdown: false,
       };
-    }
+    });
+
+    const newActivities = await Promise.all(newActivitiesPromises);
+
+    setActivities((currentActivities) => [
+      ...currentActivities,
+      ...newActivities,
+    ]);
   };
 
   const getFilesRecursively = async (entry: any): Promise<File[]> => {
@@ -324,7 +343,9 @@ const HomePage = () => {
               <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 text-sm rounded transition ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
                 Share link
               </button>
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 text-sm rounded transition ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 text-sm rounded transition ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                onClick={downLoadSelected}
+              >
                 Download
               </button>
               <button

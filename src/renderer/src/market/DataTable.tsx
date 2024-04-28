@@ -29,11 +29,13 @@ import { Input } from "../shadcn/components/ui/input";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  setSelectedPeer?: React.Dispatch<React.SetStateAction<Array<TValue>>>;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  setSelectedPeer,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -61,6 +63,18 @@ export function DataTable<TData, TValue>({
   React.useEffect(() => {
     table.setPageSize(3);
   }, []);
+
+  React.useEffect(() => {
+    if(setSelectedPeer){
+      const keys = Object.keys(rowSelection)
+      if(keys.length == 1){
+        setSelectedPeer([data[keys[0]]])
+      }
+      else{
+        setSelectedPeer([])
+      }
+    }
+  },[rowSelection])
 
   return (
     <div>

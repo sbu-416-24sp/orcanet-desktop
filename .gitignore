@@ -1,4 +1,6 @@
 build/
 node_modules/
 dist/
-out/renderer/
+out/
+/out
+src/main/.DS_Store

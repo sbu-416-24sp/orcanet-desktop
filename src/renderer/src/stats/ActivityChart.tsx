@@ -56,12 +56,12 @@ export default function FileTypeChart() {
     xaxis: {
       title: {
         text: "Weeks",
-      },
+      }
     },
   };
 
   return (
-    <div className="bg-white p-5 rounded-lg border">
+    <div className="border p-5 rounded-lg">
       <h3 className="text-stone-900 text-xl font-bold">Activity</h3>
       <div>
         <ReactApexChart
