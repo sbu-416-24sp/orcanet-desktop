@@ -4,6 +4,7 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
+  getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 
@@ -16,65 +17,42 @@ import {
   TableRow,
 } from "../shadcn/components/ui/table";
 
-import { ChevronsRight } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../shadcn/components/ui/dropdown-menu";
+import { Button } from "../shadcn/components/ui/button";
+
+import { ChevronsLeft, ChevronsRight, Grip } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
-
-export const WalletData = [
-  {
-    id: "59a53ee428a643e940546c5ccfc5663e",
-    amount: -0.5523342,
-    status: "pending",
-    reason: "BananaHub.mp4",
-    date: new Date("2021-10-10"),
-  },
-  {
-    id: "f0623b42ea2d521b945a80b014f5694b",
-    amount: 0.000012323,
-    status: "failed",
-    reason: "Dota2_OnePunchGodModeMenu.exe",
-    date: new Date("2021-10-10"),
-  },
-  {
-    id: "061b96f36e163ef82de2feefe7d7aaba",
-    amount: -0.8311008,
-
-    status: "processing",
-    reason: "PayPaiBalanceInjector.bin",
-    date: new Date("2021-10-10"),
-  },
-  {
-    id: "b8ae1f8845ee9cbe64174ae089973b56",
-    amount: 0.663450023,
-    status: "processing",
-    reason: "",
-    date: new Date("2021-10-10"),
-  },
-  {
-    id: "bcaeff20734041e27098eb5138b3003a",
-    amount: 0.00432,
-    status: "success",
-    reason: "きかんしゃトーマス.avi",
-    date: new Date("2021-10-10"),
-  },
-];
+import { WalletData } from "./WalletData";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  path?: string;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  path,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
   });
+  // const { page } = useParams();
+  const page = path;
 
   return (
-    <div className="rounded-md bg-white border">
+    <div className="rounded-md bg-white">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -120,6 +98,26 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
+      {page === "transactions" && (
+        <div className="space-x-2 text-right">
+          <Button
+            size="sm"
+            className="bg-black text-white"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Previous
+          </Button>
+          <Button
+            size="sm"
+            className="bg-black text-white"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            Next
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
@@ -131,13 +129,13 @@ export const columns = [
     cell: ({ row }: { row: any }) => {
       const status = row.getValue("status") as string;
       const color =
-        status === "pending"
+        status === "Pending"
           ? "text-yellow-500"
-          : status === "processing"
-          ? "text-blue-500"
-          : status === "success"
-          ? "text-green-500"
-          : "text-red-500";
+          : status === "Processing"
+            ? "text-blue-500"
+            : status === "Success"
+              ? "text-green-500"
+              : "text-red-500";
       return (
         <div>
           <div className={`font-medium ${color}`}>{status}</div>
@@ -152,7 +150,7 @@ export const columns = [
     cell: ({ row }: { row: any }) => {
       return (
         <div>
-          <div className="font-md">{row.getValue("id")}</div>
+          <div className="font-md text-black">{row.getValue("id")}</div>
           {row.original.reason && (
             <div className="text-gray-500">Reason: {row.original.reason}</div>
           )}
@@ -173,13 +171,42 @@ export const columns = [
       );
     },
   },
+  {
+    id: "actions",
+    enableHiding: false,
+    cell: ({ row }: { row: any }) => {
+      const payment = row.original;
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8  p-0 flex">
+              <Grip className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={() => navigator.clipboard.writeText(payment.id)}
+            >
+              Copy Transaction ID
+            </DropdownMenuItem>
+            {/* <DropdownMenuSeparator />
+            <DropdownMenuItem>View customer</DropdownMenuItem>
+            <DropdownMenuItem>View payment details</DropdownMenuItem> */}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  },
 ];
 
-export default function TransactionTable() {
-  const { page } = useParams();
+export default function TransactionTable({ path }: { path: string }) {
+  const page = path;
+  const top5Data = WalletData.slice(0, 5);
 
   return (
-    <div className="rounded-md bg-white p-5 border">
+    <div className={`rounded-md p-5 ${page !== "transactions" && "border"}`}>
       <div className="flex justify-between font-bold mb-2">
         <h3 className="text-stone-900 text-xl">Transactions</h3>
         {page !== "transactions" && (
@@ -190,8 +217,20 @@ export default function TransactionTable() {
             </div>
           </Link>
         )}
+        {page === "transactions" && (
+          <Link to="/wallet">
+            <div className="text-indigo-500 flex gap-2 text-sm items-center hover:cursor-pointer">
+              <h3>Return</h3>
+              <ChevronsLeft />
+            </div>
+          </Link>
+        )}
       </div>
-      <DataTable columns={columns} data={WalletData} />
+      <DataTable
+        columns={columns}
+        data={page !== "transactions" ? top5Data : WalletData}
+        path={path}
+      />
     </div>
   );
 }
