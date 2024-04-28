@@ -173,7 +173,7 @@ export const getColumns = (
           </button>
           {row.original.showDropdown && (
             <div
-              className="absolute right-0 mt-2 py-2 w-48 bg-white rounded-md shadow-xl z-20 border border-gray-300"
+              className="fixed right-0 mt-2 py-2 w-48 bg-white rounded-md shadow-xl z-20 border border-gray-300"
               id={`dropdown-${row.original.id}`}
               onClick={(e) => e.stopPropagation()}
             >
