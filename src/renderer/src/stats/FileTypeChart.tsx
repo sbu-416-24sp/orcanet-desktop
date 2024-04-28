@@ -32,10 +32,11 @@ export default function FileTypeChart() {
     dataLabels: {
       enabled: false,
     },
+    
   };
 
   return (
-    <div className="bg-white p-5 rounded-lg border">
+    <div className="bg-white p-5 rounded-lg">
       <h3 className="text-stone-900 text-xl font-bold">File Types</h3>
       <div>
         <ReactApexChart

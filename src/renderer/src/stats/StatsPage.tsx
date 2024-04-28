@@ -1,4 +1,4 @@
-// import PageHeader from "../header/PageHeader";
+import PageHeader from "../header/PageHeader";
 import StatsCardContainer from "./StatsCardContainer";
 import BandwidthChart from "./BandwidthChart";
 import FileTypeChart from "./FileTypeChart";
@@ -23,7 +23,7 @@ function StatsPageContent() {
 const StatsPage = () => {
   return (
     <div id="stats-page" className="size-full flex flex-col">
-      {/* <PageHeader pageName="Stats" /> */}
+      <PageHeader pageName="Stats" />
       <StatsPageContent />
     </div>
   );
