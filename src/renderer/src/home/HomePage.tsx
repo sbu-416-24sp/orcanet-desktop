@@ -14,12 +14,7 @@ import { generateFileHash, formatFileSize, sizeToBytes } from "./sizeUtils";
   function GetActivities() {
     return [];
   }
-
   
-  function UploadFile(base64String: string, name: string, size: string) {
-    let concating = base64String + name + size;
-    return concating;
-  }
   function RemoveActivity(id: number) {
     return id;
   }
@@ -46,6 +41,22 @@ const HomePage = () => {
     UPLOADING = "Uploading",
     ERROR = "Error",
     PUBLISHED = "Published",
+  }
+
+  function UploadFile(base64String: string, name: string, size: string, filePath:string) : Activity{
+    const newActivity = {
+      id: 1,
+      stringId: base64String,
+      name, 
+      size, 
+      hash: filePath, 
+      status: Status.UPLOADED
+    }
+
+    console.log("newActivity", newActivity.id)
+    setActivities(p => [...p, newActivity])
+
+    return newActivity; 
   }
   
   const [activities, setActivities] = useState<Activity[]>([]);
@@ -138,12 +149,13 @@ const HomePage = () => {
 
   const addFileToActivities = async (file: File) => {
     const hash = await generateFileHash(file);
+
     const newActivity: Activity = {
       id: activities.length + 1,
       name: file.name,
       size: formatFileSize(file.size),
       hash: hash,
-      status: "Uploaded",
+      status: Status.UPLOADED,
       showDropdown: false,
     };
 
