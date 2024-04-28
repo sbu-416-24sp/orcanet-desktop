@@ -93,7 +93,7 @@ function NavButtons({
       alert: false,
     },
     {
-      path: "/settings/profile",
+      path: "/settings",
       icon: <Settings />,
       text: "Settings",
       active: isSettingsActive(),
