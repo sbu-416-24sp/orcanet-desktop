@@ -2,8 +2,8 @@ import { app, shell, BrowserWindow, ipcMain, net } from "electron";
 import { join } from "path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
-import { getPeers} from "@/lib"
-import { GetActivity,GetActivities,GetPeers } from '@shared/types'
+import { findPeers, getPeers } from "@/lib";
+import { GetActivity, GetActivities, GetPeers, FindPeers } from "@shared/types";
 
 import { exec, spawn, ChildProcessWithoutNullStreams } from "child_process";
 
@@ -50,37 +50,40 @@ function createWindow(): void {
 }
 
 function setupBackendProcessHandlers(process: ChildProcessWithoutNullStreams) {
-  let outputBuffer = '';
+  let outputBuffer = "";
 
   const promptResponseMap = {
-    'Enter a port number to start listening to requests for Market RPC Server:': '8121\n',
-    'Enter a port number to start listening to requests for Market DHT Host:': '8122\n',
-    'Enter a port number to start listening to requests for HTTP Server:': '45002\n'
+    "Enter a port number to start listening to requests for Market RPC Server:":
+      "8121\n",
+    "Enter a port number to start listening to requests for Market DHT Host:":
+      "8122\n",
+    "Enter a port number to start listening to requests for HTTP Server:":
+      "45002\n",
   };
 
-  process.stdout.on('data', (data) => {
+  process.stdout.on("data", (data) => {
     const output = data.toString();
     console.log(`Backend output: ${output}`);
     outputBuffer += output;
 
     // Check each prompt in the map
-    Object.keys(promptResponseMap).forEach(prompt => {
+    Object.keys(promptResponseMap).forEach((prompt) => {
       if (outputBuffer.includes(prompt)) {
         process.stdin.write(promptResponseMap[prompt]);
-        outputBuffer = '';
+        outputBuffer = "";
       }
     });
   });
 
-  process.stderr.on('data', (data) => {
+  process.stderr.on("data", (data) => {
     console.error(`Backend error: ${data.toString()}`);
   });
 
-  process.on('close', (code) => {
+  process.on("close", (code) => {
     console.log(`Backend process exited with code ${code}`);
   });
 
-  process.on('error', (err) => {
+  process.on("error", (err) => {
     console.error(`Failed to start backend process: ${err}`);
   });
 }
@@ -92,17 +95,15 @@ app.whenReady().then(() => {
   // Set app user model id for windows
   electronApp.setAppUserModelId("com.electron");
 
-
-  const makeDirectory = '../../orcanet-go/peer'; 
+  const makeDirectory = "../../orcanet-go/peer";
   backendProcess = spawn("make", ["all"], {
     cwd: makeDirectory,
-    stdio: ["pipe", "pipe", "pipe"]
+    stdio: ["pipe", "pipe", "pipe"],
   });
 
   if (backendProcess) {
     setupBackendProcessHandlers(backendProcess);
   }
-
 
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
@@ -116,7 +117,14 @@ app.whenReady().then(() => {
 
   // ipcMain.handle('getActivity', (_, ...args: Parameters<GetActivity>) => getActivity(...args))
   // ipcMain.handle('getActivities', (_, ...args: Parameters<GetActivities>) => getActivities(...args))
-  ipcMain.handle('getPeers', (_, ...args: Parameters<GetPeers>) => getPeers(...args))
+  ipcMain.handle("getPeers", (_, ...args: Parameters<GetPeers>) =>
+    getPeers(...args)
+  );
+
+  /* Market Page */
+  ipcMain.handle("findPeers", (_, ...args: Parameters<FindPeers>) =>
+    findPeers(...args)
+  );
 
   createWindow();
 

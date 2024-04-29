@@ -1,7 +1,7 @@
 import { Button } from "../shadcn/components/ui/button";
 import { Input } from "../shadcn/components/ui/input";
 import { Filter, PlusIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -14,6 +14,8 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { DataTable } from "./DataTable";
 import { Seed2, columns2 } from "./columns";
 import { toast } from "../shadcn/components/ui/use-toast";
+import { fetchFilePeersAtom } from "@renderer/store";
+import { useAtom } from "jotai";
 const OverviewHeader = (props: {
   setFilter: React.Dispatch<React.SetStateAction<string>>;
   setStatusFilter: React.Dispatch<React.SetStateAction<string>>;
@@ -110,6 +112,12 @@ const AddJob = (props: { addJob: (hash: string) => void }) => {
     });
   };
 
+  const [filePeers, fetchFilePeers] = useAtom(fetchFilePeersAtom);
+
+  useEffect(() => {
+    fetchFilePeers(buffer);
+  }, [fetchFilePeers, buffer]);
+
   return (
     <div>
       <Dialog>
@@ -137,7 +145,7 @@ const AddJob = (props: { addJob: (hash: string) => void }) => {
             <>
               <div>Select a Peer</div>
               <DataTable
-                data={fakeData}
+                data={filePeers.peers}
                 columns={columns2}
                 setSelectedPeer={setSelectedPeer}
               ></DataTable>
