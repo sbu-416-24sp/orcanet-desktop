@@ -19,7 +19,7 @@ import { useAtom } from "jotai";
 const OverviewHeader = (props: {
   setFilter: React.Dispatch<React.SetStateAction<string>>;
   setStatusFilter: React.Dispatch<React.SetStateAction<string>>;
-  addJob: (hash: string) => void;
+  addJob: (hash: string, peerID: string) => void;
 }) => {
   return (
     <div className="flex justify-between mb-2">
@@ -79,7 +79,7 @@ const FilterInput = (props: {
 };
 
 const DialogClose = DialogPrimitive.Close;
-const AddJob = (props: { addJob: (hash: string) => void }) => {
+const AddJob = (props: { addJob: (hash: string, peerID: string) => void }) => {
   const [buffer, setBuffer] = useState("");
   const [validHash, setValidHash] = useState(0);
   const [selectedPeer, setSelectedPeer] = useState([]);
@@ -101,7 +101,7 @@ const AddJob = (props: { addJob: (hash: string) => void }) => {
   };
 
   const handleAddJob = () => {
-    props.addJob(buffer);
+    props.addJob(buffer, selectedPeer[0]);
     toast({
       title: "Job Successfully Added!",
       description: "Your job has been successfully added!",

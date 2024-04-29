@@ -6,10 +6,12 @@ import {
   GetPeers,
   FindPeers,
   StartJobs,
+  PauseJobs,
   TerminateJobs,
   GetHistory,
   RemoveFromHistory,
   ClearHistory,
+  AddJob,
 } from "@shared/types";
 
 declare global {
@@ -29,6 +31,7 @@ declare global {
       getHistory: GetHistory;
       removeFromHistory: RemoveFromHistory;
       clearHistory: ClearHistory;
+      addJob: AddJob;
     };
   }
 }

@@ -1,4 +1,4 @@
-import { FilePeers, HistoryJob } from "@shared/models";
+import { FilePeers, HistoryJob, JobID } from "@shared/models";
 import { atom } from "jotai";
 import { unwrap } from "jotai/utils";
 
@@ -18,3 +18,14 @@ export const fetchHistoryAtom = atom(
   (get) => get(historyAtom),
   async (_get, set) => set(historyAtom, await window.context.getHistory())
 );
+
+// const initialJobID: JobID = "";
+// const jobIDAtom = atom<JobID>(initialJobID);
+
+// export const fetchJobIDAtom = atom(
+//   (get) => get(jobIDAtom),
+//   async (_get, set, fileHash: string, peerID: string) => {
+//     const { jobID } = await window.context.addJob(fileHash, peerID);
+//     set(jobIDAtom, jobID);
+//   }
+// );

@@ -19,3 +19,4 @@ export type TerminateJobs = (jobIDs: JobID[]) => Promise<boolean>;
 export type GetHistory = () => Promise<HistoryJob[]>;
 export type RemoveFromHistory = (jobID: JobID) => Promise<boolean>;
 export type ClearHistory = () => Promise<boolean>;
+export type AddJob = (fileHash: string, peerID: string) => Promise<{jobID: JobID}>

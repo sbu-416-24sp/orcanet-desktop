@@ -115,6 +115,6 @@ export const PeersAtom = unwrap(PeersAtomAsync, (prev) => prev);
 // })
 
 /* Market Page */
-import { fetchFilePeersAtom } from "./market";
+import { fetchFilePeersAtom, fetchJobIDAtom } from "./market";
 
-export { fetchFilePeersAtom };
+export { fetchFilePeersAtom, fetchJobIDAtom };

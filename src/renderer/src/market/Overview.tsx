@@ -7,7 +7,7 @@ const Overview = (props: {
   jobInfoList: JobInfo[];
   updateJobStatuses: (newStatus: JobStatus) => void;
   removeJobs: () => void;
-  addJob: (hash: string) => void;
+  addJob: (hash: string, peerID: string) => void;
 }) => {
   const [filter, setFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");

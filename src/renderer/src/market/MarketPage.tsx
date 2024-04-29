@@ -1,10 +1,9 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import Overview from "./Overview";
 import Details from "./Details";
 import memory from "./fakeJobs";
 import { ScrollArea } from "@shadcn/components/ui/scroll-area";
 import { JobID } from "@shared/models";
-
 export interface JobInfo {
   id: string;
   fileName: string;
@@ -58,36 +57,41 @@ const MarketPage = () => {
     );
     setSelectedJobs([]);
   };
-  const addJob = (hash: string) => {
-    if (hash) {
-      //new stuff with hash
-    }
-    setJobInfoList((prev) => {
-      const newList = [...prev];
-      // console.log(newList[prev.length-1]);
-      // console.log(parseInt(prev[-1].id) + 1);
-      // console.log((parseInt(prev[-1].id) + 1).toString());
-      const date = new Date();
-      newList.push({
-        id: (parseInt(prev[prev.length - 1].id) + 1).toString(),
-        fileName: `new_job${parseInt(prev[prev.length - 1].id) + 1}.json`,
-        fileSize: 10 + Math.floor(Math.random() * 10) + 1 + " KiB",
-        status: "downloading",
-        eta: Math.floor(Math.random() * 10) + 1 + " s",
-        timeQueued: `${("0000" + date.getFullYear()).slice(-4)}-${(
-          "00" + date.getMonth()
-        ).slice(-2)}-${("00" + date.getDay()).slice(-2)} ${(
-          "00" + date.getHours()
-        ).slice(-2)}:${("00" + date.getMinutes()).slice(-2)}:${(
-          "00" + date.getSeconds()
-        ).slice(-2)}`,
-        fileHash: `NeW_jOB${parseInt(prev[prev.length - 1].id) + 1}.jSoN`,
-        accumulatedMemory: Math.floor(Math.random() * 10) + 1 + " KiB",
-        accumulatedCost: Math.floor(Math.random() * 10) + 1 + " USD",
-        projectedCost: 10 + Math.floor(Math.random() * 10) + 1 + " USD",
-      });
-      return newList;
-    });
+
+  const addJob = async (hash: string, peerID: string) => {
+    const jobID= await window.context.addJob(hash, peerID);
+    setSelectedJobs([jobID.jobID])
+
+
+    // if (hash) {
+    //   //new stuff with hash
+    // }
+    // setJobInfoList((prev) => {
+    //   const newList = [...prev];
+    //   // console.log(newList[prev.length-1]);
+    //   // console.log(parseInt(prev[-1].id) + 1);
+    //   // console.log((parseInt(prev[-1].id) + 1).toString());
+    //   const date = new Date();
+    //   newList.push({
+    //     id: (parseInt(prev[prev.length - 1].id) + 1).toString(),
+    //     fileName: `new_job${parseInt(prev[prev.length - 1].id) + 1}.json`,
+    //     fileSize: 10 + Math.floor(Math.random() * 10) + 1 + " KiB",
+    //     status: "downloading",
+    //     eta: Math.floor(Math.random() * 10) + 1 + " s",
+    //     timeQueued: `${("0000" + date.getFullYear()).slice(-4)}-${(
+    //       "00" + date.getMonth()
+    //     ).slice(-2)}-${("00" + date.getDay()).slice(-2)} ${(
+    //       "00" + date.getHours()
+    //     ).slice(-2)}:${("00" + date.getMinutes()).slice(-2)}:${(
+    //       "00" + date.getSeconds()
+    //     ).slice(-2)}`,
+    //     fileHash: `NeW_jOB${parseInt(prev[prev.length - 1].id) + 1}.jSoN`,
+    //     accumulatedMemory: Math.floor(Math.random() * 10) + 1 + " KiB",
+    //     accumulatedCost: Math.floor(Math.random() * 10) + 1 + " USD",
+    //     projectedCost: 10 + Math.floor(Math.random() * 10) + 1 + " USD",
+    //   });
+    //   return newList;
+    // });
   };
   return (
     <MarketPageContext.Provider
