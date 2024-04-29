@@ -73,9 +73,8 @@ const PeersPage = () => {
   );
 
   return (
-    <div className="p-2 pb-0 block w-auto">
-      <div id="peers-page" className="container p-8 pt-0 pl-12 justify-self-center">
-        <AddConnection/>
+    <div className="p-7 h-screen overflow-y-auto">
+      <div id="peers-page" className="container mx-auto p-8 pt-0 justify-self-center">
         <RadialGradient />
         <ComposableMap>
         <Sphere stroke="#E4E5E6" strokeWidth={0.5} fill="transparent" id="sphere"/>
@@ -128,10 +127,9 @@ const PeersPage = () => {
         
         <MarkerPoints />
           
-       <div className="mt-9 w-auto">
-          {peers ? <DataTable columns={columns} data={peers} /> : <p>No data available</p>}
+       <div className="mt-9 w-full">
+         <DataTable columns={columns} data={peers || []} />
        </div>
-
       </div>
     
     </div>

@@ -5,18 +5,11 @@ if (!process.contextIsolated) {
 }
 try {
   electron.contextBridge.exposeInMainWorld("context", {
-    ipcRenderer: {
-      send: (channel, data) => {
-        electron.ipcRenderer.send(channel, data);
-      }
-    },
     locale: navigator.language,
-    // getActivity : (...args: Parameters<GetActivity>) =>  ipcRenderer.invoke('getActivity', ...args),
-    // getActivities : (...args: Parameters<GetActivities>) =>  ipcRenderer.invoke('getActivities', ...args),
-    getPeers: (...args) => electron.ipcRenderer.invoke("getPeers", ...args)
-    // deleteActivity : (...args: Parameters<DeleteActivity>) =>  ipcRenderer.invoke('deleteActivity', ...args),
-    //TODO
+    getPeers: (...args) => electron.ipcRenderer.invoke("getPeers", ...args),
+    getBackend: () => electron.ipcRenderer.invoke("get-backend"),
+    setBackend: (backend) => electron.ipcRenderer.invoke("set-backend", backend)
   });
 } catch (error) {
-  console.log(error);
+  console.error("Failed to expose electron APIs:", error);
 }

@@ -7,7 +7,6 @@ import { GetActivity, GetActivities, GetPeers } from "@shared/types";
 import ElectronStore from "electron-store";
 
 import { exec, spawn, ChildProcessWithoutNullStreams } from "child_process";
-
 let backendProcess: ChildProcessWithoutNullStreams | null = null;
 
 const schema = {
@@ -15,7 +14,7 @@ const schema = {
     type: "string",
     default: "go",
   },
-};
+} as const;
 
 const store = new ElectronStore({ schema });
 
@@ -48,7 +47,7 @@ function startBackendProcess(backend: string) {
   let args: string[];
 
   if (backend.toLowerCase() === "go") {
-    makeDirectory = `../../orcanet-${backend.toLowerCase()}/peer`;
+    makeDirectory = join(__dirname, "../../orcanet-go/peer");
     command = "make";
     args = ["all"];
   } else if (backend.toLowerCase() === "js") {
@@ -94,7 +93,7 @@ function createWindow(): void {
     frame: true,
     vibrancy: "under-window",
     visualEffectState: "active",
-    titleBarStyle: "hidden",
+    // titleBarStyle: "hidden",
     trafficLightPosition: { x: 15, y: 10 },
     webPreferences: {
       preload: join(__dirname, "../preload/index.js"),

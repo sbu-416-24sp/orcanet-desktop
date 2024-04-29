@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron'
-
+import { GetActivity, GetActivities , GetPeers} from '@shared/types'
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise
 // just add to the DOM global.
@@ -8,7 +8,9 @@ if (!process.contextIsolated) {
 }
 
 try {
-  contextBridge.exposeInMainWorld('electron', {
+  contextBridge.exposeInMainWorld('context', {
+    locale: navigator.language,
+    getPeers : (...args: Parameters<GetPeers>) =>  ipcRenderer.invoke('getPeers', ...args),
     getBackend: () => ipcRenderer.invoke('get-backend'),
     setBackend: (backend) => ipcRenderer.invoke('set-backend', backend)
   });

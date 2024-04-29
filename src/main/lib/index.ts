@@ -73,12 +73,18 @@ export const getPeers: GetPeers = async () => {
             redirect: 'follow'
         });
 
+
         let responseBody = '';
 
         request.on('response', (response) => {
             console.info(`STATUS: ${response.statusCode}`);
             console.info(`HEADERS: ${JSON.stringify(response.headers)}`);
 
+            if (response.statusCode === 404) {
+                console.log('Page not found.');
+                resolve([]); // Resolving with empty array for 404 response
+                return; // Exiting the response handler
+            }
             response.on('data', (chunk) => {
                 responseBody += chunk;
             });
@@ -97,7 +103,6 @@ export const getPeers: GetPeers = async () => {
                         PeerID: file.peerId,
                         Connection: file.connection,
                         OpenStreams: file.openStreams,
-                        FlagUrl: file.flagUrl
                     }));
                     resolve(peers);
                 } catch (error) {
@@ -109,7 +114,7 @@ export const getPeers: GetPeers = async () => {
 
         request.on('error', (error) => {
             console.log(`ERROR: ${JSON.stringify(error)}`);
-            reject(error);
+            resolve([]);
         });
 
         request.on('close', () => {
