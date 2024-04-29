@@ -46,7 +46,6 @@ function startBackendProcess(backend: string) {
   let makeDirectory: string;
   let command: string;
   let args: string[];
-  
 
   if (backend.toLowerCase() === "go") {
     makeDirectory = `../../orcanet-${backend.toLowerCase()}/peer`;
@@ -57,9 +56,18 @@ function startBackendProcess(backend: string) {
     command = process.execPath;
     args = ["."];
   } else if (backend.toLowerCase() === "rust") {
-    makeDirectory = `../../orcanet-${backend.toLowerCase()}/peernode`;
-    command = "cargo";
-    args = ["build", "&&", "cargo", "run"];
+    const baseDir = join(__dirname, "../../orcanet-rust/peernode");
+    const command = join(baseDir, "target/release/peer-node");
+
+    backendProcess = spawn(command, [], {
+      cwd: baseDir,
+      stdio: ["pipe", "pipe", "pipe"],
+      shell: false,
+    });
+
+    setupBackendProcessHandlers(backendProcess, backend);
+
+    return;
   } else {
     console.error(`Unsupported backend type: ${backend}`);
     return;
@@ -113,7 +121,10 @@ function createWindow(): void {
   }
 }
 
-function setupBackendProcessHandlers(process: ChildProcessWithoutNullStreams, backend: string) {
+function setupBackendProcessHandlers(
+  process: ChildProcessWithoutNullStreams,
+  backend: string
+) {
   let outputBuffer = "";
 
   const promptResponseMap = {
@@ -130,15 +141,14 @@ function setupBackendProcessHandlers(process: ChildProcessWithoutNullStreams, ba
     console.log(`Backend output: ${output}`);
     outputBuffer += output;
 
-    if(backend.toLowerCase() === "go") {
-      
-    // Check each prompt in the map
-    Object.keys(promptResponseMap).forEach((prompt) => {
-      if (outputBuffer.includes(prompt)) {
-        process.stdin.write(promptResponseMap[prompt]);
-        outputBuffer = "";
-      }
-    });
+    if (backend.toLowerCase() === "go") {
+      // Check each prompt in the map
+      Object.keys(promptResponseMap).forEach((prompt) => {
+        if (outputBuffer.includes(prompt)) {
+          process.stdin.write(promptResponseMap[prompt]);
+          outputBuffer = "";
+        }
+      });
     }
   });
 
