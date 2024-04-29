@@ -12,38 +12,36 @@ import { Button } from "../shadcn/components/ui/button";
 import { GeneralInfoPanel } from "./GeneralInfoPanel";
 import { JobInfo } from "./MarketPage";
 import { toast } from "../shadcn/components/ui/use-toast";
-const Details = (props: {
-  jobInfo: JobInfo;
-  completedJobs: JobInfo[];
-  setCompletedJobs: React.Dispatch<React.SetStateAction<JobInfo[]>>;
-}) => {
+import { JobID } from "@shared/models";
+import { fetchHistoryAtom } from "@renderer/store/market";
+import { useAtom, useAtomValue } from "jotai";
+import { useEffect } from "react";
+const Details = (props: { jobInfo: JobInfo }) => {
   return (
     <div className="grid grid-cols-[minmax(0,_1fr)_minmax(0,_2fr)] gap-4 h-[calc(65vh-15rem)]">
       <GeneralInfoPanel jobInfo={props.jobInfo} />
-      <History
-        completedJobs={props.completedJobs}
-        setCompletedJobs={props.setCompletedJobs}
-      />
+      <History />
     </div>
   );
 };
 
-const History = (props: {
-  completedJobs: JobInfo[];
-  setCompletedJobs: React.Dispatch<React.SetStateAction<JobInfo[]>>;
-}) => {
-  const handleClearHistory = () => {
-    props.setCompletedJobs([]);
+const History = () => {
+  const [history, fetchHistory] = useAtom(fetchHistoryAtom);
+
+  useEffect(() => {
+    fetchHistory();
+  }, [fetchHistory]);
+
+  const handleClearHistory = async () => {
+    await window.context.clearHistory();
     toast({
       variant: "destructive",
       title: "History Cleared!",
       description: "Your download history has been cleared.",
     });
   };
-  const handleDeleteJob = (jobId: string) => {
-    props.setCompletedJobs(
-      props.completedJobs.filter((job) => job.id !== jobId)
-    );
+  const handleDeleteJob = async (jobID: JobID) => {
+    await window.context.removeFromHistory(jobID);
   };
   return (
     <div className="grid overflow-hidden">
@@ -53,7 +51,7 @@ const History = (props: {
           Clear History
         </Button>
       </div>
-      {props.completedJobs.length === 0 ? (
+      {history.length === 0 ? (
         <p>No previous jobs</p>
       ) : (
         <>
@@ -68,12 +66,12 @@ const History = (props: {
           <Table>
             <TableBody>
               <ScrollArea>
-                {props.completedJobs.map((job) => (
-                  <TableRow key={job.id}>
+                {history.map((job) => (
+                  <TableRow key={job.jobID}>
                     <TableCell className="w-[300px]">{job.fileName}</TableCell>
-                    <TableCell>{job.timeQueued}</TableCell>
+                    <TableCell>{job.timeCompleted.toDateString()}</TableCell>
                     <TableCell className="text-right">
-                      <button onClick={() => handleDeleteJob(job.id)}>
+                      <button onClick={() => handleDeleteJob(job.jobID)}>
                         <Trash2 className="size-6 text-gray-500 hover:text-destructive" />
                       </button>
                     </TableCell>

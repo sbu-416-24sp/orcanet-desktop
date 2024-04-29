@@ -28,3 +28,9 @@ export type FilePeer = {
 };
 
 export type JobID = string;
+
+export type HistoryJob = {
+  jobID: JobID;
+  fileName: string;
+  timeCompleted: Date;
+};

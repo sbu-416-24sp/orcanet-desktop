@@ -7,6 +7,9 @@ import {
   FindPeers,
   StartJobs,
   TerminateJobs,
+  GetHistory,
+  RemoveFromHistory,
+  ClearHistory,
 } from "@shared/types";
 
 declare global {
@@ -23,6 +26,9 @@ declare global {
       startJobs: StartJobs;
       pauseJobs: PauseJobs;
       terminateJobs: TerminateJobs;
+      getHistory: GetHistory;
+      removeFromHistory: RemoveFromHistory;
+      clearHistory: ClearHistory;
     };
   }
 }

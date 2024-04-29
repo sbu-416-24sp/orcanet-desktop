@@ -1,4 +1,15 @@
-import { GetActivity, GetActivities, GetPeers, FindPeers } from "@shared/types";
+import {
+  GetActivity,
+  GetActivities,
+  GetPeers,
+  FindPeers,
+  StartJobs,
+  PauseJobs,
+  TerminateJobs,
+  GetHistory,
+  RemoveFromHistory,
+  ClearHistory,
+} from "@shared/types";
 import { contextBridge, ipcRenderer } from "electron";
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise
@@ -20,12 +31,18 @@ try {
     /* Market Page */
     findPeers: (...args: Parameters<FindPeers>) =>
       ipcRenderer.invoke("findPeers", ...args),
-    startJobs: (...args: Parameters<FindPeers>) =>
+    startJobs: (...args: Parameters<StartJobs>) =>
       ipcRenderer.invoke("startJobs", ...args),
-    pauseJobs: (...args: Parameters<FindPeers>) =>
+    pauseJobs: (...args: Parameters<PauseJobs>) =>
       ipcRenderer.invoke("pauseJobs", ...args),
-    terminateJobs: (...args: Parameters<FindPeers>) =>
+    terminateJobs: (...args: Parameters<TerminateJobs>) =>
       ipcRenderer.invoke("terminateJobs", ...args),
+    getHistory: (...args: Parameters<GetHistory>) =>
+      ipcRenderer.invoke("getHistory", ...args),
+    removeFromHistory: (...args: Parameters<RemoveFromHistory>) =>
+      ipcRenderer.invoke("removeFromHistory", ...args),
+    clearHistory: (...args: Parameters<ClearHistory>) =>
+      ipcRenderer.invoke("clearHistory", ...args),
   });
 } catch (error) {
   console.log(error);

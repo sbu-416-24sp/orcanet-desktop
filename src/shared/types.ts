@@ -1,4 +1,4 @@
-import { ActivityInfo, PeerInfo, FilePeers, JobID } from "./models";
+import { ActivityInfo, PeerInfo, FilePeers, JobID, HistoryJob } from "./models";
 
 export type GetActivity = (
   filename: ActivityInfo["Name"],
@@ -16,3 +16,6 @@ export type FindPeers = (fileHash: string) => Promise<FilePeers>;
 export type StartJobs = (jobIDs: JobID[]) => Promise<boolean>;
 export type PauseJobs = (jobIDs: JobID[]) => Promise<boolean>;
 export type TerminateJobs = (jobIDs: JobID[]) => Promise<boolean>;
+export type GetHistory = () => Promise<HistoryJob[]>;
+export type RemoveFromHistory = (jobID: JobID) => Promise<boolean>;
+export type ClearHistory = () => Promise<boolean>;

@@ -34,9 +34,6 @@ const MarketPage = () => {
   const [jobInfoList, setJobInfoList] = useState<JobInfo[]>(
     jobs.filter((job) => job.status !== "completed")
   );
-  const [completedJobs, setCompletedJobs] = useState<JobInfo[]>(
-    jobs.filter((job) => job.status === "completed")
-  );
   const updateJobStatuses = async (newStatus: JobStatus) => {
     if (newStatus === "downloading") {
       await window.context.startJobs(selectedJobs);
@@ -123,8 +120,6 @@ const MarketPage = () => {
                     projectedCost: "-1 USD",
                   }
             }
-            completedJobs={completedJobs}
-            setCompletedJobs={setCompletedJobs}
           />
         </div>
       </ScrollArea>

@@ -5,6 +5,175 @@ const utils = require("@electron-toolkit/utils");
 const child_process = require("child_process");
 const icon = path.join(__dirname, "../../resources/icon.png");
 const portNumber = 45002;
+const findPeers = async (fileHash) => {
+  return new Promise((resolve, reject) => {
+    const request = electron.net.request({
+      method: "GET",
+      protocol: "http:",
+      hostname: "localhost",
+      port: portNumber,
+      path: `/find-peers/fileHash:${fileHash}`,
+      redirect: "follow"
+    });
+    let responseBody = "";
+    request.on("response", (response) => {
+      console.info(`STATUS: ${response.statusCode}`);
+      console.info(`HEADERS: ${JSON.stringify(response.headers)}`);
+      response.on("data", (chunk) => {
+        responseBody += chunk;
+      });
+      response.on("end", () => {
+        console.log("No more data in response.");
+        console.log("res body", responseBody);
+        try {
+          const filePeers = JSON.parse(responseBody);
+          resolve(filePeers);
+        } catch (error) {
+          console.error("Error parsing response:", error);
+          reject(error);
+        }
+      });
+    });
+    request.on("error", (error) => {
+      console.log(`ERROR: ${JSON.stringify(error)}`);
+      reject(error);
+    });
+    request.on("close", () => {
+      console.log("Last transaction has occurred");
+    });
+    request.setHeader("Content-Type", "application/json");
+    request.end();
+  });
+};
+const startJobs = async (jobIDs) => {
+  return new Promise((resolve, reject) => {
+    const request = electron.net.request({
+      method: "POST",
+      protocol: "http:",
+      hostname: "localhost",
+      port: portNumber,
+      path: "/start-jobs",
+      redirect: "follow"
+    });
+    let responseBody = "";
+    request.on("response", (response) => {
+      console.info(`STATUS: ${response.statusCode}`);
+      console.info(`HEADERS: ${JSON.stringify(response.headers)}`);
+      response.on("data", (chunk) => {
+        responseBody += chunk;
+      });
+      response.on("end", () => {
+        console.log("No more data in response.");
+        console.log("res body", responseBody);
+        try {
+          if (response.statusCode == 200) {
+            resolve(true);
+          }
+          resolve(false);
+        } catch (error) {
+          console.error("Error parsing response:", error);
+          reject(error);
+        }
+      });
+    });
+    request.on("error", (error) => {
+      console.log(`ERROR: ${JSON.stringify(error)}`);
+      reject(error);
+    });
+    request.on("close", () => {
+      console.log("Last transaction has occurred");
+    });
+    request.setHeader("Content-Type", "application/json");
+    request.write(JSON.stringify(jobIDs), "utf-8");
+    request.end();
+  });
+};
+const pauseJobs = async (jobIDs) => {
+  return new Promise((resolve, reject) => {
+    const request = electron.net.request({
+      method: "POST",
+      protocol: "http:",
+      hostname: "localhost",
+      port: portNumber,
+      path: "/pause-jobs",
+      redirect: "follow"
+    });
+    let responseBody = "";
+    request.on("response", (response) => {
+      console.info(`STATUS: ${response.statusCode}`);
+      console.info(`HEADERS: ${JSON.stringify(response.headers)}`);
+      response.on("data", (chunk) => {
+        responseBody += chunk;
+      });
+      response.on("end", () => {
+        console.log("No more data in response.");
+        console.log("res body", responseBody);
+        try {
+          if (response.statusCode == 200) {
+            resolve(true);
+          }
+          resolve(false);
+        } catch (error) {
+          console.error("Error parsing response:", error);
+          reject(error);
+        }
+      });
+    });
+    request.on("error", (error) => {
+      console.log(`ERROR: ${JSON.stringify(error)}`);
+      reject(error);
+    });
+    request.on("close", () => {
+      console.log("Last transaction has occurred");
+    });
+    request.setHeader("Content-Type", "application/json");
+    request.write(JSON.stringify(jobIDs), "utf-8");
+    request.end();
+  });
+};
+const terminateJobs = async (jobIDs) => {
+  return new Promise((resolve, reject) => {
+    const request = electron.net.request({
+      method: "POST",
+      protocol: "http:",
+      hostname: "localhost",
+      port: portNumber,
+      path: "/terminate-jobs",
+      redirect: "follow"
+    });
+    let responseBody = "";
+    request.on("response", (response) => {
+      console.info(`STATUS: ${response.statusCode}`);
+      console.info(`HEADERS: ${JSON.stringify(response.headers)}`);
+      response.on("data", (chunk) => {
+        responseBody += chunk;
+      });
+      response.on("end", () => {
+        console.log("No more data in response.");
+        console.log("res body", responseBody);
+        try {
+          if (response.statusCode == 200) {
+            resolve(true);
+          }
+          resolve(false);
+        } catch (error) {
+          console.error("Error parsing response:", error);
+          reject(error);
+        }
+      });
+    });
+    request.on("error", (error) => {
+      console.log(`ERROR: ${JSON.stringify(error)}`);
+      reject(error);
+    });
+    request.on("close", () => {
+      console.log("Last transaction has occurred");
+    });
+    request.setHeader("Content-Type", "application/json");
+    request.write(JSON.stringify(jobIDs), "utf-8");
+    request.end();
+  });
+};
 const getPeers = async () => {
   return new Promise((resolve, reject) => {
     const request = electron.net.request({
@@ -132,7 +301,26 @@ electron.app.whenReady().then(() => {
     utils.optimizer.watchWindowShortcuts(window);
   });
   electron.ipcMain.on("ping", () => console.log("pong"));
-  electron.ipcMain.handle("getPeers", (_, ...args) => getPeers(...args));
+  electron.ipcMain.handle(
+    "getPeers",
+    (_, ...args) => getPeers(...args)
+  );
+  electron.ipcMain.handle(
+    "findPeers",
+    (_, ...args) => findPeers(...args)
+  );
+  electron.ipcMain.handle(
+    "startJobs",
+    (_, ...args) => startJobs(...args)
+  );
+  electron.ipcMain.handle(
+    "pauseJobs",
+    (_, ...args) => pauseJobs(...args)
+  );
+  electron.ipcMain.handle(
+    "terminateJobs",
+    (_, ...args) => terminateJobs(...args)
+  );
   createWindow();
   electron.app.on("activate", function() {
     if (electron.BrowserWindow.getAllWindows().length === 0)
