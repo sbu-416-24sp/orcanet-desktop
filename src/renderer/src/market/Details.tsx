@@ -16,10 +16,10 @@ import { JobID, JobOverview } from "@shared/models";
 import { fetchHistoryAtom } from "@renderer/store/market";
 import { useAtom, useAtomValue } from "jotai";
 import { useEffect } from "react";
-const Details = (props: { jobInfo: JobInfo }) => {
+const Details = (props: { jobID: JobID }) => {
   return (
     <div className="grid grid-cols-[minmax(0,_1fr)_minmax(0,_2fr)] gap-4 h-[calc(65vh-15rem)]">
-      <GeneralInfoPanel jobInfo={props.jobInfo} />
+      <GeneralInfoPanel jobID={props.jobID} />
       <History />
     </div>
   );

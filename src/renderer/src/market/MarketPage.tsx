@@ -2,7 +2,7 @@ import { createContext, useEffect, useState } from "react";
 import Overview from "./Overview";
 import Details from "./Details";
 import { ScrollArea } from "@shadcn/components/ui/scroll-area";
-import { JobID } from "@shared/models";
+import { JobID, JobStatus } from "@shared/models";
 import { fetchJobListAtom } from "@renderer/store/market";
 import { useAtom } from "jotai";
 export interface JobInfo {
@@ -18,7 +18,6 @@ export interface JobInfo {
   accumulatedCost: string;
   projectedCost: string;
 }
-export type JobStatus = "active" | "paused" | "error";
 
 interface JobSelectionContext {
   selectedJobs: string[];
@@ -107,32 +106,7 @@ const MarketPage = () => {
             addJob={addJob}
           />
           <hr className="border mt-4 mb-4" />
-          <Details
-            jobInfo={
-              selectedJobs.length > 0
-                ? {
-                    ...jobList.filter((e) => e.jobID === selectedJobs[0])[0],
-                    timeQueued: "9999-99-99 99:99:99",
-                    fileHash: "OnGnIsSiM",
-                    accumulatedMemory: "-1",
-                    accumulatedCost: "-1 USD",
-                    projectedCost: "-1 USD",
-                  }
-                : {
-                    jobID: "-1",
-                    fileName: "MissingNo",
-                    fileSize: "-1 KiB",
-                    status: "active",
-                    eta: "-1 s",
-                    timeQueued: "9999-99-99 99:99:99",
-
-                    fileHash: "OnGnIsSiM",
-                    accumulatedMemory: "-1",
-                    accumulatedCost: "-1 USD",
-                    projectedCost: "-1 USD",
-                  }
-            }
-          />
+          <Details jobID={selectedJobs.length > 0 ? selectedJobs[0] : "-1"} />
         </div>
       </ScrollArea>
     </MarketPageContext.Provider>

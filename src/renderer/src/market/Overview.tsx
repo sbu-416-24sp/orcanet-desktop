@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { JobInfo, JobStatus } from "./MarketPage";
+import { JobInfo } from "./MarketPage";
 import OverviewHeader from "./OverviewHeader";
 import { JobList, JobControls, JobListHeader } from "./Job";
-import { JobOverview } from "@shared/models";
+import { JobStatus, JobOverview } from "@shared/models";
 
 const Overview = (props: {
   jobInfoList: JobOverview[];

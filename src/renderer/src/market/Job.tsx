@@ -6,10 +6,11 @@ import {
 } from "../shadcn/components/ui/tooltip";
 import { Play, Pause, Trash2, MoveUpIcon, MoveDownIcon } from "lucide-react";
 import { useContext } from "react";
-import { JobInfo, JobStatus, MarketPageContext } from "./MarketPage";
+import { JobInfo, MarketPageContext } from "./MarketPage";
 import { ScrollArea } from "../shadcn/components/ui/scroll-area";
 import { toast } from "../shadcn/components/ui/use-toast";
-import { JobID, JobOverview } from "@shared/models";
+import { JobID, JobStatus, JobOverview } from "@shared/models";
+
 export const JobListHeader = (props: {
   sortOrder: string[][];
   setSortOrder: React.Dispatch<React.SetStateAction<string[][]>>;

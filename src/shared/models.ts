@@ -35,11 +35,30 @@ export type HistoryJob = {
   timeCompleted: Date;
 };
 
+export type JobStatus = "active" | "paused" | "error";
+
 export type JobOverview = {
   jobID: JobID;
   fileName: string;
   fileSize: string;
   eta: string;
   timeQueued: Date;
-  status: "active" | "paused" | "error";
+  status: JobStatus;
+};
+
+export type JobDetails = {
+  fileHash: string;
+  fileName: string;
+  fileSize: Number;
+  accumulatedMemory: Number;
+  accumulatedCost: Number;
+  projectedCost: Number;
+  eta: Number;
+  timeQueued: Date;
+  status: JobStatus;
+
+  /* Added from job-peer */
+  ipAddress: string;
+  region: string;
+  price: Number;
 };

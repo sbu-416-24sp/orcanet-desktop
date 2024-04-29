@@ -5,6 +5,7 @@ import {
   JobID,
   HistoryJob,
   JobOverview,
+  JobDetails,
 } from "./models";
 
 export type GetActivity = (
@@ -24,6 +25,7 @@ export type AddJob = (
   peerID: string
 ) => Promise<{ jobID: JobID }>;
 export type FindPeers = (fileHash: string) => Promise<FilePeers>;
+export type JobInfo = (jobID: JobID) => Promise<JobDetails>;
 export type JobList = () => Promise<JobOverview[]>;
 export type StartJobs = (jobIDs: JobID[]) => Promise<boolean>;
 export type PauseJobs = (jobIDs: JobID[]) => Promise<boolean>;

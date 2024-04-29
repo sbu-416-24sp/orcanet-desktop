@@ -11,6 +11,7 @@ import {
   ClearHistory,
   JobList,
   AddJob,
+  JobInfo,
 } from "@shared/types";
 import { contextBridge, ipcRenderer } from "electron";
 // Use `contextBridge` APIs to expose Electron APIs to
@@ -37,6 +38,8 @@ try {
       ipcRenderer.invoke("findPeers", ...args),
     jobList: (...args: Parameters<JobList>) =>
       ipcRenderer.invoke("jobList", ...args),
+    jobInfo: (...args: Parameters<JobInfo>) =>
+      ipcRenderer.invoke("jobInfo", ...args),
     startJobs: (...args: Parameters<StartJobs>) =>
       ipcRenderer.invoke("startJobs", ...args),
     pauseJobs: (...args: Parameters<PauseJobs>) =>

@@ -13,6 +13,7 @@ import {
   ClearHistory,
   AddJob,
   JobList,
+  JobInfo,
 } from "@shared/types";
 
 declare global {
@@ -28,6 +29,7 @@ declare global {
       addJob: AddJob;
       findPeers: FindPeers;
       jobList: JobList;
+      jobInfo: JobInfo;
       startJobs: StartJobs;
       pauseJobs: PauseJobs;
       terminateJobs: TerminateJobs;

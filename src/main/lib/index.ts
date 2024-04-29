@@ -148,19 +148,25 @@ export const getPeers: GetPeers = async () => {
 
 /* Market Page */
 import {
+  addJob,
   findPeers,
+  jobList,
+  jobInfo,
   startJobs,
   pauseJobs,
-  terminateJobs, addJob,
+  terminateJobs,
   getHistory,
   removeFromHistory,
   clearHistory,
 } from "./market";
 export {
+  addJob,
   findPeers,
+  jobList,
+  jobInfo,
   startJobs,
   pauseJobs,
-  terminateJobs, addJob,
+  terminateJobs,
   getHistory,
   removeFromHistory,
   clearHistory,
