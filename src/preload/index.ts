@@ -9,6 +9,8 @@ import {
   GetHistory,
   RemoveFromHistory,
   ClearHistory,
+  JobList,
+  AddJob,
 } from "@shared/types";
 import { contextBridge, ipcRenderer } from "electron";
 // Use `contextBridge` APIs to expose Electron APIs to
@@ -29,8 +31,12 @@ try {
     //TODO
 
     /* Market Page */
+    addJob: (...args: Parameters<AddJob>) =>
+      ipcRenderer.invoke("addJob", ...args),
     findPeers: (...args: Parameters<FindPeers>) =>
       ipcRenderer.invoke("findPeers", ...args),
+    jobList: (...args: Parameters<JobList>) =>
+      ipcRenderer.invoke("jobList", ...args),
     startJobs: (...args: Parameters<StartJobs>) =>
       ipcRenderer.invoke("startJobs", ...args),
     pauseJobs: (...args: Parameters<PauseJobs>) =>

@@ -2,9 +2,10 @@ import { useState } from "react";
 import { JobInfo, JobStatus } from "./MarketPage";
 import OverviewHeader from "./OverviewHeader";
 import { JobList, JobControls, JobListHeader } from "./Job";
+import { JobOverview } from "@shared/models";
 
 const Overview = (props: {
-  jobInfoList: JobInfo[];
+  jobInfoList: JobOverview[];
   updateJobStatuses: (newStatus: JobStatus) => void;
   removeJobs: () => void;
   addJob: (hash: string, peerID: string) => void;

@@ -9,6 +9,7 @@ import { useContext } from "react";
 import { JobInfo, JobStatus, MarketPageContext } from "./MarketPage";
 import { ScrollArea } from "../shadcn/components/ui/scroll-area";
 import { toast } from "../shadcn/components/ui/use-toast";
+import { JobID, JobOverview } from "@shared/models";
 export const JobListHeader = (props: {
   sortOrder: string[][];
   setSortOrder: React.Dispatch<React.SetStateAction<string[][]>>;
@@ -155,7 +156,7 @@ export const JobListHeader = (props: {
   );
 };
 export const JobList = (props: {
-  jobInfoList: JobInfo[];
+  jobInfoList: JobOverview[];
   filter: string;
   statusFilter: string;
   sortOrder: string[][];
@@ -225,7 +226,10 @@ export const JobList = (props: {
         }
         return -a_unit.localeCompare(b_unit) * multiplier; // d < h < min < s lexicographically
       } else if (sorting[0] === "timeQueued" && a.timeQueued !== b.timeQueued) {
-        return a.timeQueued.localeCompare(b.timeQueued) * multiplier;
+        return (
+          a.timeQueued.toISOString().localeCompare(b.timeQueued.toISOString()) *
+          multiplier
+        );
       }
     }
     return 0;
@@ -234,43 +238,43 @@ export const JobList = (props: {
     <ScrollArea className="h-[35vh]">
       <ul className="w-[calc(100%-1rem)]">
         {filteredJobs.map((e) => (
-          <Job key={e.id} {...e} />
+          <Job key={e.jobID} {...e} />
         ))}
       </ul>
     </ScrollArea>
   );
 };
 const Job = (props: {
-  id: string;
+  jobID: JobID;
   fileName: string;
   fileSize: string;
   status: JobStatus;
   eta: string;
-  timeQueued: string;
+  timeQueued: Date;
 }) => {
   const { selectedJobs: selectedJobs, setSelectedJobs: setSelectedJobs } =
     useContext(MarketPageContext);
   return (
     <li
       className={`flex items-center justify-between p-2 mb-2 rounded ${
-        selectedJobs.includes(props.id)
+        selectedJobs.includes(props.jobID)
           ? "bg-gray-200 dark:bg-gray-600"
           : "bg-gray-50 hover:bg-accent hover:text-accent-foreground dark:bg-gray-900 dark:hover:bg-gray-800"
       }`}
       onClick={(e) => {
         if (e.ctrlKey) {
-          if (selectedJobs.includes(props.id)) {
-            setSelectedJobs(selectedJobs.filter((job) => job !== props.id));
+          if (selectedJobs.includes(props.jobID)) {
+            setSelectedJobs(selectedJobs.filter((job) => job !== props.jobID));
           } else {
             const jobIDsCopy = [...selectedJobs];
-            jobIDsCopy.push(props.id);
+            jobIDsCopy.push(props.jobID);
             setSelectedJobs(jobIDsCopy);
           }
         } else {
-          if (selectedJobs.includes(props.id) && selectedJobs.length === 1) {
+          if (selectedJobs.includes(props.jobID) && selectedJobs.length === 1) {
             setSelectedJobs([]);
           } else {
-            setSelectedJobs([props.id]);
+            setSelectedJobs([props.jobID]);
           }
         }
       }}
@@ -302,7 +306,9 @@ const Job = (props: {
       </div>
       <div className="w-[4.5rem] text-right">{props.fileSize}</div>
       <div className="w-16 text-right">{props.eta}</div>
-      <div className="w-[9.5rem] text-right">{props.timeQueued}</div>
+      <div className="w-[9.5rem] text-right">
+        {props.timeQueued.toISOString()}
+      </div>
     </li>
   );
 };
@@ -321,7 +327,7 @@ export const JobControls = (props: {
       </div>
       <button
         onClick={() => {
-          props.updateJobStatuses("downloading");
+          props.updateJobStatuses("active");
           toast({
             title: "File Download Resumed",
             description: "The file download has been resumed.",
@@ -358,14 +364,12 @@ export const JobControls = (props: {
 };
 function statusToColorCSS(status: JobStatus): string {
   switch (status) {
-    case "downloading":
+    case "active":
       return "stroke-green-500";
     case "paused":
       return "stroke-yellow-500";
     case "error":
       return "stroke-red-500";
-    case "completed":
-      return "stroke-black dark:stroke-white";
     default:
       return "";
   }

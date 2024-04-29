@@ -1,11 +1,12 @@
 import { createContext, useEffect, useState } from "react";
 import Overview from "./Overview";
 import Details from "./Details";
-import memory from "./fakeJobs";
 import { ScrollArea } from "@shadcn/components/ui/scroll-area";
 import { JobID } from "@shared/models";
+import { fetchJobListAtom } from "@renderer/store/market";
+import { useAtom } from "jotai";
 export interface JobInfo {
-  id: string;
+  jobID: JobID;
   fileName: string;
   fileSize: string;
   status: JobStatus;
@@ -17,7 +18,7 @@ export interface JobInfo {
   accumulatedCost: string;
   projectedCost: string;
 }
-export type JobStatus = "downloading" | "paused" | "error" | "completed";
+export type JobStatus = "active" | "paused" | "error";
 
 interface JobSelectionContext {
   selectedJobs: string[];
@@ -29,39 +30,39 @@ export const MarketPageContext = createContext<JobSelectionContext>(
 
 const MarketPage = () => {
   const [selectedJobs, setSelectedJobs] = useState<JobID[]>([]);
-  const jobs = memory;
-  const [jobInfoList, setJobInfoList] = useState<JobInfo[]>(
-    jobs.filter((job) => job.status !== "completed")
-  );
+  const [jobList, fetchJobList] = useAtom(fetchJobListAtom);
+  useEffect(() => {
+    fetchJobList();
+  }, [fetchJobList]);
+
   const updateJobStatuses = async (newStatus: JobStatus) => {
-    if (newStatus === "downloading") {
+    if (newStatus === "active") {
       await window.context.startJobs(selectedJobs);
     } else if (newStatus === "paused") {
       await window.context.pauseJobs(selectedJobs);
     }
-    /* Old frontend testing */
-    setJobInfoList((prevJobInfoList) => {
-      return prevJobInfoList.map((job) => {
-        if (selectedJobs.includes(job.id)) {
-          return { ...job, status: newStatus };
-        }
-        return job;
-      });
-    });
+    // /* Old frontend testing */
+    // setJobInfoList((prevJobInfoList) => {
+    //   return prevJobInfoList.map((job) => {
+    //     if (selectedJobs.includes(job.id)) {
+    //       return { ...job, status: newStatus };
+    //     }
+    //     return job;
+    //   });
+    // });
   };
   const removeJobs = async () => {
     await window.context.terminateJobs(selectedJobs);
-    /* Old frontend testing */
-    setJobInfoList((prevJobInfoList) =>
-      prevJobInfoList.filter((job) => !selectedJobs.includes(job.id))
-    );
+    // /* Old frontend testing */
+    // setJobInfoList((prevJobInfoList) =>
+    //   prevJobInfoList.filter((job) => !selectedJobs.includes(job.id))
+    // );
     setSelectedJobs([]);
   };
 
   const addJob = async (hash: string, peerID: string) => {
-    const jobID= await window.context.addJob(hash, peerID);
-    setSelectedJobs([jobID.jobID])
-
+    const jobID = await window.context.addJob(hash, peerID);
+    setSelectedJobs([jobID.jobID]);
 
     // if (hash) {
     //   //new stuff with hash
@@ -100,7 +101,7 @@ const MarketPage = () => {
       <ScrollArea className="h-full grow">
         <div id="market-page" className="bg-background p-6 h-full">
           <Overview
-            jobInfoList={jobInfoList}
+            jobInfoList={jobList}
             updateJobStatuses={updateJobStatuses}
             removeJobs={removeJobs}
             addJob={addJob}
@@ -109,12 +110,19 @@ const MarketPage = () => {
           <Details
             jobInfo={
               selectedJobs.length > 0
-                ? jobInfoList.filter((e) => e.id === selectedJobs[0])[0]
+                ? {
+                    ...jobList.filter((e) => e.jobID === selectedJobs[0])[0],
+                    timeQueued: "9999-99-99 99:99:99",
+                    fileHash: "OnGnIsSiM",
+                    accumulatedMemory: "-1",
+                    accumulatedCost: "-1 USD",
+                    projectedCost: "-1 USD",
+                  }
                 : {
-                    id: "-1",
+                    jobID: "-1",
                     fileName: "MissingNo",
                     fileSize: "-1 KiB",
-                    status: "completed",
+                    status: "active",
                     eta: "-1 s",
                     timeQueued: "9999-99-99 99:99:99",
 

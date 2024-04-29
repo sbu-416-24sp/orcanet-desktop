@@ -23,9 +23,12 @@ import {
   GetHistory,
   RemoveFromHistory,
   ClearHistory,
+  JobList,
+  AddJob,
 } from "@shared/types";
 
 import { exec, spawn, ChildProcessWithoutNullStreams } from "child_process";
+import { addJob, jobList } from "./lib/market";
 
 let backendProcess: ChildProcessWithoutNullStreams | null = null;
 
@@ -142,8 +145,12 @@ app.whenReady().then(() => {
   );
 
   /* Market Page */
+  ipcMain.handle("addJob", (_, ...args: Parameters<AddJob>) => addJob(...args));
   ipcMain.handle("findPeers", (_, ...args: Parameters<FindPeers>) =>
     findPeers(...args)
+  );
+  ipcMain.handle("jobList", (_, ...args: Parameters<JobList>) =>
+    jobList(...args)
   );
   ipcMain.handle("startJobs", (_, ...args: Parameters<StartJobs>) =>
     startJobs(...args)

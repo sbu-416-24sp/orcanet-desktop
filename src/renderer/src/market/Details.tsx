@@ -12,7 +12,7 @@ import { Button } from "../shadcn/components/ui/button";
 import { GeneralInfoPanel } from "./GeneralInfoPanel";
 import { JobInfo } from "./MarketPage";
 import { toast } from "../shadcn/components/ui/use-toast";
-import { JobID } from "@shared/models";
+import { JobID, JobOverview } from "@shared/models";
 import { fetchHistoryAtom } from "@renderer/store/market";
 import { useAtom, useAtomValue } from "jotai";
 import { useEffect } from "react";

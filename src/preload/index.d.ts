@@ -12,6 +12,7 @@ import {
   RemoveFromHistory,
   ClearHistory,
   AddJob,
+  JobList,
 } from "@shared/types";
 
 declare global {
@@ -24,14 +25,15 @@ declare global {
       // deleteActivity: DeleteActivity
       getPeers: GetPeers;
       /* Market Page */
+      addJob: AddJob;
       findPeers: FindPeers;
+      jobList: JobList;
       startJobs: StartJobs;
       pauseJobs: PauseJobs;
       terminateJobs: TerminateJobs;
       getHistory: GetHistory;
       removeFromHistory: RemoveFromHistory;
       clearHistory: ClearHistory;
-      addJob: AddJob;
     };
   }
 }

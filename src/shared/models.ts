@@ -34,3 +34,12 @@ export type HistoryJob = {
   fileName: string;
   timeCompleted: Date;
 };
+
+export type JobOverview = {
+  jobID: JobID;
+  fileName: string;
+  fileSize: string;
+  eta: string;
+  timeQueued: Date;
+  status: "active" | "paused" | "error";
+};
