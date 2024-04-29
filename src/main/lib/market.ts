@@ -16,7 +16,7 @@ export const findPeers: FindPeers = async (fileHash: string) => {
       protocol: "http:",
       hostname: "localhost",
       port: portNumber,
-      path: `/get-peers/fileHash:${fileHash}`,
+      path: `/find-peers/fileHash:${fileHash}`,
       redirect: "follow",
     });
 
