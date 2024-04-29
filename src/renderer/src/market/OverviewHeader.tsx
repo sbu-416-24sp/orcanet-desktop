@@ -12,7 +12,7 @@ import {
 } from "../shadcn/components/ui/dialog";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { DataTable } from "./DataTable";
-import { Seed2, columns2 } from "./columns";
+import { columns2 } from "./columns";
 import { toast } from "../shadcn/components/ui/use-toast";
 import { fetchFilePeersAtom } from "@renderer/store";
 import { useAtom } from "jotai";
@@ -78,17 +78,13 @@ const FilterInput = (props: {
   );
 };
 
-const fakeData: Seed2[] = [
-  { name: "Alice", price: "20 ORC", reputation: 30 },
-  { name: "Bob", price: "35 ORC", reputation: 60 },
-];
 const DialogClose = DialogPrimitive.Close;
 const AddJob = (props: { addJob: (hash: string) => void }) => {
   const [buffer, setBuffer] = useState("");
   const [validHash, setValidHash] = useState(0);
   const [selectedPeer, setSelectedPeer] = useState([]);
 
-  const hash = "a";
+  const [filePeers, fetchFilePeers] = useAtom(fetchFilePeersAtom);
 
   const resetAddJob = () => {
     setBuffer("");
@@ -97,7 +93,7 @@ const AddJob = (props: { addJob: (hash: string) => void }) => {
   };
 
   const handleSearchHash = () => {
-    if (buffer === hash) {
+    if (filePeers.peers.length > 0) {
       setValidHash(1);
     } else {
       setValidHash(-1);
@@ -111,8 +107,6 @@ const AddJob = (props: { addJob: (hash: string) => void }) => {
       description: "Your job has been successfully added!",
     });
   };
-
-  const [filePeers, fetchFilePeers] = useAtom(fetchFilePeersAtom);
 
   useEffect(() => {
     fetchFilePeers(buffer);

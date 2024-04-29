@@ -2,14 +2,7 @@ import { FilePeers } from "@shared/models";
 import { atom } from "jotai";
 
 const initialFilePeers: FilePeers = {
-  peers: [
-    {
-      peerID: null,
-      ip: "",
-      region: "",
-      price: -1,
-    },
-  ],
+  peers: [],
 };
 const filePeersAtom = atom<FilePeers>(initialFilePeers);
 

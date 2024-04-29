@@ -99,12 +99,6 @@ export const columns: ColumnDef<Seed>[] = [
   },
 ];
 
-export type Seed2 = {
-  name: string;
-  price: string;
-  reputation: number;
-};
-
 export const columns2: ColumnDef<FilePeer>[] = [
   {
     id: "select",
