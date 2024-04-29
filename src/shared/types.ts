@@ -7,3 +7,15 @@ export type CreateActivity = () => Promise<ActivityInfo['Hash'] | false>
 export type DeleteActivity = (title: ActivityInfo['Hash']) => Promise<boolean>
 
 export type GetPeers = () => Promise<PeerInfo[]>
+
+export {};
+
+declare global {
+  interface Window {
+    electron: {
+      ipcRenderer: {
+        send: (channel: string, data?: any) => void;
+      }
+    }
+  }
+}

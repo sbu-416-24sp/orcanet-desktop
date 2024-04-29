@@ -4,27 +4,75 @@ import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
 import { getPeers } from "@/lib";
 import { GetActivity, GetActivities, GetPeers } from "@shared/types";
+import ElectronStore from "electron-store";
 
 import { exec, spawn, ChildProcessWithoutNullStreams } from "child_process";
 
 let backendProcess: ChildProcessWithoutNullStreams | null = null;
 
+const schema = {
+  backend: {
+    type: "string",
+    default: "go",
+  },
+};
+
+const store = new ElectronStore({ schema });
+
+ipcMain.handle("get-backend", async () => {
+  return store.get("backend");
+});
+
+ipcMain.handle("set-backend", async (_, newBackend) => {
+  store.set("backend", newBackend);
+  startBackendProcess(newBackend);
+});
+
+function watchBackendChanges() {
+  store.onDidChange("backend", (newValue, oldValue) => {
+    console.log(`Backend changed from ${oldValue} to ${newValue}`);
+    startBackendProcess(newValue as string);
+  });
+}
+
 function startBackendProcess(backend: string) {
+  console.log(`Attempting to start backend: ${backend}`); // Debugging
   if (backendProcess) {
+    console.log("Killing existing backend process"); // Debugging
     backendProcess.kill("SIGTERM");
     backendProcess = null;
   }
-  ipcMain.on('set-backend', (_, backend) => {
-    startBackendProcess(backend);
-  });
-  const makeDirectory = `../../orcanet-${backend.toLowerCase()}/peer`;
-  backendProcess = spawn("make", ["all"], {
+
+  let makeDirectory: string;
+  let command: string;
+  let args: string[];
+  
+
+  if (backend.toLowerCase() === "go") {
+    makeDirectory = `../../orcanet-${backend.toLowerCase()}/peer`;
+    command = "make";
+    args = ["all"];
+  } else if (backend.toLowerCase() === "js") {
+    makeDirectory = `../../orcanet-${backend.toLowerCase()}/src`;
+    command = process.execPath;
+    args = ["."];
+  } else if (backend.toLowerCase() === "rust") {
+    makeDirectory = `../../orcanet-${backend.toLowerCase()}/peernode`;
+    command = "cargo";
+    args = ["build", "&&", "cargo", "run"];
+  } else {
+    console.error(`Unsupported backend type: ${backend}`);
+    return;
+  }
+
+  console.log(`Directory for backend: ${makeDirectory}`); // Debugging
+  backendProcess = spawn(command, args, {
     cwd: makeDirectory,
     stdio: ["pipe", "pipe", "pipe"],
   });
-  setupBackendProcessHandlers(backendProcess);
-}
 
+  setupBackendProcessHandlers(backendProcess, backend);
+}
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -65,7 +113,7 @@ function createWindow(): void {
   }
 }
 
-function setupBackendProcessHandlers(process: ChildProcessWithoutNullStreams) {
+function setupBackendProcessHandlers(process: ChildProcessWithoutNullStreams, backend: string) {
   let outputBuffer = "";
 
   const promptResponseMap = {
@@ -82,6 +130,8 @@ function setupBackendProcessHandlers(process: ChildProcessWithoutNullStreams) {
     console.log(`Backend output: ${output}`);
     outputBuffer += output;
 
+    if(backend.toLowerCase() === "go") {
+      
     // Check each prompt in the map
     Object.keys(promptResponseMap).forEach((prompt) => {
       if (outputBuffer.includes(prompt)) {
@@ -89,6 +139,7 @@ function setupBackendProcessHandlers(process: ChildProcessWithoutNullStreams) {
         outputBuffer = "";
       }
     });
+    }
   });
 
   process.stderr.on("data", (data) => {
@@ -104,14 +155,16 @@ function setupBackendProcessHandlers(process: ChildProcessWithoutNullStreams) {
   });
 }
 
-// This method will be called when Electron has finished
+// This method will be call when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   // Set app user model id for windows
   electronApp.setAppUserModelId("com.electron");
 
-  startBackendProcess("go");
+  startBackendProcess(store.get("backend") as string);
+
+  watchBackendChanges();
 
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
@@ -143,7 +196,7 @@ app.whenReady().then(() => {
 // explicitly with Cmd + Q.
 app.on("window-all-closed", () => {
   if (backendProcess) {
-    backendProcess.kill();
+    backendProcess.kill("SIGTERM");
   }
   if (process.platform !== "darwin") {
     app.quit();

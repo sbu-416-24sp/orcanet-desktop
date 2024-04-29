@@ -1,11 +1,13 @@
-"use client"
+"use client";
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { ChevronDown } from "lucide-react"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ChevronDown } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { Button, buttonVariants } from "../../shadcn/components/ui/button";
-import { cn } from "../../shadcn/lib/utils"
+import { cn } from "../../shadcn/lib/utils";
+import { ipcRenderer } from "electron";
+import { useEffect } from "react";
 import {
   Form,
   FormControl,
@@ -14,52 +16,65 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../../shadcn/components/ui/form"
-import { Input } from "../../shadcn/components/ui/input"
-import { toast } from "../../shadcn/components/ui/use-toast"
+} from "../../shadcn/components/ui/form";
+import { Input } from "../../shadcn/components/ui/input";
+import { toast } from "../../shadcn/components/ui/use-toast";
 import { Textarea } from "../../shadcn/components/ui/textarea";
 
 const accountFormSchema = z.object({
-  backend: z.enum(
-    ["Go", "JS", "Rust"],
-    {
-      invalid_type_error: "Select a backend",
-      required_error: "Please select a backend.",
-    }
-  ),
-    defaultSaveFolder: z.string(),
-})
+  backend: z.enum(["go", "js", "rust"], {
+    invalid_type_error: "Select a backend",
+    required_error: "Please select a backend.",
+  }),
+  defaultSaveFolder: z.string(),
+});
 
-type AccountFormValues = z.infer<typeof accountFormSchema>
+type AccountFormValues = z.infer<typeof accountFormSchema>;
 
 // This can come from your database or API.
 const defaultValues: Partial<AccountFormValues> = {
   // name: "Your name",
   // dob: new Date("2023-01-23"),
-}
+};
 export function TransferForm() {
-    const form = useForm<AccountFormValues>({
-      resolver: zodResolver(accountFormSchema),
-      defaultValues,
-    })
-  
-    function onSubmit(data: AccountFormValues) {
-      if(data){
-        window.Electron.ipcRenderer.send('set-backend', data.backend);
+  const form = useForm<AccountFormValues>({
+    resolver: zodResolver(accountFormSchema),
+    defaultValues,
+  });
+
+  useEffect(() => {
+    async function fetchBackend() {
+      try {
+        const backend = await window.electron.getBackend();
+        form.setValue('backend', backend);
+      } catch (error) {
+        console.error('Failed to fetch backend:', error);
       }
-      toast({
-        title: "Transfer Notification",
-        description: "Your transfer settings have successfully been updated!",
-      })
     }
+    fetchBackend();
+  }, [form]);
   
-    return (
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+  async function onSubmit(data: AccountFormValues) {
+    try {
+      if (data) {
+        await window.electron.setBackend(data.backend);
+        toast({
+          title: "Transfer Notification",
+          description: "Your transfer settings have successfully been updated!",
+        });
+      }
+    } catch (error) {
+      console.error('Failed to update backend:', error);
+    }
+  }
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
           name="backend"
-          defaultValue="Go"
+          defaultValue="go"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Backend</FormLabel>
@@ -86,7 +101,7 @@ export function TransferForm() {
             </FormItem>
           )}
         />
-        <div className="grid grid-cols-2 gap-4">    
+        <div className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
             name="defaultSaveFolder"
@@ -104,8 +119,8 @@ export function TransferForm() {
             )}
           />
         </div>
-          <Button type="submit">Update Transfer Settings</Button>
-        </form>
-      </Form>
-    )
-  }
+        <Button type="submit">Update Transfer Settings</Button>
+      </form>
+    </Form>
+  );
+}
