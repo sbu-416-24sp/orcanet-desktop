@@ -5,6 +5,11 @@ if (!process.contextIsolated) {
 }
 try {
   electron.contextBridge.exposeInMainWorld("context", {
+    ipcRenderer: {
+      send: (channel, data) => {
+        electron.ipcRenderer.send(channel, data);
+      }
+    },
     locale: navigator.language,
     // getActivity : (...args: Parameters<GetActivity>) =>  ipcRenderer.invoke('getActivity', ...args),
     // getActivities : (...args: Parameters<GetActivities>) =>  ipcRenderer.invoke('getActivities', ...args),

@@ -9,6 +9,11 @@ if (!process.contextIsolated) {
 
 try{
   contextBridge.exposeInMainWorld('context',{
+    ipcRenderer: {
+      send: (channel, data) => {
+        ipcRenderer.send(channel, data);
+      }
+    },
     locale: navigator.language,
     // getActivity : (...args: Parameters<GetActivity>) =>  ipcRenderer.invoke('getActivity', ...args),
     // getActivities : (...args: Parameters<GetActivities>) =>  ipcRenderer.invoke('getActivities', ...args),

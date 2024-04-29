@@ -57,6 +57,21 @@ const getPeers = async () => {
   });
 };
 let backendProcess = null;
+function startBackendProcess(backend) {
+  if (backendProcess) {
+    backendProcess.kill("SIGTERM");
+    backendProcess = null;
+  }
+  electron.ipcMain.on("set-backend", (_, backend2) => {
+    startBackendProcess(backend2);
+  });
+  const makeDirectory = `../../orcanet-${backend.toLowerCase()}/peer`;
+  backendProcess = child_process.spawn("make", ["all"], {
+    cwd: makeDirectory,
+    stdio: ["pipe", "pipe", "pipe"]
+  });
+  setupBackendProcessHandlers(backendProcess);
+}
 function createWindow() {
   const mainWindow = new electron.BrowserWindow({
     width: 900,
@@ -120,19 +135,15 @@ function setupBackendProcessHandlers(process2) {
 }
 electron.app.whenReady().then(() => {
   utils.electronApp.setAppUserModelId("com.electron");
-  const makeDirectory = "../../orcanet-go/peer";
-  backendProcess = child_process.spawn("make", ["all"], {
-    cwd: makeDirectory,
-    stdio: ["pipe", "pipe", "pipe"]
-  });
-  if (backendProcess) {
-    setupBackendProcessHandlers(backendProcess);
-  }
+  startBackendProcess("go");
   electron.app.on("browser-window-created", (_, window) => {
     utils.optimizer.watchWindowShortcuts(window);
   });
   electron.ipcMain.on("ping", () => console.log("pong"));
-  electron.ipcMain.handle("getPeers", (_, ...args) => getPeers(...args));
+  electron.ipcMain.handle(
+    "getPeers",
+    (_, ...args) => getPeers(...args)
+  );
   createWindow();
   electron.app.on("activate", function() {
     if (electron.BrowserWindow.getAllWindows().length === 0)

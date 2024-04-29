@@ -45,7 +45,7 @@ export function TransferForm() {
   
     function onSubmit(data: AccountFormValues) {
       if(data){
-        //new stuff
+        window.Electron.ipcRenderer.send('set-backend', data.backend);
       }
       toast({
         title: "Transfer Notification",
@@ -72,9 +72,9 @@ export function TransferForm() {
                     )}
                     {...field}
                   >
-                    <option value="Go">Go</option>
-                    <option value="JS">JS</option>
-                    <option value="Rust">Rust</option>
+                    <option value="go">Go</option>
+                    <option value="js">JS</option>
+                    <option value="rust">Rust</option>
                   </select>
                 </FormControl>
                 <ChevronDown className="absolute right-3 top-2.5 h-4 w-4 opacity-50" />
