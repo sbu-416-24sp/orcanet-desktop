@@ -147,5 +147,21 @@ export const getPeers: GetPeers = async () => {
 //   }
 
 /* Market Page */
-import { findPeers, startJobs, pauseJobs, terminateJobs } from "./market";
-export { findPeers, startJobs, pauseJobs, terminateJobs };
+import {
+  findPeers,
+  startJobs,
+  pauseJobs,
+  terminateJobs,
+  getHistory,
+  removeFromHistory,
+  clearHistory,
+} from "./market";
+export {
+  findPeers,
+  startJobs,
+  pauseJobs,
+  terminateJobs,
+  getHistory,
+  removeFromHistory,
+  clearHistory,
+};

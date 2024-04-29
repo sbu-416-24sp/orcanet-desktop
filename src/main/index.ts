@@ -3,9 +3,12 @@ import { join } from "path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
 import {
+  clearHistory,
   findPeers,
+  getHistory,
   getPeers,
   pauseJobs,
+  removeFromHistory,
   startJobs,
   terminateJobs,
 } from "@/lib";
@@ -17,6 +20,9 @@ import {
   PauseJobs,
   StartJobs,
   TerminateJobs,
+  GetHistory,
+  RemoveFromHistory,
+  ClearHistory,
 } from "@shared/types";
 
 import { exec, spawn, ChildProcessWithoutNullStreams } from "child_process";
@@ -147,6 +153,16 @@ app.whenReady().then(() => {
   );
   ipcMain.handle("terminateJobs", (_, ...args: Parameters<TerminateJobs>) =>
     terminateJobs(...args)
+  );
+  ipcMain.handle("getHistory", (_, ...args: Parameters<GetHistory>) =>
+    getHistory(...args)
+  );
+  ipcMain.handle(
+    "removeFromHistory",
+    (_, ...args: Parameters<RemoveFromHistory>) => removeFromHistory(...args)
+  );
+  ipcMain.handle("clearHistory", (_, ...args: Parameters<ClearHistory>) =>
+    clearHistory(...args)
   );
 
   createWindow();
