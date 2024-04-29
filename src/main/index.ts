@@ -48,7 +48,10 @@ function startBackendProcess(backend: string) {
   let args: string[];
 
   if (backend.toLowerCase() === "go") {
-    makeDirectory = `../../orcanet-${backend.toLowerCase()}/peer`;
+    makeDirectory = join(
+      __dirname,
+      `../../orcanet-${backend.toLowerCase()}/peer`
+    );
     command = "make";
     args = ["all"];
   } else if (backend.toLowerCase() === "js") {
