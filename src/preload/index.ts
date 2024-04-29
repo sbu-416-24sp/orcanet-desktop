@@ -20,6 +20,12 @@ try {
     /* Market Page */
     findPeers: (...args: Parameters<FindPeers>) =>
       ipcRenderer.invoke("findPeers", ...args),
+    startJobs: (...args: Parameters<FindPeers>) =>
+      ipcRenderer.invoke("startJobs", ...args),
+    pauseJobs: (...args: Parameters<FindPeers>) =>
+      ipcRenderer.invoke("pauseJobs", ...args),
+    terminateJobs: (...args: Parameters<FindPeers>) =>
+      ipcRenderer.invoke("terminateJobs", ...args),
   });
 } catch (error) {
   console.log(error);

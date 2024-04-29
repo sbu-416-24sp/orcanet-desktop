@@ -3,18 +3,19 @@ import Overview from "./Overview";
 import Details from "./Details";
 import memory from "./fakeJobs";
 import { ScrollArea } from "@shadcn/components/ui/scroll-area";
+import { JobID } from "@shared/models";
 
 export interface JobInfo {
   id: string;
   fileName: string;
   fileSize: string;
   status: JobStatus;
-  remainingTime: string;
+  eta: string;
   timeQueued: string;
 
-  hash: string;
-  accumulatedData: string;
-  runningCost: string;
+  fileHash: string;
+  accumulatedMemory: string;
+  accumulatedCost: string;
   projectedCost: string;
 }
 export type JobStatus = "downloading" | "paused" | "error" | "completed";
@@ -28,11 +29,21 @@ export const MarketPageContext = createContext<JobSelectionContext>(
 );
 
 const MarketPage = () => {
-  const [selectedJobs, setSelectedJobs] = useState<string[]>([]);
-  const jobs = memory
-  const [jobInfoList, setJobInfoList] = useState<JobInfo[]>(jobs.filter(job => job.status !== "completed"));
-  const [completedJobs, setCompletedJobs] = useState<JobInfo[]>(jobs.filter(job => job.status === "completed"))
-  const updateJobStatuses = (newStatus: JobStatus) => {
+  const [selectedJobs, setSelectedJobs] = useState<JobID[]>([]);
+  const jobs = memory;
+  const [jobInfoList, setJobInfoList] = useState<JobInfo[]>(
+    jobs.filter((job) => job.status !== "completed")
+  );
+  const [completedJobs, setCompletedJobs] = useState<JobInfo[]>(
+    jobs.filter((job) => job.status === "completed")
+  );
+  const updateJobStatuses = async (newStatus: JobStatus) => {
+    if (newStatus === "downloading") {
+      await window.context.startJobs(selectedJobs);
+    } else if (newStatus === "paused") {
+      await window.context.pauseJobs(selectedJobs);
+    }
+    /* Old frontend testing */
     setJobInfoList((prevJobInfoList) => {
       return prevJobInfoList.map((job) => {
         if (selectedJobs.includes(job.id)) {
@@ -42,14 +53,16 @@ const MarketPage = () => {
       });
     });
   };
-  const removeJobs = () => {
+  const removeJobs = async () => {
+    await window.context.terminateJobs(selectedJobs);
+    /* Old frontend testing */
     setJobInfoList((prevJobInfoList) =>
       prevJobInfoList.filter((job) => !selectedJobs.includes(job.id))
     );
     setSelectedJobs([]);
   };
   const addJob = (hash: string) => {
-    if(hash){
+    if (hash) {
       //new stuff with hash
     }
     setJobInfoList((prev) => {
@@ -63,7 +76,7 @@ const MarketPage = () => {
         fileName: `new_job${parseInt(prev[prev.length - 1].id) + 1}.json`,
         fileSize: 10 + Math.floor(Math.random() * 10) + 1 + " KiB",
         status: "downloading",
-        remainingTime: Math.floor(Math.random() * 10) + 1 + " s",
+        eta: Math.floor(Math.random() * 10) + 1 + " s",
         timeQueued: `${("0000" + date.getFullYear()).slice(-4)}-${(
           "00" + date.getMonth()
         ).slice(-2)}-${("00" + date.getDay()).slice(-2)} ${(
@@ -71,9 +84,9 @@ const MarketPage = () => {
         ).slice(-2)}:${("00" + date.getMinutes()).slice(-2)}:${(
           "00" + date.getSeconds()
         ).slice(-2)}`,
-        hash: `NeW_jOB${parseInt(prev[prev.length - 1].id) + 1}.jSoN`,
-        accumulatedData: Math.floor(Math.random() * 10) + 1 + " KiB",
-        runningCost: Math.floor(Math.random() * 10) + 1 + " USD",
+        fileHash: `NeW_jOB${parseInt(prev[prev.length - 1].id) + 1}.jSoN`,
+        accumulatedMemory: Math.floor(Math.random() * 10) + 1 + " KiB",
+        accumulatedCost: Math.floor(Math.random() * 10) + 1 + " USD",
         projectedCost: 10 + Math.floor(Math.random() * 10) + 1 + " USD",
       });
       return newList;
@@ -101,12 +114,12 @@ const MarketPage = () => {
                     fileName: "MissingNo",
                     fileSize: "-1 KiB",
                     status: "completed",
-                    remainingTime: "-1 s",
+                    eta: "-1 s",
                     timeQueued: "9999-99-99 99:99:99",
 
-                    hash: "OnGnIsSiM",
-                    accumulatedData: "-1",
-                    runningCost: "-1 USD",
+                    fileHash: "OnGnIsSiM",
+                    accumulatedMemory: "-1",
+                    accumulatedCost: "-1 USD",
                     projectedCost: "-1 USD",
                   }
             }

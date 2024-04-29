@@ -210,9 +210,9 @@ export const JobList = (props: {
         }
 
         return a_unit.localeCompare(b_unit) * multiplier; // GiB < KiB < MiB < TiB lexicographically
-      } else if (sorting[0] === "eta" && a.remainingTime !== b.remainingTime) {
-        const [a_number, a_unit] = a.remainingTime.split(" ");
-        const [b_number, b_unit] = b.remainingTime.split(" ");
+      } else if (sorting[0] === "eta" && a.eta !== b.eta) {
+        const [a_number, a_unit] = a.eta.split(" ");
+        const [b_number, b_unit] = b.eta.split(" ");
 
         if (a_unit === b_unit) {
           if (a_number.length < b_number.length) {
@@ -245,7 +245,7 @@ const Job = (props: {
   fileName: string;
   fileSize: string;
   status: JobStatus;
-  remainingTime: string;
+  eta: string;
   timeQueued: string;
 }) => {
   const { selectedJobs: selectedJobs, setSelectedJobs: setSelectedJobs } =
@@ -301,7 +301,7 @@ const Job = (props: {
         <div>{props.fileName}</div>
       </div>
       <div className="w-[4.5rem] text-right">{props.fileSize}</div>
-      <div className="w-16 text-right">{props.remainingTime}</div>
+      <div className="w-16 text-right">{props.eta}</div>
       <div className="w-[9.5rem] text-right">{props.timeQueued}</div>
     </li>
   );

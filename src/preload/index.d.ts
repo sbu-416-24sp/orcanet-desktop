@@ -5,6 +5,8 @@ import {
   GetActivities,
   GetPeers,
   FindPeers,
+  StartJobs,
+  TerminateJobs,
 } from "@shared/types";
 
 declare global {
@@ -18,6 +20,9 @@ declare global {
       getPeers: GetPeers;
       /* Market Page */
       findPeers: FindPeers;
+      startJobs: StartJobs;
+      pauseJobs: PauseJobs;
+      terminateJobs: TerminateJobs;
     };
   }
 }

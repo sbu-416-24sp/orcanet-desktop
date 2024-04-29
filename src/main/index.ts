@@ -2,8 +2,22 @@ import { app, shell, BrowserWindow, ipcMain, net } from "electron";
 import { join } from "path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
-import { findPeers, getPeers } from "@/lib";
-import { GetActivity, GetActivities, GetPeers, FindPeers } from "@shared/types";
+import {
+  findPeers,
+  getPeers,
+  pauseJobs,
+  startJobs,
+  terminateJobs,
+} from "@/lib";
+import {
+  GetActivity,
+  GetActivities,
+  GetPeers,
+  FindPeers,
+  PauseJobs,
+  StartJobs,
+  TerminateJobs,
+} from "@shared/types";
 
 import { exec, spawn, ChildProcessWithoutNullStreams } from "child_process";
 
@@ -124,6 +138,15 @@ app.whenReady().then(() => {
   /* Market Page */
   ipcMain.handle("findPeers", (_, ...args: Parameters<FindPeers>) =>
     findPeers(...args)
+  );
+  ipcMain.handle("startJobs", (_, ...args: Parameters<StartJobs>) =>
+    startJobs(...args)
+  );
+  ipcMain.handle("pauseJobs", (_, ...args: Parameters<PauseJobs>) =>
+    pauseJobs(...args)
+  );
+  ipcMain.handle("terminateJobs", (_, ...args: Parameters<TerminateJobs>) =>
+    terminateJobs(...args)
   );
 
   createWindow();

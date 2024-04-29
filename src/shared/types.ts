@@ -1,4 +1,4 @@
-import { ActivityInfo, PeerInfo, FilePeers } from "./models";
+import { ActivityInfo, PeerInfo, FilePeers, JobID } from "./models";
 
 export type GetActivity = (
   filename: ActivityInfo["Name"],
@@ -13,3 +13,6 @@ export type GetPeers = () => Promise<PeerInfo[]>;
 
 /* Market Page */
 export type FindPeers = (fileHash: string) => Promise<FilePeers>;
+export type StartJobs = (jobIDs: JobID[]) => Promise<boolean>;
+export type PauseJobs = (jobIDs: JobID[]) => Promise<boolean>;
+export type TerminateJobs = (jobIDs: JobID[]) => Promise<boolean>;

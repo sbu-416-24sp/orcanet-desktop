@@ -15,11 +15,11 @@ export const GeneralInfoPanel = (props: { jobInfo: JobInfo }) => {
   return (
     <div className="rounded-lg border bg-gray-50 dark:bg-gray-900">
       <div className="flex justify-between rounded-t-lg bg-gray-300 text-gray-800">
-        <div className="ml-2">{props.jobInfo.hash}</div>
+        <div className="ml-2">{props.jobInfo.fileHash}</div>
         <CopyIcon
           onClick={async () => {
             try {
-              await navigator.clipboard.writeText(props.jobInfo.hash);
+              await navigator.clipboard.writeText(props.jobInfo.fileHash);
               alert("Hash copied to clipboard!");
             } catch (err) {
               alert("Failed to copy hash");
@@ -31,15 +31,17 @@ export const GeneralInfoPanel = (props: { jobInfo: JobInfo }) => {
       <div className="relative flex flex-col justify-between h-[calc(100%-4rem)] mt-2 mb-3 pt-3 pb-3 pl-4 pr-4">
         <div className="text-lg">{props.jobInfo.fileName}</div>
         <div className="">
-          <span className="text-blue-600">{props.jobInfo.accumulatedData}</span>{" "}
+          <span className="text-blue-600">
+            {props.jobInfo.accumulatedMemory}
+          </span>{" "}
           / {props.jobInfo.fileSize}
         </div>
         <div className="">
           Running Cost:{" "}
-          <span className="text-blue-600">{props.jobInfo.runningCost}</span>
+          <span className="text-blue-600">{props.jobInfo.accumulatedCost}</span>
         </div>
         <div className="">Projected Cost: {props.jobInfo.projectedCost}</div>
-        <div>ETA: {props.jobInfo.remainingTime}</div>
+        <div>ETA: {props.jobInfo.eta}</div>
         <svg
           width={80}
           height={80}
@@ -55,7 +57,7 @@ export const GeneralInfoPanel = (props: { jobInfo: JobInfo }) => {
           ></circle>
           <text x="50%" y="50%" textAnchor="middle" dy=".3em" className="">
             {Math.round(
-              (parseInt(props.jobInfo.accumulatedData) /
+              (parseInt(props.jobInfo.accumulatedMemory) /
                 parseInt(props.jobInfo.fileSize.slice(0, -4))) *
                 10000
             ) /

@@ -26,3 +26,5 @@ export type FilePeer = {
   region: string;
   price: Number;
 };
+
+export type JobID = string;
