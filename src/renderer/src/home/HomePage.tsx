@@ -274,7 +274,7 @@ const HomePage = () => {
       onDrop={handleDrop}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
-      className={`relative w-full`}
+      className={`relative w-full h-screen overflow-auto`}
     >
       <div className="dashboard-overview bg-white p-6 rounded-xl shadow-lg mb-6">
         <h2 className="text-xl font-semibold mb-4 text-gray-800">
