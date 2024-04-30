@@ -25,14 +25,12 @@ import { useLocation } from 'react-router-dom';
 export const usePeersList = () => {
   const [updatedPeers, setUpdatedPeers] = useState<PeerInfo[]>([]);
   const peers = useAtomValue(PeersAtom);
-  const location = useLocation(); // Get the current location/route
+  const location = useLocation(); 
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout | null = null;
 
-    // Check if the current route is the peers page or the page where you want to update the peers list
-    const shouldUpdatePeers =
-      location.pathname === '/peers' || location.pathname === '/your-page';
+    const shouldUpdatePeers = location.pathname === '/peers';
 
     if (shouldUpdatePeers) {
       const fetchPeers = async () => {
