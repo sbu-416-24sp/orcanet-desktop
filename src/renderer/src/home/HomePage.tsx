@@ -134,6 +134,7 @@ const HomePage = () => {
       .map((activity) => activity);
     
     setActivities(selectedActivities);
+    localStorage.setItem('activities', JSON.stringify(selectedActivities));
   };
   const downLoadSelected = async () => {
     const selectedActivities = activities
@@ -185,7 +186,7 @@ const HomePage = () => {
   
       console.log(hash);
       const newActivity: Activity = {
-        id: activities.length + 1 + hash.length + hash.charCodeAt(0) + hash.charCodeAt(1) + hash.charCodeAt(hash.length-1),
+        id: activities.length + 1,
         name: file.name,
         size: formatFileSize(file.size),
         hash: hash,
