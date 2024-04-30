@@ -107,7 +107,7 @@ export const getPeers: GetPeers = async () => {
                     resolve(peers);
                 } catch (error) {
                     console.error('Error parsing response:', error);
-                    reject(error);
+                    resolve([])
                 }
             });
         });
