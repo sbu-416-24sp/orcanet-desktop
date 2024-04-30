@@ -160,18 +160,43 @@ const HomePage = () => {
   };
 
   const addFileToActivities = async (file: File) => {
-    const hash = await generateFileHash(file);
-
-    const newActivity: Activity = {
-      id: activities.length + 1 + hash.length + hash.charCodeAt(0) + hash.charCodeAt(1) + hash.charCodeAt(hash.length-1),
-      name: file.name,
-      size: formatFileSize(file.size),
-      hash: hash,
-      status: Status.UPLOADED,
-      showDropdown: false,
+    const filePath = file.path; // You need to replace this with the actual file path if available
+    console.log(file.path);
+  
+    const payload = {
+      FilePath: filePath,
     };
-
-    setActivities((currentActivities) => [...currentActivities, newActivity]);
+  
+    try {
+      const response = await fetch('http://localhost:5173/api/upload', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+  
+      let responseText = await response.text();
+      console.log("responseText", responseText)
+      const hashStart = responseText.indexOf('"hash":') + 8; // 8 characters to move past '"hash": ' including the space and the opening quote
+      const hashEnd = responseText.indexOf('"', hashStart); // Find the closing quote of the hash value
+      const hash = responseText.substring(hashStart, hashEnd);
+  
+      console.log(hash);
+      const newActivity: Activity = {
+        id: activities.length + 1 + hash.length + hash.charCodeAt(0) + hash.charCodeAt(1) + hash.charCodeAt(hash.length-1),
+        name: file.name,
+        size: formatFileSize(file.size),
+        hash: hash,
+        status: Status.UPLOADED,
+        showDropdown: false,
+      };
+  
+      setActivities((currentActivities) => [...currentActivities, newActivity]);
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      alert('There was an error uploading the file. Please try again later.');
+    }
   };
 
   const removeActivity = (id: number) => {
@@ -185,7 +210,7 @@ const HomePage = () => {
     event.preventDefault();
     const items = event.dataTransfer.items;
     const files: File[] = [];
-
+  
     for (let i = 0; i < items.length; i++) {
       const item = items[i].webkitGetAsEntry();
       if (item) {
@@ -193,25 +218,9 @@ const HomePage = () => {
         files.push(...fileEntries);
       }
     }
-
-    const newActivitiesPromises = files.map(async (file, index) => {
-      const hash = await generateFileHash(file);
-      return {
-        id: activities.length + index + 1,
-        name: file.name,
-        size: formatFileSize(file.size),
-        hash: hash,
-        status: "Uploaded",
-        showDropdown: false,
-      };
-    });
-
-    const newActivities = await Promise.all(newActivitiesPromises);
-
-    setActivities((currentActivities) => [
-      ...currentActivities,
-      ...newActivities,
-    ]);
+  
+    const newActivitiesPromises = files.map(file => addFileToActivities(file));
+    await Promise.all(newActivitiesPromises);
   };
 
   const getFilesRecursively = async (entry: any): Promise<File[]> => {
