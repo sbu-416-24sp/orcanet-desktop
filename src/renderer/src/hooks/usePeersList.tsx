@@ -1,22 +1,42 @@
-import { PeersAtom } from '@/store'
+import { PeersAtom ,getPeers} from '@/store'
 import { useAtom, useAtomValue } from 'jotai'
+import { useEffect, useState } from 'react';
+import { PeerInfo } from '@shared/models';
+// export const usePeersList = () => {
+//   const peers = useAtomValue(PeersAtom)
 
+//   // const [selectedNoteIndex, setSelectedNoteIndex] = useAtom(selectedNoteIndexAtom)
+
+//   // const handleNoteSelect = (index: number) => async () => {
+//   //   setSelectedNoteIndex(index)
+
+//   //   if (onSelect) {
+//   //     onSelect()
+//   //   }
+//   // }
+
+//   return {
+//     peers,
+//     // selectedNoteIndex,
+//     // handleNoteSelect
+//   }
+// }
 export const usePeersList = () => {
-  const peers = useAtomValue(PeersAtom)
+  const [updatedPeers, setUpdatedPeers] = useState<PeerInfo[]>([]);
+  const peers = useAtomValue(PeersAtom);
 
-  // const [selectedNoteIndex, setSelectedNoteIndex] = useAtom(selectedNoteIndexAtom)
+  useEffect(() => {
+    const fetchPeers = async () => {
+      const sortedPeers = await getPeers();
+      setUpdatedPeers(sortedPeers);
+      console.log('heyy');
+    };
 
-  // const handleNoteSelect = (index: number) => async () => {
-  //   setSelectedNoteIndex(index)
+    const intervalId = setInterval(fetchPeers, 3000);
 
-  //   if (onSelect) {
-  //     onSelect()
-  //   }
-  // }
+    // Clean up the interval when the component unmounts
+    return () => clearInterval(intervalId);
+  }, []);
 
-  return {
-    peers,
-    // selectedNoteIndex,
-    // handleNoteSelect
-  }
-}
+  return { peers: updatedPeers.length > 0 ? updatedPeers : peers };
+};
