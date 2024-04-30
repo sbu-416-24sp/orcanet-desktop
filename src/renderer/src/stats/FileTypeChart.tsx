@@ -32,6 +32,7 @@ export default function FileTypeChart() {
     dataLabels: {
       enabled: false,
     },
+    
   };
 
   return (
