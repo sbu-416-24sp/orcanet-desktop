@@ -115,7 +115,7 @@ export const getColumns = (
           <div>
             {truncatedName}
             <div style={{ color: "black", fontSize: "smaller" }}>
-              {row.original.hash}
+              {row.original.hash.slice(0, -24) + '...'}
             </div>
           </div>
         );
