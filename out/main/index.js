@@ -46,7 +46,7 @@ const getPeers = async () => {
           resolve(peers);
         } catch (error) {
           console.error("Error parsing response:", error);
-          reject(error);
+          resolve([]);
         }
       });
     });
@@ -93,7 +93,7 @@ function startBackendProcess(backend) {
   let command;
   let args;
   if (backend.toLowerCase() === "go") {
-    makeDirectory = path.join(__dirname, "../../orcanet-go/peer");
+    makeDirectory = `/Users/joannelu/PeerNode/orcanet-go-new/peer`;
     command = "make";
     args = ["all"];
   } else if (backend.toLowerCase() === "js") {
