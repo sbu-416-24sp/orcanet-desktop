@@ -63,12 +63,13 @@ const HomePage = () => {
 
   const [updateTrigger, setUpdateTrigger] = useState(false);
 
-  const fetchActivities = async () => {
+  const fetchActivities = () => {
     try {
-      const result = await GetActivities();
-      setActivities(result);
+      const storedActivities = localStorage.getItem('activities');
+      const activities = storedActivities ? JSON.parse(storedActivities) : [];
+      setActivities(activities);
     } catch (error) {
-      console.error("Failed to fetch activities:", error);
+      console.error("Failed to fetch activities from local storage:", error);
     }
   };
 
@@ -191,8 +192,11 @@ const HomePage = () => {
         status: Status.UPLOADED,
         showDropdown: false,
       };
-  
-      setActivities((currentActivities) => [...currentActivities, newActivity]);
+      setActivities((currentActivities) => {
+        const updatedActivities = [...currentActivities, newActivity];
+        localStorage.setItem('activities', JSON.stringify(updatedActivities));
+        return updatedActivities;
+      });
     } catch (error) {
       console.error('Error uploading file:', error);
       alert('There was an error uploading the file. Please try again later.');
