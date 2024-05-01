@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 module.exports = router;
 
-router.get("/add-job/*", (req, res) => {
+router.put("/add-job/*", (req, res) => {
   res.json({ jobID: "1" });
   console.log("received: /add-job");
 });
@@ -55,15 +55,33 @@ router.get("/job-info/*", (req, res) => {
   });
   console.log("received: /job-info");
 });
-router.get("/start-jobs/*", (req, res) => {
+router.post("/start-jobs/*", (req, res) => {
   res.status(200).send("started");
   console.log("received: /start-jobs");
 });
-router.get("/pause-jobs/*", (req, res) => {
+router.post("/pause-jobs/*", (req, res) => {
   res.status(200).send("paused");
   console.log("received: /pause-jobs");
 });
-router.get("/terminate-jobs/*", (req, res) => {
+router.post("/terminate-jobs/*", (req, res) => {
   res.status(200).send("terminated");
   console.log("received: /terminate-jobs");
+});
+router.get("/get-history/*", (req, res) => {
+  res.json({
+    jobs: {
+      jobID: "1",
+      fileName: "WhoLetTheDogsIn.mp4",
+      timeCompleted: "2024-05-01T23:15:30.000Z",
+    },
+  });
+  console.log("received: /get-history");
+});
+router.post("/remove-from-history/*", (req, res) => {
+  res.status(200).send("removed from history");
+  console.log("received: /remove-from-history");
+});
+router.post("/clear-history/*", (req, res) => {
+  res.status(200).send("cleared history");
+  console.log("received: /clear-history");
 });

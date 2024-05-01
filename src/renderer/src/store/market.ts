@@ -6,22 +6,36 @@ const initialFilePeers: FilePeers = {
   peers: [],
 };
 const filePeersAtom = atom<FilePeers>(initialFilePeers);
-export const fetchFilePeersAtom = atom(
-  (get) => get(filePeersAtom),
-  async (_get, set, fileHash: string) =>
-    set(filePeersAtom, await window.context.findPeers(fileHash))
+export const fetchFilePeersAtom = unwrap(
+  atom(
+    (get) => get(filePeersAtom),
+    async (_get, set, fileHash: string) => {
+      const filePeers = await window.context.findPeers(fileHash);
+      set(filePeersAtom, filePeers);
+    }
+  )
 );
 
 const initialHistory: HistoryJob[] = [];
 const historyAtom = atom<HistoryJob[]>(initialHistory);
-export const fetchHistoryAtom = atom(
-  (get) => get(historyAtom),
-  async (_get, set) => set(historyAtom, await window.context.getHistory())
+export const fetchHistoryAtom = unwrap(
+  atom(
+    (get) => get(historyAtom),
+    async (_get, set) => {
+      const history = await window.context.getHistory();
+      set(historyAtom, history);
+    }
+  )
 );
 
 const initialJobList: JobOverview[] = [];
 const jobListAtom = atom<JobOverview[]>(initialJobList);
-export const fetchJobListAtom = atom(
-  (get) => get(jobListAtom),
-  async (_get, set) => set(jobListAtom, await window.context.jobList())
+export const fetchJobListAtom = unwrap(
+  atom(
+    (get) => get(jobListAtom),
+    async (_get, set) => {
+      const jobList = await window.context.jobList();
+      set(jobListAtom, jobList);
+    }
+  )
 );

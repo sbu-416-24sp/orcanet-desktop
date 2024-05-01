@@ -2,7 +2,7 @@ import { createContext, useEffect, useState } from "react";
 import Overview from "./Overview";
 import Details from "./Details";
 import { ScrollArea } from "@shadcn/components/ui/scroll-area";
-import { JobID, JobStatus } from "@shared/models";
+import { JobDetails, JobID, JobOverview, JobStatus } from "@shared/models";
 import { fetchJobListAtom } from "@renderer/store/market";
 import { useAtom } from "jotai";
 
@@ -16,10 +16,14 @@ export const MarketPageContext = createContext<JobSelectionContext>(
 
 const MarketPage = () => {
   const [selectedJobs, setSelectedJobs] = useState<JobID[]>([]);
-  const [jobList, fetchJobList] = useAtom(fetchJobListAtom);
+  const [jobList, setJobList] = useState<JobOverview[]>([]);
   useEffect(() => {
-    fetchJobList();
-  }, [fetchJobList]);
+    const fn = async () => {
+      const jobListData = await window.context.jobList();
+      setJobList(jobListData);
+    };
+    fn();
+  });
 
   const updateJobStatuses = async (newStatus: JobStatus) => {
     if (newStatus === "active") {
@@ -87,7 +91,7 @@ const MarketPage = () => {
       <ScrollArea className="h-full grow">
         <div id="market-page" className="bg-background p-6 h-full">
           <Overview
-            jobInfoList={jobList}
+            jobInfoList={jobList !== undefined ? jobList : []}
             updateJobStatuses={updateJobStatuses}
             removeJobs={removeJobs}
             addJob={addJob}

@@ -16,6 +16,7 @@ import { columns2 } from "./columns";
 import { toast } from "../shadcn/components/ui/use-toast";
 import { fetchFilePeersAtom } from "@renderer/store";
 import { useAtom } from "jotai";
+import { FilePeer, FilePeers } from "@shared/models";
 const OverviewHeader = (props: {
   setFilter: React.Dispatch<React.SetStateAction<string>>;
   setStatusFilter: React.Dispatch<React.SetStateAction<string>>;
@@ -84,7 +85,14 @@ const AddJob = (props: { addJob: (hash: string, peerID: string) => void }) => {
   const [validHash, setValidHash] = useState(0);
   const [selectedPeer, setSelectedPeer] = useState([]);
 
-  const [filePeers, fetchFilePeers] = useAtom(fetchFilePeersAtom);
+  const [filePeers, setFilePeers] = useState<FilePeers>({ peers: [] });
+  useEffect(() => {
+    const fn = async () => {
+      const filePeersData = await window.context.findPeers(buffer);
+      setFilePeers(filePeersData);
+    };
+    fn();
+  }, [buffer]);
 
   const resetAddJob = () => {
     setBuffer("");
@@ -93,7 +101,7 @@ const AddJob = (props: { addJob: (hash: string, peerID: string) => void }) => {
   };
 
   const handleSearchHash = () => {
-    if (filePeers.peers.length > 0) {
+    if (filePeers !== undefined && filePeers.peers.length > 0) {
       setValidHash(1);
     } else {
       setValidHash(-1);
@@ -107,10 +115,6 @@ const AddJob = (props: { addJob: (hash: string, peerID: string) => void }) => {
       description: "Your job has been successfully added!",
     });
   };
-
-  useEffect(() => {
-    fetchFilePeers(buffer);
-  }, [fetchFilePeers, buffer]);
 
   return (
     <div>
@@ -139,7 +143,7 @@ const AddJob = (props: { addJob: (hash: string, peerID: string) => void }) => {
             <>
               <div>Select a Peer</div>
               <DataTable
-                data={filePeers.peers}
+                data={filePeers !== undefined ? filePeers.peers : []}
                 columns={columns2}
                 setSelectedPeer={setSelectedPeer}
               ></DataTable>

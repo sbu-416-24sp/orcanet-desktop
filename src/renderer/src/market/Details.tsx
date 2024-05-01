@@ -11,10 +11,10 @@ import { ScrollArea } from "../shadcn/components/ui/scroll-area";
 import { Button } from "../shadcn/components/ui/button";
 import { GeneralInfoPanel } from "./GeneralInfoPanel";
 import { toast } from "../shadcn/components/ui/use-toast";
-import { JobID, JobOverview } from "@shared/models";
+import { JobID, JobOverview, HistoryJob } from "@shared/models";
 import { fetchHistoryAtom } from "@renderer/store/market";
 import { useAtom, useAtomValue } from "jotai";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 const Details = (props: { jobID: JobID }) => {
   return (
     <div className="grid grid-cols-[minmax(0,_1fr)_minmax(0,_2fr)] gap-4 h-[calc(65vh-15rem)]">
@@ -25,11 +25,14 @@ const Details = (props: { jobID: JobID }) => {
 };
 
 const History = () => {
-  const [history, fetchHistory] = useAtom(fetchHistoryAtom);
-
+  const [history, setHistory] = useState<HistoryJob[]>();
   useEffect(() => {
-    fetchHistory();
-  }, [fetchHistory]);
+    const fn = async () => {
+      const historyData = await window.context.getHistory();
+      setHistory(historyData);
+    };
+    fn();
+  });
 
   const handleClearHistory = async () => {
     await window.context.clearHistory();
@@ -50,7 +53,7 @@ const History = () => {
           Clear History
         </Button>
       </div>
-      {history.length === 0 ? (
+      {history !== undefined && history.length === 0 ? (
         <p>No previous jobs</p>
       ) : (
         <>
@@ -65,17 +68,23 @@ const History = () => {
           <Table>
             <TableBody>
               <ScrollArea>
-                {history.map((job) => (
-                  <TableRow key={job.jobID}>
-                    <TableCell className="w-[300px]">{job.fileName}</TableCell>
-                    <TableCell>{job.timeCompleted.toDateString()}</TableCell>
-                    <TableCell className="text-right">
-                      <button onClick={() => handleDeleteJob(job.jobID)}>
-                        <Trash2 className="size-6 text-gray-500 hover:text-destructive" />
-                      </button>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {history !== undefined
+                  ? history.map((job) => (
+                      <TableRow key={job.jobID}>
+                        <TableCell className="w-[300px]">
+                          {job.fileName}
+                        </TableCell>
+                        <TableCell>
+                          {job.timeCompleted.toDateString()}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <button onClick={() => handleDeleteJob(job.jobID)}>
+                            <Trash2 className="size-6 text-gray-500 hover:text-destructive" />
+                          </button>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  : null}
               </ScrollArea>
             </TableBody>
           </Table>
