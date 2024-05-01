@@ -29,6 +29,8 @@ const HomePage = () => {
     name: string;
     size: string;
     hash: string;
+    date: Date;
+    type: string,
     status: string;
     showDropdown?: boolean;
     peers?: number;
@@ -43,21 +45,21 @@ const HomePage = () => {
     PUBLISHED = "Published",
   }
 
-  function UploadFile(base64String: string, name: string, size: string, filePath:string) : Activity{
-    const newActivity = {
-      id: 1,
-      stringId: base64String,
-      name, 
-      size, 
-      hash: filePath, 
-      status: Status.UPLOADED
-    }
+  // function UploadFile(base64String: string, name: string, size: string, filePath:string) : Activity{
+  //   const newActivity = {
+  //     id: 1,
+  //     stringId: base64String,
+  //     name, 
+  //     size, 
+  //     hash: filePath, 
+  //     status: Status.UPLOADED
+  //   }
 
-    console.log("newActivity", newActivity.id)
-    setActivities(p => [...p, newActivity])
+  //   console.log("newActivity", newActivity.id)
+  //   setActivities(p => [...p, newActivity])
 
-    return newActivity; 
-  }
+  //   return newActivity; 
+  // }
   
   const [activities, setActivities] = useState<Activity[]>([]);
 
@@ -208,6 +210,8 @@ const HomePage = () => {
         size: formatFileSize(file.size),
         hash: hash,
         status: Status.UPLOADED,
+        date: new Date(),
+        type: file.type,
         showDropdown: false,
       };
       setActivities((currentActivities) => {

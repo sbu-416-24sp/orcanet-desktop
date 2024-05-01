@@ -8,6 +8,8 @@ export type Activity = {
   name: string;
   size: string;
   hash: string;
+  date: Date;
+  type: string,
   status: string;
   showDropdown?: boolean;
   peers?: number;
@@ -315,6 +317,18 @@ export const getColumns = (
                           File Size:
                         </p>
                         <p className="text-black">{row.original.size}</p>
+                      </div>
+                      <div className="mb-6">
+                        <p className="text-lg font-semibold text-black">
+                          File Type:
+                        </p>
+                        <p className="text-black">{row.original.type}</p>
+                      </div>
+                      <div className="mb-6">
+                        <p className="text-lg font-semibold text-black">
+                          Date Created
+                        </p>
+                        <p className="text-black">{row.original.date.toLocaleDateString()}</p>
                       </div>
                       <div className="flex items-center justify-center space-x-4 bg-gray-200 p-4 rounded-b-2xl">
                         <button
