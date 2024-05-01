@@ -25,10 +25,11 @@ import {
   ClearHistory,
   JobList,
   AddJob,
+  JobInfo,
 } from "@shared/types";
 
 import { exec, spawn, ChildProcessWithoutNullStreams } from "child_process";
-import { addJob, jobList } from "./lib/market";
+import { addJob, jobInfo, jobList } from "./lib/market";
 
 let backendProcess: ChildProcessWithoutNullStreams | null = null;
 
@@ -124,9 +125,9 @@ app.whenReady().then(() => {
     stdio: ["pipe", "pipe", "pipe"],
   });
 
-  if (backendProcess) {
-    setupBackendProcessHandlers(backendProcess);
-  }
+  // if (backendProcess) {
+  //   setupBackendProcessHandlers(backendProcess);
+  // }
 
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
@@ -151,6 +152,9 @@ app.whenReady().then(() => {
   );
   ipcMain.handle("jobList", (_, ...args: Parameters<JobList>) =>
     jobList(...args)
+  );
+  ipcMain.handle("jobInfo", (_, ...args: Parameters<JobInfo>) =>
+    jobInfo(...args)
   );
   ipcMain.handle("startJobs", (_, ...args: Parameters<StartJobs>) =>
     startJobs(...args)
