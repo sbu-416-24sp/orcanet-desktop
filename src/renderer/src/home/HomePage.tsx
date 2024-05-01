@@ -263,29 +263,29 @@ const HomePage = () => {
       onDragLeave={handleDragLeave}
       className={`relative w-full`}
     >
-      <div className="dashboard-overview bg-white p-6 rounded-xl shadow-lg mb-6">
-        <h2 className="text-xl font-semibold mb-4 text-gray-800">
+      <div className="dashboard-overview  p-6 rounded-xl shadow-lg mb-6">
+        <h2 className="text-xl font-semibold mb-4  dark:text-white">
           Dashboard Overview
         </h2>
         <div className="grid grid-cols-3 gap-6">
-          <div className="file-hosted bg-white p-4 rounded-lg">
-            <span className="block text-sm font-medium text-gray-600">
+          <div className="file-hosted  p-4 rounded-lg">
+            <span className="block text-sm font-medium text-gray-600 dark:text-gray-300">
               Files Hosted
             </span>
             <span className="block text-2xl font-bold text-gray-800">
               {totalFiles}
             </span>
           </div>
-          <div className="storage-used bg-white p-4 rounded-lg">
-            <span className="block text-sm font-medium text-gray-600">
+          <div className="storage-used  p-4 rounded-lg">
+            <span className="block text-sm font-medium text-gray-600 dark:text-gray-300">
               Total Storage Used
             </span>
             <span className="block text-2xl font-bold text-gray-800">
               {totalSizeFormatted}
             </span>
           </div>
-          <div className="network-status bg-white p-4 rounded-lg">
-            <span className="block text-sm font-medium text-gray-600">
+          <div className="network-status  p-4 rounded-lg">
+            <span className="block text-sm font-medium text-gray-600 dark:text-gray-300">
               Network Status
             </span>
             <span
@@ -314,7 +314,7 @@ const HomePage = () => {
       />
       {isAnyActivitySelected && (
         <div
-          className={`ml-80 fixed bottom-0 inset-x-0 mx-auto p-4 bg-gray-100 shadow-lg flex items-center justify-between transition-transform duration-300 ease-in-out ${
+          className={`ml-80 fixed bottom-0 inset-x-0 mx-auto p-4 shadow-lg flex items-center justify-between transition-transform duration-300 ease-in-out ${
             isAnyActivitySelected ? "translate-y-0" : "translate-y-full"
           }`}
         >
@@ -327,7 +327,7 @@ const HomePage = () => {
                 {activities.filter((activity) => activity.isSelected).length}{" "}
                 Item selected
               </span>
-              <span className="text-sm text-gray-800">
+              <span className="text-sm">
                 Total size:{" "}
                 {formatFileSize(
                   activities

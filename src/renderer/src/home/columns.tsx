@@ -97,7 +97,7 @@ export const getColumns = (
             <input
               type="text"
               defaultValue={row.original.name}
-              className="bg-white text-black border-none"
+              className="border-none"
               onBlur={(e) => {
                 updateActivityName(row.original.id, e.target.value);
                 toggleEdit(row.original.id);
@@ -114,7 +114,7 @@ export const getColumns = (
         return (
           <div>
             {truncatedName}
-            <div style={{ color: "black", fontSize: "smaller" }}>
+            <div style={{ fontSize: "smaller" }}>
               {row.original.hash}
             </div>
           </div>
@@ -140,7 +140,7 @@ export const getColumns = (
       id: "dropdown",
       header: () => null,
       cell: ({ row }) => (
-        <div className="relative" ref={dropdownRef}>
+        <div className="relative dark" ref={dropdownRef}>
           <button
             onClick={(e) => {
                       // Calculate and update dropdown position
@@ -175,18 +175,18 @@ export const getColumns = (
           </button>
           {row.original.showDropdown && (
             <div
-              className="fixed right-0 mt-2 py-2 w-48 bg-white rounded-md shadow-xl z-20 border border-gray-300"
+              className="fixed right-0 mt-2 py-2 w-48 rounded-md shadow-xl z-20 border border-gray-300"
               id={`dropdown-${row.original.id}`}
               onClick={(e) => e.stopPropagation()}
             >
               <a
                 href="#"
-                className="block px-4 py-2 text-sm text-black hover:bg-gray-300 border-b border-gray-200"
+                className="block px-4 py-2 text-sm  hover:bg-gray-300 border-b border-gray-200"
               >
                 Download
               </a>
               <div
-                className="block px-4 py-2 text-sm text-black hover:bg-gray-300 border-b border-gray-200 cursor-pointer"
+                className="block px-4 py-2 text-sm  hover:bg-gray-300 border-b border-gray-200 cursor-pointer"
                 onClick={(e) => {
                   e.preventDefault();
                   toggleEdit(row.original.id);
@@ -197,7 +197,7 @@ export const getColumns = (
               </div>
               <a
                 href="#"
-                className="block px-4 py-2 text-sm text-black hover:bg-gray-300 border-b border-gray-200"
+                className="block px-4 py-2 text-sm  hover:bg-gray-300 border-b border-gray-200"
               >
                 <button
                   onClick={(e) => {
@@ -209,7 +209,7 @@ export const getColumns = (
                 </button>
               </a>
               <div
-                className="block px-4 py-2 text-sm text-black hover:bg-gray-300 border-b border-gray-200 cursor-pointer"
+                className="block px-4 py-2 text-sm  hover:bg-gray-300 border-b border-gray-200 cursor-pointer"
                 onClick={() => {
                   navigator.clipboard.writeText(row.original.hash);
                   toggleDropdown(row.original.id);
@@ -217,7 +217,7 @@ export const getColumns = (
               >
                 Copy CID
               </div>
-              <div className="block px-4 py-2 text-sm text-black hover:bg-gray-300 cursor-pointer">
+              <div className="block px-4 py-2 text-sm  hover:bg-gray-300 cursor-pointer">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -227,12 +227,12 @@ export const getColumns = (
                   Publish to OrcaNet
                 </button>
                 {isModalOpen && (
-                  <div className="fixed inset-0 bg-white bg-opacity-75 flex justify-center items-center z-50">
-                    <div className="bg-white p-8 rounded-2xl shadow-2xl max-w-lg w-full mx-4">
+                  <div className="fixed inset-0 bg-opacity-75 flex justify-center items-center z-50">
+                    <div className="p-8 rounded-2xl shadow-2xl max-w-lg w-full mx-4 dark:bg-gray-700">
                       <div className="flex justify-center mb-6">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          className="w-12 h-12 text-black"
+                          className="w-12 h-12 "
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -245,17 +245,17 @@ export const getColumns = (
                           />
                         </svg>
                       </div>
-                      <h2 className="text-2xl font-bold text-black mb-6 text-center">
+                      <h2 className="text-2xl font-bold  mb-6 text-center">
                         Publish to OrcaNet
                       </h2>
                       <div className="mb-6">
-                        <p className="text-lg font-semibold text-black">
+                        <p className="text-lg font-semibold ">
                           CID:
                         </p>
-                        <p className="text-black">{row.original.hash}</p>
+                        <p className="">{row.original.hash}</p>
                       </div>
                       <div className="mb-6">
-                        <p className="text-lg font-semibold text-black">
+                        <p className="text-lg font-semibold ">
                           Select key for publishing:
                         </p>
                         <div className="mt-2 text-center">
@@ -268,15 +268,15 @@ export const getColumns = (
                           />
                           <label
                             htmlFor="selfKey"
-                            className="ml-2 text-black"
+                            className="ml-2 "
                           >
                             self
                           </label>
                         </div>
                       </div>
-                      <div className="flex items-center justify-center space-x-4 bg-gray-200 p-4 rounded-b-2xl">
+                      <div className="flex items-center justify-center space-x-4 p-4 rounded-b-2xl">
                         <button
-                          className="flex-1 justify-center py-3 px-6 border border-transparent shadow text-lg font-medium rounded-md text-black bg-red-300 hover:bg-red-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out"
+                          className="flex-1 justify-center py-3 px-6 border border-transparent shadow text-lg font-medium rounded-md  bg-red-300 hover:bg-red-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out"
                           onClick={() => {
                             setIsModalOpen(false);
                             toggleDropdown(row.original.id);
@@ -285,7 +285,7 @@ export const getColumns = (
                           Cancel
                         </button>
                         <button
-                          className="flex-1 justify-center py-3 px-6 border border-transparent shadow text-lg font-medium rounded-md text-white bg-blue-300 hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
+                          className="flex-1 justify-center py-3 px-6 border border-transparent shadow text-lg font-medium rounded-md bg-blue-300 hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
                           onClick={() => {
                             setIsModalOpen(false);
                             toggleDropdown(row.original.id);
@@ -299,35 +299,35 @@ export const getColumns = (
                 )}
 
                 {isFileDetailModalOpen && (
-                  <div className="fixed inset-0 bg-white bg-opacity-75 flex justify-center items-center z-50">
-                    <div className="bg-white p-8 rounded-2xl shadow-2xl max-w-lg w-full mx-4">
+                  <div className="fixed inset-0 bg-opacity-75 flex justify-center items-center z-50">
+                    <div className="p-8 rounded-2xl shadow-2xl max-w-lg w-full mx-4 dark:bg-gray-700">
                       <div className="flex justify-center mb-6">
                         <AiFillFile style={{width: "100px", height:"100px"}}/>
                       </div>
-                      <h2 className="text-2xl font-bold text-black mb-6 text-center">
+                      <h2 className="text-2xl font-bold  mb-6 text-center">
                         File Details
                       </h2>
                       <div className="mb-6">
-                        <p className="text-lg font-semibold text-black">
+                        <p className="text-lg font-semibold ">
                           File Name:
                         </p>
-                        <p className="text-black">{row.original.name}</p>
+                        <p className="">{row.original.name}</p>
                       </div>
                       <div className="mb-6">
-                        <p className="text-lg font-semibold text-black">
+                        <p className="text-lg font-semibold">
                           CID:
                         </p>
-                        <p className="text-black">{row.original.hash}</p>
+                        <p className="">{row.original.hash}</p>
                       </div>
                       <div className="mb-6">
-                        <p className="text-lg font-semibold text-black">
+                        <p className="text-lg font-semibold">
                           File Size:
                         </p>
-                        <p className="text-black">{row.original.size}</p>
+                        <p className="">{row.original.size}</p>
                       </div>
-                      <div className="flex items-center justify-center space-x-4 bg-gray-200 p-4 rounded-b-2xl">
+                      <div className="flex items-center justify-center space-x-4 p-4 rounded-b-2xl">
                         <button
-                          className="flex-1 justify-center py-3 px-6 border border-transparent shadow text-lg font-medium rounded-md text-black bg-red-300 hover:bg-red-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out"
+                          className="flex-1 justify-center py-3 px-6 border border-transparent shadow text-lg font-medium rounded-md  bg-red-300 hover:bg-red-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out"
                           onClick={() => {
                             setIsFileDetailModalOpen(false);
                             toggleDropdown(row.original.id);

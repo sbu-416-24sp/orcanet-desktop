@@ -92,7 +92,7 @@ export function DataTable({
   });
 
   return (
-    <div className="flex flex-col py-4 w-full bg-white text-black">
+    <div className="flex flex-col py-4 w-full">
       <div className="flex items-center justify-between py-2">
         <div className="w-1/2">
           <SearchBar
@@ -104,14 +104,14 @@ export function DataTable({
         <div className="w-1/2 flex justify-end relative">
           <button
             id="file-upload"
-            className="border border-black hover:bg-gray-100 text-black font-medium py-2 px-4 rounded-lg transition duration-150 ease-in-out"
+            className="border border-black hover:bg-gray-100 font-medium py-2 px-4 rounded-lg transition duration-150 ease-in-out"
             onClick={() => setIsDropdownVisible(!isDropdownVisible)}
           >
-            <span className="text-black">+</span> Import
+            <span className="">+</span> Import
           </button>
           <div
             ref={dropdownRef}
-            className={`origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-300 ${
+            className={`origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 divide-y divide-gray-300 ${
               isDropdownVisible ? "block" : "hidden"
             }`}
             id="file-upload-dropdown"
@@ -119,7 +119,7 @@ export function DataTable({
           >
             <label
               htmlFor="file-upload-file"
-              className="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 border-b border-gray-300 cursor-pointer"
+              className="block px-4 py-2 text-sm hover:bg-gray-100 border-b border-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 cursor-pointer"
             >
               File
               <input
@@ -137,7 +137,7 @@ export function DataTable({
             </label>
             <label
               htmlFor="folder-upload"
-              className="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 cursor-pointer"
+              className="block px-4 py-2 text-sm hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 cursor-pointer"
             >
               Folder
               <input
@@ -159,14 +159,14 @@ export function DataTable({
         </div>
       </div>
 
-      <div className="rounded-md border overflow-visible bg-white">
+      <div className="rounded-md border overflow-visible">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id} className="bg-gray-50 text-black">
+                    <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -185,10 +185,10 @@ export function DataTable({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  className={row.getIsSelected() ? "selected-row bg-gray-100" : "unselected-row bg-white"} 
+                  className={row.getIsSelected() ? "selected-row bg-gray-100 dark:bg-gray-600" : "unselected-row"} 
                   >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="text-black">
+                    <TableCell key={cell.id} className="">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
@@ -201,7 +201,7 @@ export function DataTable({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center text-black"
+                  className="h-24 text-center"
                 >
                   No results.
                 </TableCell>
@@ -214,7 +214,7 @@ export function DataTable({
         <Button
           variant="outline"
           size="sm"
-          className="text-black border-black"
+          className="border-black"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
@@ -223,7 +223,7 @@ export function DataTable({
         <Button
           variant="outline"
           size="sm"
-          className="text-black border-black"
+          className="border-black"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
