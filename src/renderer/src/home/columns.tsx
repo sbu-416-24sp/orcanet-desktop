@@ -26,26 +26,29 @@ export const getColumns = (
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFileDetailModalOpen, setIsFileDetailModalOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      activities.forEach((activity) => {
-        if (activity.showDropdown) {
-          const dropdownElement = document.getElementById(
-            `dropdown-${activity.id}`
-          );
-          if (
-            dropdownElement &&
-            !dropdownElement.contains(event.target as Node)
-          ) {
-            toggleDropdown(activity.id);
-          }
+      const dropdowns = document.querySelectorAll('.dropdown-container');
+      dropdowns.forEach((dropdown) => {
+        const button = dropdown.querySelector('button');
+        const dropdownMenu = dropdown.querySelector('.dropdown-menu');
+
+        if (
+          dropdownMenu &&
+          !dropdownMenu.contains(event.target as Node) &&
+          !button?.contains(event.target as Node)
+        ) {
+          const activityId = Number(dropdown.getAttribute('data-activity-id'));
+          toggleDropdown(activityId);
         }
       });
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [activities]);
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const selectColumn: ColumnDef<Activity> = {
     id: "select",
@@ -114,8 +117,8 @@ export const getColumns = (
         return (
           <div>
             {truncatedName}
-            <div style={{ fontSize: "smaller" }}>
-              {row.original.hash}
+            <div style={{ color: "black", fontSize: "smaller" }}>
+              {row.original.hash.slice(0, -24) + '...'}
             </div>
           </div>
         );
@@ -140,21 +143,9 @@ export const getColumns = (
       id: "dropdown",
       header: () => null,
       cell: ({ row }) => (
-        <div className="relative dark" ref={dropdownRef}>
+        <div className="relative dropdown-container" data-activity-id={row.original.id}>
           <button
-            onClick={(e) => {
-                      // Calculate and update dropdown position
-                      const rect = e.currentTarget.getBoundingClientRect();
-                      const scrollTop = window.scrollY || document.documentElement.scrollTop;
-                      const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
-                      const dropdownElement = document.getElementById(`dropdown-${row.original.id}`);
-                      if (dropdownElement) {
-                        dropdownElement.style.position = 'fixed';
-                        // Adjust position with scroll offsets
-                        dropdownElement.style.top = `${rect.bottom + scrollTop}px`;
-                        dropdownElement.style.left = `${rect.left + scrollLeft}px`;
-                      }
-              // toggle the current row's dropdown
+            onClick={() => {
               toggleDropdown(row.original.id);
             }}
           >

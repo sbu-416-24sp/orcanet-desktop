@@ -2,3 +2,23 @@
     width: vw;
     height: 200px;
 }
+
+.size-full {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .overflow-y-auto {
+    overflow-y: auto; /* Enable vertical scrolling when content overflows */
+  }
+  
+  .flex {
+    display: flex; /* Use flexbox layout */
+  }
+  
+  /* Adjust font size and line height for auto-resize */
+  .text-auto-resize {
+    font-size: min(1vw, 1vh); /* Adjust font size based on viewport width and height */
+    line-height: 1.5; /* Adjust line height as needed */
+  }
+  

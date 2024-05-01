@@ -8,6 +8,7 @@ import {
   Route,
   Link,
   Outlet,
+  Navigate,
 } from "react-router-dom";
 
 const sidebarNavItems = [
@@ -43,6 +44,9 @@ export default function SettingsPage() {
           <aside className="-mx-4 lg:w-1/5">
             <SidebarNav items={sidebarNavItems} />
           </aside>
+          <Routes>
+            <Route path="/" element={<Navigate replace to="/settings/transfer" />} />
+          </Routes>
           <Outlet />
         </div>
       </div>

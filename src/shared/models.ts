@@ -4,7 +4,6 @@ export type PeerInfo = {
 	PeerID  :    string
 	Connection : string
 	OpenStreams: string 
-	FlagUrl :    string 
 }
 
 export type ActivityInfo = {   

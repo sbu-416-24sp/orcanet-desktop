@@ -10,6 +10,8 @@ declare global {
       // getActivities: GetActivities
       // deleteActivity: DeleteActivity
       getPeers: GetPeers
+      getBackend: null
+      setBackend: string
     }
   }
 }

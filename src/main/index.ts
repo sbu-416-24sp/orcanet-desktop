@@ -2,13 +2,85 @@ import { app, shell, BrowserWindow, ipcMain, net } from "electron";
 import { join } from "path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
-import { getPeers} from "@/lib"
-import { GetActivity,GetActivities,GetPeers } from '@shared/types'
+import { getPeers } from "@/lib";
+import { GetActivity, GetActivities, GetPeers } from "@shared/types";
+import ElectronStore from "electron-store";
 
 import { exec, spawn, ChildProcessWithoutNullStreams } from "child_process";
-
 let backendProcess: ChildProcessWithoutNullStreams | null = null;
 
+const schema = {
+  backend: {
+    type: "string",
+    default: "go",
+  },
+} as const;
+
+const store = new ElectronStore({ schema });
+
+ipcMain.handle("get-backend", async () => {
+  return store.get("backend");
+});
+
+ipcMain.handle("set-backend", async (_, newBackend) => {
+  store.set("backend", newBackend);
+  startBackendProcess(newBackend);
+});
+
+function watchBackendChanges() {
+  store.onDidChange("backend", (newValue, oldValue) => {
+    console.log(`Backend changed from ${oldValue} to ${newValue}`);
+    startBackendProcess(newValue as string);
+  });
+}
+
+function startBackendProcess(backend: string) {
+  console.log(`Attempting to start backend: ${backend}`); // Debugging
+  if (backendProcess) {
+    console.log("Killing existing backend process"); // Debugging
+    backendProcess.kill("SIGTERM");
+    backendProcess = null;
+  }
+
+  let makeDirectory: string;
+  let command: string;
+  let args: string[];
+
+  if (backend.toLowerCase() === "go") {
+    // makeDirectory = join(__dirname, "../../orcanet-go/peer");
+    makeDirectory = join(__dirname, "../../orcanet-go/peer");
+    command = "make";
+    args = ["all"];
+  } else if (backend.toLowerCase() === "js") {
+    makeDirectory = `../../orcanet-${backend.toLowerCase()}/src`;
+    command = process.execPath;
+    args = ["."];
+  } else if (backend.toLowerCase() === "rust") {
+    const baseDir = join(__dirname, "../../orcanet-rust/peernode");
+    const command = join(baseDir, "target/release/peer-node");
+
+    backendProcess = spawn(command, [], {
+      cwd: baseDir,
+      stdio: ["pipe", "pipe", "pipe"],
+      shell: false,
+    });
+
+    setupBackendProcessHandlers(backendProcess, backend);
+
+    return;
+  } else {
+    console.error(`Unsupported backend type: ${backend}`);
+    return;
+  }
+
+  console.log(`Directory for backend: ${makeDirectory}`); // Debugging
+  backendProcess = spawn(command, args, {
+    cwd: makeDirectory,
+    stdio: ["pipe", "pipe", "pipe"],
+  });
+
+  setupBackendProcessHandlers(backendProcess, backend);
+}
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -22,7 +94,7 @@ function createWindow(): void {
     frame: true,
     vibrancy: "under-window",
     visualEffectState: "active",
-    titleBarStyle: "hidden",
+    // titleBarStyle: "hidden",
     trafficLightPosition: { x: 15, y: 10 },
     webPreferences: {
       preload: join(__dirname, "../preload/index.js"),
@@ -49,60 +121,60 @@ function createWindow(): void {
   }
 }
 
-function setupBackendProcessHandlers(process: ChildProcessWithoutNullStreams) {
-  let outputBuffer = '';
+function setupBackendProcessHandlers(
+  process: ChildProcessWithoutNullStreams,
+  backend: string
+) {
+  let outputBuffer = "";
 
   const promptResponseMap = {
-    'Enter a port number to start listening to requests for Market RPC Server:': '8121\n',
-    'Enter a port number to start listening to requests for Market DHT Host:': '8122\n',
-    'Enter a port number to start listening to requests for HTTP Server:': '45002\n'
+    "Enter a port number to start listening to requests for Market RPC Server:":
+      "8121\n",
+    "Enter a port number to start listening to requests for Market DHT Host:":
+      "8122\n",
+    "Enter a port number to start listening to requests for HTTP Server:":
+      "45002\n",
   };
 
-  process.stdout.on('data', (data) => {
+  process.stdout.on("data", (data) => {
     const output = data.toString();
     console.log(`Backend output: ${output}`);
     outputBuffer += output;
 
-    // Check each prompt in the map
-    Object.keys(promptResponseMap).forEach(prompt => {
-      if (outputBuffer.includes(prompt)) {
-        process.stdin.write(promptResponseMap[prompt]);
-        outputBuffer = '';
-      }
-    });
+    if (backend.toLowerCase() === "go") {
+      // Check each prompt in the map
+      Object.keys(promptResponseMap).forEach((prompt) => {
+        if (outputBuffer.includes(prompt)) {
+          process.stdin.write(promptResponseMap[prompt]);
+          outputBuffer = "";
+        }
+      });
+    }
   });
 
-  process.stderr.on('data', (data) => {
+  process.stderr.on("data", (data) => {
     console.error(`Backend error: ${data.toString()}`);
   });
 
-  process.on('close', (code) => {
+  process.on("close", (code) => {
     console.log(`Backend process exited with code ${code}`);
   });
 
-  process.on('error', (err) => {
+  process.on("error", (err) => {
     console.error(`Failed to start backend process: ${err}`);
   });
 }
 
-// This method will be called when Electron has finished
+// This method will be call when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   // Set app user model id for windows
   electronApp.setAppUserModelId("com.electron");
 
+  startBackendProcess(store.get("backend") as string);
 
-  const makeDirectory = '../../orcanet-go/peer'; 
-  backendProcess = spawn("make", ["all"], {
-    cwd: makeDirectory,
-    stdio: ["pipe", "pipe", "pipe"]
-  });
-
-  if (backendProcess) {
-    setupBackendProcessHandlers(backendProcess);
-  }
-
+  watchBackendChanges();
 
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
@@ -116,7 +188,9 @@ app.whenReady().then(() => {
 
   // ipcMain.handle('getActivity', (_, ...args: Parameters<GetActivity>) => getActivity(...args))
   // ipcMain.handle('getActivities', (_, ...args: Parameters<GetActivities>) => getActivities(...args))
-  ipcMain.handle('getPeers', (_, ...args: Parameters<GetPeers>) => getPeers(...args))
+  ipcMain.handle("getPeers", (_, ...args: Parameters<GetPeers>) =>
+    getPeers(...args)
+  );
 
   createWindow();
 
@@ -132,7 +206,7 @@ app.whenReady().then(() => {
 // explicitly with Cmd + Q.
 app.on("window-all-closed", () => {
   if (backendProcess) {
-    backendProcess.kill();
+    backendProcess.kill("SIGTERM");
   }
   if (process.platform !== "darwin") {
     app.quit();
