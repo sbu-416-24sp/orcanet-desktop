@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 module.exports = router;
 
-router.put("/add-job/*", (req, res) => {
+router.put("/add-job", (req, res) => {
   res.json({ jobID: "1" });
   console.log("received: /add-job");
 });
@@ -21,7 +21,7 @@ router.get("/find-peers/*", (req, res) => {
   });
   console.log("received: /find-peers");
 });
-router.get("/job-list/*", (req, res) => {
+router.get("/job-list", (req, res) => {
   res.json({
     jobs: [
       {
@@ -55,19 +55,19 @@ router.get("/job-info/*", (req, res) => {
   });
   console.log("received: /job-info");
 });
-router.post("/start-jobs/*", (req, res) => {
+router.post("/start-jobs", (req, res) => {
   res.status(200).send("started");
   console.log("received: /start-jobs");
 });
-router.post("/pause-jobs/*", (req, res) => {
+router.post("/pause-jobs", (req, res) => {
   res.status(200).send("paused");
   console.log("received: /pause-jobs");
 });
-router.post("/terminate-jobs/*", (req, res) => {
+router.post("/terminate-jobs", (req, res) => {
   res.status(200).send("terminated");
   console.log("received: /terminate-jobs");
 });
-router.get("/get-history/*", (req, res) => {
+router.get("/get-history", (req, res) => {
   res.json({
     jobs: {
       jobID: "1",
@@ -81,7 +81,7 @@ router.post("/remove-from-history/*", (req, res) => {
   res.status(200).send("removed from history");
   console.log("received: /remove-from-history");
 });
-router.post("/clear-history/*", (req, res) => {
+router.post("/clear-history", (req, res) => {
   res.status(200).send("cleared history");
   console.log("received: /clear-history");
 });
