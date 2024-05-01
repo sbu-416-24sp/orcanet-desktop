@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { JobInfo } from "./MarketPage";
 import OverviewHeader from "./OverviewHeader";
 import { JobList, JobControls, JobListHeader } from "./Job";
 import { JobStatus, JobOverview } from "@shared/models";

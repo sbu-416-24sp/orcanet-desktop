@@ -5,19 +5,6 @@ import { ScrollArea } from "@shadcn/components/ui/scroll-area";
 import { JobID, JobStatus } from "@shared/models";
 import { fetchJobListAtom } from "@renderer/store/market";
 import { useAtom } from "jotai";
-export interface JobInfo {
-  jobID: JobID;
-  fileName: string;
-  fileSize: string;
-  status: JobStatus;
-  eta: string;
-  timeQueued: string;
-
-  fileHash: string;
-  accumulatedMemory: string;
-  accumulatedCost: string;
-  projectedCost: string;
-}
 
 interface JobSelectionContext {
   selectedJobs: string[];

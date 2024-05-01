@@ -6,7 +6,7 @@ import {
 } from "../shadcn/components/ui/tooltip";
 import { Play, Pause, Trash2, MoveUpIcon, MoveDownIcon } from "lucide-react";
 import { useContext } from "react";
-import { JobInfo, MarketPageContext } from "./MarketPage";
+import { MarketPageContext } from "./MarketPage";
 import { ScrollArea } from "../shadcn/components/ui/scroll-area";
 import { toast } from "../shadcn/components/ui/use-toast";
 import { JobID, JobStatus, JobOverview } from "@shared/models";
@@ -178,54 +178,21 @@ export const JobList = (props: {
       if (sorting[0] === "name" && a.fileName !== b.fileName) {
         return a.fileName.localeCompare(b.fileName) * multiplier;
       } else if (sorting[0] === "size" && a.fileSize !== b.fileSize) {
-        const [a_number, a_unit] = a.fileSize.split(" ");
-        const [b_number, b_unit] = b.fileSize.split(" ");
-        if (a_unit === b_unit) {
-          if (a_number.length < b_number.length) {
-            return -multiplier;
-          }
-          if (a_number.length > b_number.length) {
-            return multiplier;
-          }
-          return a_number.localeCompare(b_number) * multiplier;
-        }
-        if (a_unit === "TiB") {
+        if (a.fileSize < b.fileSize) {
+          return -multiplier;
+        } else if (a.fileSize === b.fileSize) {
+          return 0;
+        } else {
           return multiplier;
         }
-        if (b_unit === "TiB") {
-          return -multiplier;
-        }
-        if (a_unit === "GiB") {
-          return multiplier;
-        }
-        if (b_unit === "GiB") {
-          return -multiplier;
-        }
-        if (a_unit === "MiB") {
-          return multiplier;
-        }
-        if (b_unit === "MiB") {
-          return -multiplier;
-        }
-        if (a_unit === "KiB") {
-          return -multiplier;
-        }
-
-        return a_unit.localeCompare(b_unit) * multiplier; // GiB < KiB < MiB < TiB lexicographically
       } else if (sorting[0] === "eta" && a.eta !== b.eta) {
-        const [a_number, a_unit] = a.eta.split(" ");
-        const [b_number, b_unit] = b.eta.split(" ");
-
-        if (a_unit === b_unit) {
-          if (a_number.length < b_number.length) {
-            return -multiplier;
-          }
-          if (a_number.length > b_number.length) {
-            return multiplier;
-          }
-          return a_number.localeCompare(b_number) * multiplier;
+        if (a.eta < b.eta) {
+          return -multiplier;
+        } else if (a.eta === b.eta) {
+          return 0;
+        } else {
+          return multiplier;
         }
-        return -a_unit.localeCompare(b_unit) * multiplier; // d < h < min < s lexicographically
       } else if (sorting[0] === "timeQueued" && a.timeQueued !== b.timeQueued) {
         return (
           a.timeQueued.toISOString().localeCompare(b.timeQueued.toISOString()) *
@@ -248,9 +215,9 @@ export const JobList = (props: {
 const Job = (props: {
   jobID: JobID;
   fileName: string;
-  fileSize: string;
+  fileSize: Number;
   status: JobStatus;
-  eta: string;
+  eta: Number;
   timeQueued: Date;
 }) => {
   const { selectedJobs: selectedJobs, setSelectedJobs: setSelectedJobs } =
@@ -305,8 +272,8 @@ const Job = (props: {
         </TooltipProvider>
         <div>{props.fileName}</div>
       </div>
-      <div className="w-[4.5rem] text-right">{props.fileSize}</div>
-      <div className="w-16 text-right">{props.eta}</div>
+      <div className="w-[4.5rem] text-right">{props.fileSize.toString()}</div>
+      <div className="w-16 text-right">{props.eta.toString()}</div>
       <div className="w-[9.5rem] text-right">
         {props.timeQueued.toISOString()}
       </div>

@@ -1,4 +1,18 @@
-import { JobInfo } from "./MarketPage";
+import { JobID, JobStatus } from "@shared/models";
+
+interface JobInfo {
+  jobID: JobID;
+  fileName: string;
+  fileSize: string;
+  status: JobStatus;
+  eta: string;
+  timeQueued: string;
+
+  fileHash: string;
+  accumulatedMemory: string;
+  accumulatedCost: string;
+  projectedCost: string;
+}
 
 const jobInfoList: JobInfo[] = [
   {

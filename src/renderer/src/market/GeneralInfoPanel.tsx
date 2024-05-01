@@ -1,7 +1,4 @@
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
-import { Card } from "../shadcn/components/ui/card";
 import { CopyIcon } from "lucide-react";
-import { JobInfo } from "./MarketPage";
 import { JobDetails, JobID } from "@shared/models";
 import { useEffect, useState } from "react";
 
@@ -33,20 +30,22 @@ export const GeneralInfoPanel = (props: { jobID: JobID }) => {
         <div className="text-lg">{jobDetails.fileName}</div>
         <div className="">
           <span className="text-blue-600">
-            {jobDetails.accumulatedMemory.toString()}
+            {jobDetails.accumulatedMemory.toString() + " MiB"}
           </span>
-          {jobDetails.fileSize.toString()}
+          {jobDetails.fileSize.toString() + " MiB"}
         </div>
         <div className="">
-          Running Cost:{" "}
+          Running Cost:
           <span className="text-blue-600">
-            {jobDetails.accumulatedCost.toString()}
+            {jobDetails.accumulatedCost.toString() + " OC"}
           </span>
         </div>
         <div className="">
-          Projected Cost: {jobDetails.projectedCost.toString()}
+          {"Projected Cost: " + jobDetails.projectedCost.toString() + " OC"}
         </div>
-        <div>ETA: {jobDetails.eta.toString()}</div>
+        <div>{"ETA: " + jobDetails.eta.toString() + " sec"}</div>
+        <div>{"Peer:" + jobDetails.ipAddress + " | " + jobDetails.region}</div>
+        <div>{"Price: " + jobDetails.price + " OC / MiB"}</div>
         <svg
           width={80}
           height={80}

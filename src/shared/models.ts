@@ -35,13 +35,13 @@ export type HistoryJob = {
   timeCompleted: Date;
 };
 
-export type JobStatus = "active" | "paused" | "error";
+export type JobStatus = "active" | "paused" | "error" | "completed";
 
 export type JobOverview = {
   jobID: JobID;
   fileName: string;
-  fileSize: string;
-  eta: string;
+  fileSize: Number;
+  eta: Number;
   timeQueued: Date;
   status: JobStatus;
 };
