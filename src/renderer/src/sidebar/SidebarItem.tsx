@@ -55,7 +55,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({path, icon, text, active }) =>
           duration-400
           ${
             active
-              ? "bg-indigo-50"
+              ? "bg-gray-300"
               : "hover:bg-indigo-50 text-gray-600"
           }
       `}
