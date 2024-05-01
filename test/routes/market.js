@@ -3,12 +3,12 @@ const express = require("express");
 const router = express.Router();
 module.exports = router;
 
-router.get("/add-job", (req, res) => {
+router.get("/add-job/*", (req, res) => {
   res.json({ jobID: "1" });
   console.log("received: /add-job");
 });
 
-router.get("/find-peers", (req, res) => {
+router.get("/find-peers/*", (req, res) => {
   res.json({
     peers: [
       {
@@ -21,7 +21,7 @@ router.get("/find-peers", (req, res) => {
   });
   console.log("received: /find-peers");
 });
-router.get("/job-list", (req, res) => {
+router.get("/job-list/*", (req, res) => {
   res.json({
     jobs: [
       {
@@ -36,7 +36,7 @@ router.get("/job-list", (req, res) => {
   });
   console.log("received: /job-list");
 });
-router.get("/job-info", (req, res) => {
+router.get("/job-info/*", (req, res) => {
   res.json({
     fileHash: "blahblah",
     fileName: "WhoLetTheDogsOut.mp4",
@@ -55,15 +55,15 @@ router.get("/job-info", (req, res) => {
   });
   console.log("received: /job-info");
 });
-router.get("/start-jobs", (req, res) => {
+router.get("/start-jobs/*", (req, res) => {
   res.status(200).send("started");
   console.log("received: /start-jobs");
 });
-router.get("/pause-jobs", (req, res) => {
+router.get("/pause-jobs/*", (req, res) => {
   res.status(200).send("paused");
   console.log("received: /pause-jobs");
 });
-router.get("/terminate-jobs", (req, res) => {
+router.get("/terminate-jobs/*", (req, res) => {
   res.status(200).send("terminated");
   console.log("received: /terminate-jobs");
 });

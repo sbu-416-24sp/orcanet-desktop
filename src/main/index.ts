@@ -52,6 +52,7 @@ function createWindow(): void {
       preload: join(__dirname, "../preload/index.js"),
       sandbox: true,
       contextIsolation: true,
+      // nodeIntegration: false,
     },
   });
 
@@ -82,7 +83,7 @@ function setupBackendProcessHandlers(process: ChildProcessWithoutNullStreams) {
     "Enter a port number to start listening to requests for Market DHT Host:":
       "8122\n",
     "Enter a port number to start listening to requests for HTTP Server:":
-      "45002\n",
+      "3000\n",
   };
 
   process.stdout.on("data", (data) => {
@@ -125,9 +126,9 @@ app.whenReady().then(() => {
     stdio: ["pipe", "pipe", "pipe"],
   });
 
-  // if (backendProcess) {
-  //   setupBackendProcessHandlers(backendProcess);
-  // }
+  if (backendProcess) {
+    setupBackendProcessHandlers(backendProcess);
+  }
 
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.

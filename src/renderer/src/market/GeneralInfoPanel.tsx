@@ -3,7 +3,22 @@ import { JobDetails, JobID } from "@shared/models";
 import { useEffect, useState } from "react";
 
 export const GeneralInfoPanel = (props: { jobID: JobID }) => {
-  const [jobDetails, setJobDetails] = useState<JobDetails>({} as JobDetails);
+  const [jobDetails, setJobDetails] = useState<JobDetails>({
+    fileHash: "blahblah",
+    fileName: "WhoLetTheDogsOut.mp4",
+    fileSize: 128,
+    accumulatedMemory: 78,
+    accumulatedCost: 42,
+    projectedCost: 60,
+    eta: 10,
+    timeQueued: new Date("2024-05-01T23:15:30.000Z"),
+    status: "active",
+
+    /* Added from job-peer */
+    ipAddress: "255.255.255.255",
+    region: "North America",
+    price: 4,
+  });
   useEffect(() => {
     const fn = async () => {
       const jobDetails = await window.context.jobInfo(props.jobID);

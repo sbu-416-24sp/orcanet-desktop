@@ -490,6 +490,7 @@ function createWindow() {
       preload: path.join(__dirname, "../preload/index.js"),
       sandbox: true,
       contextIsolation: true
+      // nodeIntegration: false,
     }
   });
   mainWindow.on("ready-to-show", () => {
@@ -505,6 +506,34 @@ function createWindow() {
     mainWindow.loadFile(path.join(__dirname, "../renderer/index.html"));
   }
 }
+function setupBackendProcessHandlers(process2) {
+  let outputBuffer = "";
+  const promptResponseMap = {
+    "Enter a port number to start listening to requests for Market RPC Server:": "8121\n",
+    "Enter a port number to start listening to requests for Market DHT Host:": "8122\n",
+    "Enter a port number to start listening to requests for HTTP Server:": "3000\n"
+  };
+  process2.stdout.on("data", (data) => {
+    const output = data.toString();
+    console.log(`Backend output: ${output}`);
+    outputBuffer += output;
+    Object.keys(promptResponseMap).forEach((prompt) => {
+      if (outputBuffer.includes(prompt)) {
+        process2.stdin.write(promptResponseMap[prompt]);
+        outputBuffer = "";
+      }
+    });
+  });
+  process2.stderr.on("data", (data) => {
+    console.error(`Backend error: ${data.toString()}`);
+  });
+  process2.on("close", (code) => {
+    console.log(`Backend process exited with code ${code}`);
+  });
+  process2.on("error", (err) => {
+    console.error(`Failed to start backend process: ${err}`);
+  });
+}
 electron.app.whenReady().then(() => {
   utils.electronApp.setAppUserModelId("com.electron");
   const makeDirectory = "../../orcanet-go/peer";
@@ -512,6 +541,9 @@ electron.app.whenReady().then(() => {
     cwd: makeDirectory,
     stdio: ["pipe", "pipe", "pipe"]
   });
+  if (backendProcess) {
+    setupBackendProcessHandlers(backendProcess);
+  }
   electron.app.on("browser-window-created", (_, window) => {
     utils.optimizer.watchWindowShortcuts(window);
   });
