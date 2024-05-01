@@ -82,7 +82,24 @@ const HomePage = () => {
   );
   const totalFiles = activities.length;
 
-  const networkStatus = "Healthy";
+  const getOnLineStatus = () =>
+    typeof navigator !== 'undefined' && typeof navigator.onLine === 'boolean'
+        ? navigator.onLine
+        : true;
+
+  const [status, setStatus] = React.useState(getOnLineStatus());
+  const setOnline = () => setStatus(true);
+  const setOffline = () => setStatus(false);
+
+  useEffect(() => {
+    window.addEventListener('online', setOnline);
+    window.addEventListener('offline', setOffline);
+
+    return () => {
+        window.removeEventListener('online', setOnline);
+        window.removeEventListener('offline', setOffline);
+    };
+  }, []);
 
   const toggleDropdown = (id: number) => {
     if (id === -1) {
@@ -304,10 +321,10 @@ const HomePage = () => {
             </span>
             <span
               className={`block text-2xl font-bold ${
-                networkStatus === "Healthy" ? "text-green-600" : "text-red-600"
+                status ? "text-green-600" : "text-red-600"
               }`}
             >
-              {networkStatus}
+              {status ? "Healthy" : "No Internet"}
             </span>
           </div>
         </div>

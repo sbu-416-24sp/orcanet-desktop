@@ -77,11 +77,14 @@ export function DataTable({
       : false;
   };
 
+  const [sorting, setSorting] = useState([]);
+
   const table = useReactTable({
     data,
     columns,
     state: {
       globalFilter,
+      sorting: sorting,
     },
     onGlobalFilterChange: setGlobalFilter,
     globalFilterFn: fuzzyTextFilterFn,
@@ -89,6 +92,7 @@ export function DataTable({
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    onSortingChange: setSorting,
   });
 
   return (
@@ -166,13 +170,16 @@ export function DataTable({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id} className="bg-gray-50 text-black">
+                    <TableHead key={header.id} style={{ cursor: 'pointer' }} className="bg-gray-50 text-black" onClick={header.column.getToggleSortingHandler()}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
                             header.getContext()
                           )}
+                        {
+                          {asc: ' ⬆️', desc: ' ⬇️'} [header.column.getIsSorted() ?? null]
+                        }
                     </TableHead>
                   );
                 })}
