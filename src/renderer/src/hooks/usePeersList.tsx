@@ -1,22 +1,54 @@
-import { PeersAtom } from '@/store'
+import { PeersAtom ,getPeers} from '@/store'
 import { useAtom, useAtomValue } from 'jotai'
+import { useEffect, useState } from 'react';
+import { PeerInfo } from '@shared/models';
+import { useLocation } from 'react-router-dom';
+// export const usePeersList = () => {
+//   const peers = useAtomValue(PeersAtom)
 
+//   // const [selectedNoteIndex, setSelectedNoteIndex] = useAtom(selectedNoteIndexAtom)
+
+//   // const handleNoteSelect = (index: number) => async () => {
+//   //   setSelectedNoteIndex(index)
+
+//   //   if (onSelect) {
+//   //     onSelect()
+//   //   }
+//   // }
+
+//   return {
+//     peers,
+//     // selectedNoteIndex,
+//     // handleNoteSelect
+//   }
+// }
 export const usePeersList = () => {
-  const peers = useAtomValue(PeersAtom)
+  const [updatedPeers, setUpdatedPeers] = useState<PeerInfo[]>([]);
+  const peers = useAtomValue(PeersAtom);
+  const location = useLocation(); 
 
-  // const [selectedNoteIndex, setSelectedNoteIndex] = useAtom(selectedNoteIndexAtom)
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout | null = null;
 
-  // const handleNoteSelect = (index: number) => async () => {
-  //   setSelectedNoteIndex(index)
+    const shouldUpdatePeers = location.pathname === '/peers';
 
-  //   if (onSelect) {
-  //     onSelect()
-  //   }
-  // }
+    if (shouldUpdatePeers) {
+      const fetchPeers = async () => {
+        const sortedPeers = await getPeers();
+        setUpdatedPeers(sortedPeers);
+        console.log('heyy');
+      };
 
-  return {
-    peers,
-    // selectedNoteIndex,
-    // handleNoteSelect
-  }
-}
+      intervalId = setInterval(fetchPeers, 3000);
+    }
+
+    // Clean up the interval when the component unmounts or the route changes
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [location.pathname]); // Add location.pathname as a dependency
+
+  return { peers: updatedPeers.length > 0 ? updatedPeers : peers };
+};

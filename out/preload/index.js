@@ -6,11 +6,9 @@ if (!process.contextIsolated) {
 try {
   electron.contextBridge.exposeInMainWorld("context", {
     locale: navigator.language,
-    // getActivity : (...args: Parameters<GetActivity>) =>  ipcRenderer.invoke('getActivity', ...args),
-    // getActivities : (...args: Parameters<GetActivities>) =>  ipcRenderer.invoke('getActivities', ...args),
     getPeers: (...args) => electron.ipcRenderer.invoke("getPeers", ...args),
-    // deleteActivity : (...args: Parameters<DeleteActivity>) =>  ipcRenderer.invoke('deleteActivity', ...args),
-    //TODO
+    getBackend: () => electron.ipcRenderer.invoke("get-backend"),
+    setBackend: (backend) => electron.ipcRenderer.invoke("set-backend", backend),
     /* Market Page */
     addJob: (...args) => electron.ipcRenderer.invoke("addJob", ...args),
     findPeers: (...args) => electron.ipcRenderer.invoke("findPeers", ...args),
@@ -24,5 +22,5 @@ try {
     clearHistory: (...args) => electron.ipcRenderer.invoke("clearHistory", ...args)
   });
 } catch (error) {
-  console.log(error);
+  console.error("Failed to expose electron APIs:", error);
 }

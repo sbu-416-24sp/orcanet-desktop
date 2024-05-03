@@ -12,14 +12,18 @@ import { unwrap } from "jotai/utils";
 
 // export const ActivitiesAtom = unwrap(ActivitiesAtomAsync, (prev) => prev)
 
-const loadPeers = async () => {
+export const getPeers = async () => {
   const peers = await window.context.getPeers();
   return peers.sort((a, b) => b.Location.localeCompare(a.Location));
 };
 
-const PeersAtomAsync = atom<PeerInfo[] | Promise<PeerInfo[]>>(loadPeers);
+const PeersAtomAsync = atom<PeerInfo[] | Promise<PeerInfo[]>>(async () => {
+  const initialPeers = await getPeers();
+  return initialPeers;
+});
 
 export const PeersAtom = unwrap(PeersAtomAsync, (prev) => prev);
+
 
 // export const selectedActivityIndexAtom = atom<number | null>(null)
 

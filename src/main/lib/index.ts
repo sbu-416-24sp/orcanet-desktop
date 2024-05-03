@@ -79,6 +79,11 @@ export const getPeers: GetPeers = async () => {
       console.info(`STATUS: ${response.statusCode}`);
       console.info(`HEADERS: ${JSON.stringify(response.headers)}`);
 
+            if (response.statusCode === 404) {
+                console.log('Page not found.');
+                resolve([]); // Resolving with empty array for 404 response
+                return; // Exiting the response handler
+            }
       response.on("data", (chunk) => {
         responseBody += chunk;
       });

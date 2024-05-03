@@ -33,3 +33,16 @@ export type TerminateJobs = (jobIDs: JobID[]) => Promise<boolean>;
 export type GetHistory = () => Promise<HistoryJob[]>;
 export type RemoveFromHistory = (jobID: JobID) => Promise<boolean>;
 export type ClearHistory = () => Promise<boolean>;
+
+
+export {};
+
+declare global {
+  interface Window {
+    electron: {
+      ipcRenderer: {
+        send: (channel: string, data?: any) => void;
+      }
+    }
+  }
+}

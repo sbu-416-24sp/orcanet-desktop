@@ -2,6 +2,7 @@
 const electron = require("electron");
 const path = require("path");
 const utils = require("@electron-toolkit/utils");
+const ElectronStore = require("electron-store");
 const child_process = require("child_process");
 const icon = path.join(__dirname, "../../resources/icon.png");
 const portNumber = 3e3;
@@ -434,6 +435,11 @@ const getPeers = async () => {
     request.on("response", (response) => {
       console.info(`STATUS: ${response.statusCode}`);
       console.info(`HEADERS: ${JSON.stringify(response.headers)}`);
+      if (response.statusCode === 404) {
+        console.log("Page not found.");
+        resolve([]);
+        return;
+      }
       response.on("data", (chunk) => {
         responseBody += chunk;
       });
@@ -472,6 +478,65 @@ const getPeers = async () => {
   });
 };
 let backendProcess = null;
+const schema = {
+  backend: {
+    type: "string",
+    default: "go"
+  }
+};
+const store = new ElectronStore({ schema });
+electron.ipcMain.handle("get-backend", async () => {
+  return store.get("backend");
+});
+electron.ipcMain.handle("set-backend", async (_, newBackend) => {
+  store.set("backend", newBackend);
+  startBackendProcess(newBackend);
+});
+function watchBackendChanges() {
+  store.onDidChange("backend", (newValue, oldValue) => {
+    console.log(`Backend changed from ${oldValue} to ${newValue}`);
+    startBackendProcess(newValue);
+  });
+}
+function startBackendProcess(backend) {
+  console.log(`Attempting to start backend: ${backend}`);
+  if (backendProcess) {
+    console.log("Killing existing backend process");
+    backendProcess.kill("SIGTERM");
+    backendProcess = null;
+  }
+  let makeDirectory;
+  let command;
+  let args;
+  if (backend.toLowerCase() === "go") {
+    makeDirectory = path.join(__dirname, "../../orcanet-go/peer");
+    command = "make";
+    args = ["all"];
+  } else if (backend.toLowerCase() === "js") {
+    makeDirectory = `../../orcanet-${backend.toLowerCase()}/src`;
+    command = process.execPath;
+    args = ["."];
+  } else if (backend.toLowerCase() === "rust") {
+    const baseDir = path.join(__dirname, "../../orcanet-rust/peernode");
+    const command2 = path.join(baseDir, "target/release/peer-node");
+    backendProcess = child_process.spawn(command2, [], {
+      cwd: baseDir,
+      stdio: ["pipe", "pipe", "pipe"],
+      shell: false
+    });
+    setupBackendProcessHandlers(backendProcess, backend);
+    return;
+  } else {
+    console.error(`Unsupported backend type: ${backend}`);
+    return;
+  }
+  console.log(`Directory for backend: ${makeDirectory}`);
+  backendProcess = child_process.spawn(command, args, {
+    cwd: makeDirectory,
+    stdio: ["pipe", "pipe", "pipe"]
+  });
+  setupBackendProcessHandlers(backendProcess, backend);
+}
 function createWindow() {
   const mainWindow = new electron.BrowserWindow({
     width: 900,
@@ -484,7 +549,7 @@ function createWindow() {
     frame: true,
     vibrancy: "under-window",
     visualEffectState: "active",
-    titleBarStyle: "hidden",
+    // titleBarStyle: "hidden",
     trafficLightPosition: { x: 15, y: 10 },
     webPreferences: {
       preload: path.join(__dirname, "../preload/index.js"),
@@ -506,7 +571,7 @@ function createWindow() {
     mainWindow.loadFile(path.join(__dirname, "../renderer/index.html"));
   }
 }
-function setupBackendProcessHandlers(process2) {
+function setupBackendProcessHandlers(process2, backend) {
   let outputBuffer = "";
   const promptResponseMap = {
     "Enter a port number to start listening to requests for Market RPC Server:": "8121\n",
@@ -517,12 +582,14 @@ function setupBackendProcessHandlers(process2) {
     const output = data.toString();
     console.log(`Backend output: ${output}`);
     outputBuffer += output;
-    Object.keys(promptResponseMap).forEach((prompt) => {
-      if (outputBuffer.includes(prompt)) {
-        process2.stdin.write(promptResponseMap[prompt]);
-        outputBuffer = "";
-      }
-    });
+    if (backend.toLowerCase() === "go") {
+      Object.keys(promptResponseMap).forEach((prompt) => {
+        if (outputBuffer.includes(prompt)) {
+          process2.stdin.write(promptResponseMap[prompt]);
+          outputBuffer = "";
+        }
+      });
+    }
   });
   process2.stderr.on("data", (data) => {
     console.error(`Backend error: ${data.toString()}`);
@@ -536,14 +603,8 @@ function setupBackendProcessHandlers(process2) {
 }
 electron.app.whenReady().then(() => {
   utils.electronApp.setAppUserModelId("com.electron");
-  const makeDirectory = "../../orcanet-go/peer";
-  backendProcess = child_process.spawn("make", ["all"], {
-    cwd: makeDirectory,
-    stdio: ["pipe", "pipe", "pipe"]
-  });
-  if (backendProcess) {
-    setupBackendProcessHandlers(backendProcess);
-  }
+  startBackendProcess(store.get("backend"));
+  watchBackendChanges();
   electron.app.on("browser-window-created", (_, window) => {
     utils.optimizer.watchWindowShortcuts(window);
   });
@@ -597,7 +658,7 @@ electron.app.whenReady().then(() => {
 });
 electron.app.on("window-all-closed", () => {
   if (backendProcess) {
-    backendProcess.kill();
+    backendProcess.kill("SIGTERM");
   }
   if (process.platform !== "darwin") {
     electron.app.quit();

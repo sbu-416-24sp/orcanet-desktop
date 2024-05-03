@@ -36,6 +36,8 @@ declare global {
       getHistory: GetHistory;
       removeFromHistory: RemoveFromHistory;
       clearHistory: ClearHistory;
+      getBackend: null
+      setBackend: string
     };
   }
 }
