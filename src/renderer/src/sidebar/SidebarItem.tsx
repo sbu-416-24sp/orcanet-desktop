@@ -55,8 +55,8 @@ const SidebarItem: React.FC<SidebarItemProps> = ({path, icon, text, active }) =>
           duration-400
           ${
             active
-              ? "bg-indigo-50"
-              : "hover:bg-indigo-50 text-gray-600"
+              ? "bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-gray-200" 
+              : "hover:bg-indigo-50 dark:hover:bg-gray-800 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white" // Brighter labels when not selected in dark mode
           }
       `}
       >
