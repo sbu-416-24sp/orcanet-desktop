@@ -93,7 +93,7 @@ function startBackendProcess(backend) {
   let command;
   let args;
   if (backend.toLowerCase() === "go") {
-    makeDirectory = `/Users/joannelu/PeerNode/orcanet-go-new/peer`;
+    makeDirectory = path.join(__dirname, "../../orcanet-go/peer");
     command = "make";
     args = ["all"];
   } else if (backend.toLowerCase() === "js") {

@@ -29,6 +29,8 @@ const HomePage = () => {
     name: string;
     size: string;
     hash: string;
+    date: string;
+    type: string,
     status: string;
     showDropdown?: boolean;
     peers?: number;
@@ -43,21 +45,21 @@ const HomePage = () => {
     PUBLISHED = "Published",
   }
 
-  function UploadFile(base64String: string, name: string, size: string, filePath:string) : Activity{
-    const newActivity = {
-      id: 1,
-      stringId: base64String,
-      name, 
-      size, 
-      hash: filePath, 
-      status: Status.UPLOADED
-    }
+  // function UploadFile(base64String: string, name: string, size: string, filePath:string) : Activity{
+  //   const newActivity = {
+  //     id: 1,
+  //     stringId: base64String,
+  //     name, 
+  //     size, 
+  //     hash: filePath, 
+  //     status: Status.UPLOADED
+  //   }
 
-    console.log("newActivity", newActivity.id)
-    setActivities(p => [...p, newActivity])
+  //   console.log("newActivity", newActivity.id)
+  //   setActivities(p => [...p, newActivity])
 
-    return newActivity; 
-  }
+  //   return newActivity; 
+  // }
   
   const [activities, setActivities] = useState<Activity[]>([]);
 
@@ -67,6 +69,7 @@ const HomePage = () => {
     try {
       const storedActivities = localStorage.getItem('activities');
       const activities = storedActivities ? JSON.parse(storedActivities) : [];
+      console.log("activities", activities)
       setActivities(activities);
     } catch (error) {
       console.error("Failed to fetch activities from local storage:", error);
@@ -82,7 +85,24 @@ const HomePage = () => {
   );
   const totalFiles = activities.length;
 
-  const networkStatus = "Healthy";
+  const getOnLineStatus = () =>
+    typeof navigator !== 'undefined' && typeof navigator.onLine === 'boolean'
+        ? navigator.onLine
+        : true;
+
+  const [status, setStatus] = React.useState(getOnLineStatus());
+  const setOnline = () => setStatus(true);
+  const setOffline = () => setStatus(false);
+
+  useEffect(() => {
+    window.addEventListener('online', setOnline);
+    window.addEventListener('offline', setOffline);
+
+    return () => {
+        window.removeEventListener('online', setOnline);
+        window.removeEventListener('offline', setOffline);
+    };
+  }, []);
 
   const toggleDropdown = (id: number) => {
     if (id === -1) {
@@ -141,7 +161,36 @@ const HomePage = () => {
       .filter((activity) => activity.isSelected)
       .map((activity) => activity);
 
-    console.log("selectedActivities", selectedActivities)
+    // console.log("selectedActivities", selectedActivities)
+    console.log("cvs.png")
+  }
+
+  const downloadFile = async (filePath: string, fileName: string) => {
+    // const selectedActivities = activities
+    // .filter((activity) => activity.isSelected)
+    // .map((activity) => activity);
+
+    // console.log("selectedActivities", selectedActivities)
+    // let filePath = selectedActivities[0].name;
+    // let fileName = selectedActivities[0].name;
+
+    try {
+      const response = await fetch(filePath);
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+  
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = fileName;
+  
+      document.body.appendChild(link);
+      link.click();
+  
+      document.body.removeChild(link);
+      URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error('Error downloading file:', error);
+    }
   }
 
   const updateSelection = (id: number, isSelected: boolean) => {
@@ -191,8 +240,11 @@ const HomePage = () => {
         size: formatFileSize(file.size),
         hash: hash,
         status: Status.UPLOADED,
+        date: new Date().toLocaleDateString(),
+        type: file.type,
         showDropdown: false,
       };
+      console.log("newActivity", newActivity)
       setActivities((currentActivities) => {
         const updatedActivities = [...currentActivities, newActivity];
         localStorage.setItem('activities', JSON.stringify(updatedActivities));
@@ -304,10 +356,10 @@ const HomePage = () => {
             </span>
             <span
               className={`block text-2xl font-bold ${
-                networkStatus === "Healthy" ? "text-green-600" : "text-red-600"
+                status ? "text-green-600" : "text-red-600"
               }`}
             >
-              {networkStatus}
+              {status ? "Healthy" : "No Internet"}
             </span>
           </div>
         </div>
@@ -319,6 +371,7 @@ const HomePage = () => {
           toggleEdit,
           updateSelection,
           updateAllSelections,
+          downloadFile,
           activities
         )}
         data={activities}
@@ -358,7 +411,8 @@ const HomePage = () => {
                 Share link
               </button>
               <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 text-sm rounded transition ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                onClick={downLoadSelected}
+                // onClick={downLoadSelected}
+                // onClick={() => downloadFile()}
               >
                 Download
               </button>
