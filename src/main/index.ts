@@ -2,11 +2,36 @@ import { app, shell, BrowserWindow, ipcMain, net } from "electron";
 import { join } from "path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
-import { getPeers } from "@/lib";
-import { GetActivity, GetActivities, GetPeers } from "@shared/types";
+import {
+  clearHistory,
+  findPeers,
+  getHistory,
+  getPeers,
+  pauseJobs,
+  removeFromHistory,
+  startJobs,
+  terminateJobs,
+} from "@/lib";
+import {
+  GetActivity,
+  GetActivities,
+  GetPeers,
+  FindPeers,
+  PauseJobs,
+  StartJobs,
+  TerminateJobs,
+  GetHistory,
+  RemoveFromHistory,
+  ClearHistory,
+  JobList,
+  AddJob,
+  JobInfo,
+} from "@shared/types";
 import ElectronStore from "electron-store";
 
 import { exec, spawn, ChildProcessWithoutNullStreams } from "child_process";
+import { addJob, jobInfo, jobList } from "./lib/market";
+
 let backendProcess: ChildProcessWithoutNullStreams | null = null;
 
 const schema = {
@@ -100,6 +125,7 @@ function createWindow(): void {
       preload: join(__dirname, "../preload/index.js"),
       sandbox: true,
       contextIsolation: true,
+      // nodeIntegration: false,
     },
   });
 
@@ -133,7 +159,7 @@ function setupBackendProcessHandlers(
     "Enter a port number to start listening to requests for Market DHT Host:":
       "8122\n",
     "Enter a port number to start listening to requests for HTTP Server:":
-      "45002\n",
+      "3000\n",
   };
 
   process.stdout.on("data", (data) => {
@@ -190,6 +216,37 @@ app.whenReady().then(() => {
   // ipcMain.handle('getActivities', (_, ...args: Parameters<GetActivities>) => getActivities(...args))
   ipcMain.handle("getPeers", (_, ...args: Parameters<GetPeers>) =>
     getPeers(...args)
+  );
+
+  /* Market Page */
+  ipcMain.handle("addJob", (_, ...args: Parameters<AddJob>) => addJob(...args));
+  ipcMain.handle("findPeers", (_, ...args: Parameters<FindPeers>) =>
+    findPeers(...args)
+  );
+  ipcMain.handle("jobList", (_, ...args: Parameters<JobList>) =>
+    jobList(...args)
+  );
+  ipcMain.handle("jobInfo", (_, ...args: Parameters<JobInfo>) =>
+    jobInfo(...args)
+  );
+  ipcMain.handle("startJobs", (_, ...args: Parameters<StartJobs>) =>
+    startJobs(...args)
+  );
+  ipcMain.handle("pauseJobs", (_, ...args: Parameters<PauseJobs>) =>
+    pauseJobs(...args)
+  );
+  ipcMain.handle("terminateJobs", (_, ...args: Parameters<TerminateJobs>) =>
+    terminateJobs(...args)
+  );
+  ipcMain.handle("getHistory", (_, ...args: Parameters<GetHistory>) =>
+    getHistory(...args)
+  );
+  ipcMain.handle(
+    "removeFromHistory",
+    (_, ...args: Parameters<RemoveFromHistory>) => removeFromHistory(...args)
+  );
+  ipcMain.handle("clearHistory", (_, ...args: Parameters<ClearHistory>) =>
+    clearHistory(...args)
   );
 
   createWindow();

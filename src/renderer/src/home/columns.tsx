@@ -8,6 +8,8 @@ export type Activity = {
   name: string;
   size: string;
   hash: string;
+  date: string;
+  type: string,
   status: string;
   showDropdown?: boolean;
   peers?: number;
@@ -21,6 +23,7 @@ export const getColumns = (
   toggleEdit: (id: number) => void,
   updateSelection: (id: number, isSelected: boolean) => void,
   updateAllSelections: (isSelected: boolean) => void,
+  downloadFile: (filePath: string, fileName: string) => void,
   activities: Activity[]
 ): ColumnDef<Activity>[] => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -168,7 +171,8 @@ export const getColumns = (
             <div
               className="fixed right-0 mt-2 py-2 w-48 rounded-md shadow-xl z-20 border border-gray-300"
               id={`dropdown-${row.original.id}`}
-              onClick={(e) => e.stopPropagation()}
+              // onClick={(e) => e.stopPropagation()}
+              // onClick={() => downloadFile(row.original.name)}
             >
               <a
                 href="#"
@@ -316,7 +320,19 @@ export const getColumns = (
                         </p>
                         <p className="">{row.original.size}</p>
                       </div>
-                      <div className="flex items-center justify-center space-x-4 p-4 rounded-b-2xl">
+                      <div className="mb-6">
+                        <p className="text-lg font-semibold text-black">
+                          File Type:
+                        </p>
+                        <p className="text-black">{row.original.type}</p>
+                      </div>
+                      <div className="mb-6">
+                        <p className="text-lg font-semibold text-black">
+                          Date Created
+                        </p>
+                        <p className="text-black">{row.original.date}</p>
+                      </div>
+                      <div className="flex items-center justify-center space-x-4 bg-gray-200 p-4 rounded-b-2xl">
                         <button
                           className="flex-1 justify-center py-3 px-6 border border-transparent shadow text-lg font-medium rounded-md  bg-red-300 hover:bg-red-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out"
                           onClick={() => {

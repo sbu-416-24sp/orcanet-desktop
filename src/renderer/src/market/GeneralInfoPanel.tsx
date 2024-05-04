@@ -1,25 +1,51 @@
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
-import { Card } from "../shadcn/components/ui/card";
 import { CopyIcon } from "lucide-react";
-import { JobInfo } from "./MarketPage";
+import { JobDetails, JobID } from "@shared/models";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
-export const GeneralInfoPanel = (props: { jobInfo: JobInfo }) => {
-  const speedGraph = [
-    { time: 0, speed: 0 },
-    { time: 1, speed: 8 },
-    { time: 2, speed: 12 },
-    { time: 3, speed: 14 },
-    { time: 4, speed: 14 },
-    { time: 5, speed: 14 },
-  ];
+export const GeneralInfoPanel = (props: { jobID: JobID }) => {
+  const [jobDetails, setJobDetails] = useState<JobDetails>({
+    fileHash: "blahblah",
+    fileName: "WhoLetTheDogsOut.mp4",
+    fileSize: 128,
+    accumulatedMemory: 78,
+    accumulatedCost: 42,
+    projectedCost: 60,
+    eta: 10,
+    timeQueued: "2024-05-01T23:15:30.000Z",
+    status: "active",
+
+    /* Added from job-peer */
+    ipAddress: "255.255.255.255",
+    region: "North America",
+    price: 4,
+  });
+  const location = useLocation();
+  const shouldUpdate = location.pathname === "/market";
+  useEffect(() => {
+    let intervalID: NodeJS.Timeout | null = null;
+    if (shouldUpdate) {
+      const fn = async () => {
+        const jobDetails = await window.context.jobInfo(props.jobID);
+        setJobDetails(jobDetails);
+      };
+      intervalID = setInterval(fn, 100000);
+    }
+    return () => {
+      if (intervalID) {
+        clearInterval(intervalID);
+      }
+    };
+  }, [location.pathname]);
+  console.log("line40: " + JSON.stringify(jobDetails));
   return (
     <div className="rounded-lg border bg-gray-50 dark:bg-gray-900">
       <div className="flex justify-between rounded-t-lg bg-gray-300 text-gray-800">
-        <div className="ml-2">{props.jobInfo.hash}</div>
+        <div className="ml-2">{jobDetails.fileHash}</div>
         <CopyIcon
           onClick={async () => {
             try {
-              await navigator.clipboard.writeText(props.jobInfo.hash);
+              await navigator.clipboard.writeText(jobDetails.fileHash);
               alert("Hash copied to clipboard!");
             } catch (err) {
               alert("Failed to copy hash");
@@ -29,17 +55,25 @@ export const GeneralInfoPanel = (props: { jobInfo: JobInfo }) => {
         />
       </div>
       <div className="relative flex flex-col justify-between h-[calc(100%-4rem)] mt-2 mb-3 pt-3 pb-3 pl-4 pr-4">
-        <div className="text-lg">{props.jobInfo.fileName}</div>
+        <div className="text-lg">{jobDetails.fileName}</div>
         <div className="">
-          <span className="text-blue-600">{props.jobInfo.accumulatedData}</span>{" "}
-          / {props.jobInfo.fileSize}
+          <span className="text-blue-600">
+            {jobDetails.accumulatedMemory.toString() + " MiB"}
+          </span>
+          {" / " + jobDetails.fileSize.toString() + " MiB"}
         </div>
         <div className="">
-          Running Cost:{" "}
-          <span className="text-blue-600">{props.jobInfo.runningCost}</span>
+          {"Running Cost: "}
+          <span className="text-blue-600">
+            {jobDetails.accumulatedCost.toString() + " OC"}
+          </span>
         </div>
-        <div className="">Projected Cost: {props.jobInfo.projectedCost}</div>
-        <div>ETA: {props.jobInfo.remainingTime}</div>
+        <div className="">
+          {"Projected Cost: " + jobDetails.projectedCost.toString() + " OC"}
+        </div>
+        <div>{"ETA: " + jobDetails.eta.toString() + " sec"}</div>
+        <div>{"Peer: " + jobDetails.ipAddress + " | " + jobDetails.region}</div>
+        <div>{"Price: " + jobDetails.price + " OC / MiB"}</div>
         <svg
           width={80}
           height={80}
@@ -55,8 +89,8 @@ export const GeneralInfoPanel = (props: { jobInfo: JobInfo }) => {
           ></circle>
           <text x="50%" y="50%" textAnchor="middle" dy=".3em" className="">
             {Math.round(
-              (parseInt(props.jobInfo.accumulatedData) /
-                parseInt(props.jobInfo.fileSize.slice(0, -4))) *
+              (parseInt(jobDetails.accumulatedMemory.toString()) /
+                parseInt(jobDetails.fileSize.toString().slice(0, -4))) *
                 10000
             ) /
               100 +
@@ -65,7 +99,7 @@ export const GeneralInfoPanel = (props: { jobInfo: JobInfo }) => {
         </svg>
       </div>
       <div className="text-right text-sm rounded-b-lg bg-gray-500 text-gray-100">
-        <div className="mr-2">{props.jobInfo.timeQueued}</div>
+        <div className="mr-2">{jobDetails.timeQueued}</div>
       </div>
     </div>
   );

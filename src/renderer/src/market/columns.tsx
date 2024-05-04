@@ -6,6 +6,7 @@ import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "../shadcn/components/ui/button";
 
 import { Checkbox } from "../shadcn/components/ui/checkbox";
+import { FilePeer } from "@shared/models";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -98,14 +99,7 @@ export const columns: ColumnDef<Seed>[] = [
   },
 ];
 
-
-export type Seed2 = {
-  name: string;
-  price: string;
-  reputation: number;
-};
-
-export const columns2: ColumnDef<Seed2>[] = [
+export const columns2: ColumnDef<FilePeer>[] = [
   {
     id: "select",
     cell: ({ row }) => (
@@ -157,5 +151,5 @@ export const columns2: ColumnDef<Seed2>[] = [
         </Button>
       );
     },
-  }
-]
+  },
+];

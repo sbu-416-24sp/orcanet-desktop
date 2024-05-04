@@ -1,7 +1,7 @@
 import { Button } from "../shadcn/components/ui/button";
 import { Input } from "../shadcn/components/ui/input";
 import { Filter, PlusIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -12,12 +12,15 @@ import {
 } from "../shadcn/components/ui/dialog";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { DataTable } from "./DataTable";
-import { Seed2, columns2 } from "./columns";
+import { columns2 } from "./columns";
 import { toast } from "../shadcn/components/ui/use-toast";
+import { fetchFilePeersAtom } from "@renderer/store";
+import { useAtom } from "jotai";
+import { FilePeer, FilePeers } from "@shared/models";
 const OverviewHeader = (props: {
   setFilter: React.Dispatch<React.SetStateAction<string>>;
   setStatusFilter: React.Dispatch<React.SetStateAction<string>>;
-  addJob: (hash: string) => void;
+  addJob: (hash: string, peerID: string) => void;
 }) => {
   return (
     <div className="flex justify-between mb-2">
@@ -76,17 +79,20 @@ const FilterInput = (props: {
   );
 };
 
-const fakeData: Seed2[] = [
-  { name: "Alice", price: "20 ORC", reputation: 30 },
-  { name: "Bob", price: "35 ORC", reputation: 60 },
-];
 const DialogClose = DialogPrimitive.Close;
-const AddJob = (props: { addJob: (hash: string) => void }) => {
+const AddJob = (props: { addJob: (hash: string, peerID: string) => void }) => {
   const [buffer, setBuffer] = useState("");
   const [validHash, setValidHash] = useState(0);
   const [selectedPeer, setSelectedPeer] = useState([]);
 
-  const hash = "a";
+  const [filePeers, setFilePeers] = useState<FilePeers>({ peers: [] });
+  useEffect(() => {
+    const fn = async () => {
+      const filePeersData = await window.context.findPeers(buffer);
+      setFilePeers(filePeersData);
+    };
+    fn();
+  }, [buffer]);
 
   const resetAddJob = () => {
     setBuffer("");
@@ -95,7 +101,7 @@ const AddJob = (props: { addJob: (hash: string) => void }) => {
   };
 
   const handleSearchHash = () => {
-    if (buffer === hash) {
+    if (filePeers !== undefined && filePeers.peers.length > 0) {
       setValidHash(1);
     } else {
       setValidHash(-1);
@@ -103,7 +109,7 @@ const AddJob = (props: { addJob: (hash: string) => void }) => {
   };
 
   const handleAddJob = () => {
-    props.addJob(buffer);
+    props.addJob(buffer, selectedPeer[0]);
     toast({
       title: "Job Successfully Added!",
       description: "Your job has been successfully added!",
@@ -137,7 +143,7 @@ const AddJob = (props: { addJob: (hash: string) => void }) => {
             <>
               <div>Select a Peer</div>
               <DataTable
-                data={fakeData}
+                data={filePeers !== undefined ? filePeers.peers : []}
                 columns={columns2}
                 setSelectedPeer={setSelectedPeer}
               ></DataTable>
