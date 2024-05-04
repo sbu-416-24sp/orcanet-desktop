@@ -194,10 +194,7 @@ export const JobList = (props: {
           return multiplier;
         }
       } else if (sorting[0] === "timeQueued" && a.timeQueued !== b.timeQueued) {
-        return (
-          a.timeQueued.toISOString().localeCompare(b.timeQueued.toISOString()) *
-          multiplier
-        );
+        return a.timeQueued.localeCompare(b.timeQueued);
       }
     }
     return 0;
@@ -218,7 +215,7 @@ const Job = (props: {
   fileSize: Number;
   status: JobStatus;
   eta: Number;
-  timeQueued: Date;
+  timeQueued: string;
 }) => {
   const { selectedJobs: selectedJobs, setSelectedJobs: setSelectedJobs } =
     useContext(MarketPageContext);
@@ -274,9 +271,7 @@ const Job = (props: {
       </div>
       <div className="w-[4.5rem] text-right">{props.fileSize.toString()}</div>
       <div className="w-16 text-right">{props.eta.toString()}</div>
-      <div className="w-[9.5rem] text-right">
-        {props.timeQueued.toISOString()}
-      </div>
+      <div className="w-[9.5rem] text-right">{props.timeQueued}</div>
     </li>
   );
 };

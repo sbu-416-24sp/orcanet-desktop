@@ -74,9 +74,7 @@ const History = () => {
                         <TableCell className="w-[300px]">
                           {job.fileName}
                         </TableCell>
-                        <TableCell>
-                          {job.timeCompleted.toDateString()}
-                        </TableCell>
+                        <TableCell>{job.timeCompleted}</TableCell>
                         <TableCell className="text-right">
                           <button onClick={() => handleDeleteJob(job.jobID)}>
                             <Trash2 className="size-6 text-gray-500 hover:text-destructive" />

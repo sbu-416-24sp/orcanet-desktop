@@ -11,7 +11,7 @@ export const GeneralInfoPanel = (props: { jobID: JobID }) => {
     accumulatedCost: 42,
     projectedCost: 60,
     eta: 10,
-    timeQueued: new Date("2024-05-01T23:15:30.000Z"),
+    timeQueued: "2024-05-01T23:15:30.000Z",
     status: "active",
 
     /* Added from job-peer */
@@ -86,7 +86,7 @@ export const GeneralInfoPanel = (props: { jobID: JobID }) => {
         </svg>
       </div>
       <div className="text-right text-sm rounded-b-lg bg-gray-500 text-gray-100">
-        <div className="mr-2">{jobDetails.timeQueued.toISOString()}</div>
+        <div className="mr-2">{jobDetails.timeQueued}</div>
       </div>
     </div>
   );
