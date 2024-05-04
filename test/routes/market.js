@@ -69,11 +69,13 @@ router.post("/terminate-jobs", (req, res) => {
 });
 router.get("/get-history", (req, res) => {
   res.json({
-    jobs: {
-      jobID: "1",
-      fileName: "WhoLetTheDogsIn.mp4",
-      timeCompleted: "2024-05-01T23:15:30.000Z",
-    },
+    jobs: [
+      {
+        jobID: "1",
+        fileName: "WhoLetTheDogsIn.mp4",
+        timeCompleted: "2024-05-01T23:15:30.000Z",
+      },
+    ],
   });
   console.log("received: /get-history");
 });

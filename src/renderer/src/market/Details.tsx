@@ -15,6 +15,7 @@ import { JobID, JobOverview, HistoryJob } from "@shared/models";
 import { fetchHistoryAtom } from "@renderer/store/market";
 import { useAtom, useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 const Details = (props: { jobID: JobID }) => {
   return (
     <div className="grid grid-cols-[minmax(0,_1fr)_minmax(0,_2fr)] gap-4 h-[calc(65vh-15rem)]">
@@ -25,14 +26,15 @@ const Details = (props: { jobID: JobID }) => {
 };
 
 const History = () => {
-  const [history, setHistory] = useState<HistoryJob[]>();
+  const [history, setHistory] = useState<HistoryJob[]>([]);
+  const location = useLocation();
   useEffect(() => {
     const fn = async () => {
       const historyData = await window.context.getHistory();
       setHistory(historyData);
     };
     fn();
-  });
+  }, [location.pathname]);
 
   const handleClearHistory = async () => {
     await window.context.clearHistory();
