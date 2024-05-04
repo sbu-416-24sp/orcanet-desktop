@@ -1,6 +1,6 @@
-import { ActivityInfo, PeerInfo } from '@shared/models'
-import { atom } from 'jotai'
-import { unwrap } from 'jotai/utils'
+import { ActivityInfo, PeerInfo } from "@shared/models";
+import { atom } from "jotai";
+import { unwrap } from "jotai/utils";
 
 // const loadActivities = async () => {
 //   const activities = await window.context.getActivities();
@@ -117,3 +117,12 @@ export const PeersAtom = unwrap(PeersAtomAsync, (prev) => prev);
 //   // de select any note
 //   set(selectedNoteIndexAtom, null)
 // })
+
+/* Market Page */
+import {
+  fetchFilePeersAtom,
+  fetchHistoryAtom,
+  fetchJobListAtom,
+} from "./market";
+
+export { fetchFilePeersAtom, fetchHistoryAtom, fetchJobListAtom };

@@ -25,6 +25,7 @@ import {
 
 import { Button } from "../shadcn/components/ui/button";
 import { Input } from "../shadcn/components/ui/input";
+import { useAtomValue } from "jotai";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -65,16 +66,15 @@ export function DataTable<TData, TValue>({
   }, []);
 
   React.useEffect(() => {
-    if(setSelectedPeer){
-      const keys = Object.keys(rowSelection)
-      if(keys.length == 1){
-        setSelectedPeer([data[keys[0]]])
-      }
-      else{
-        setSelectedPeer([])
+    if (setSelectedPeer) {
+      const keys = Object.keys(rowSelection);
+      if (keys.length == 1) {
+        setSelectedPeer([data[keys[0]]]);
+      } else {
+        setSelectedPeer([]);
       }
     }
-  },[rowSelection])
+  }, [rowSelection]);
 
   return (
     <div>
