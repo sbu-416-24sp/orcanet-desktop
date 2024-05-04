@@ -28,12 +28,21 @@ const Details = (props: { jobID: JobID }) => {
 const History = () => {
   const [history, setHistory] = useState<HistoryJob[]>([]);
   const location = useLocation();
+  const shouldUpdate = location.pathname === "/market";
   useEffect(() => {
-    const fn = async () => {
-      const historyData = await window.context.getHistory();
-      setHistory(historyData);
+    let intervalID: NodeJS.Timeout | null = null;
+    if (shouldUpdate) {
+      const fn = async () => {
+        const historyData = await window.context.getHistory();
+        setHistory(historyData);
+      };
+      intervalID = setInterval(fn, 3000);
+    }
+    return () => {
+      if (intervalID) {
+        clearInterval(intervalID);
+      }
     };
-    fn();
   }, [location.pathname]);
 
   const handleClearHistory = async () => {
