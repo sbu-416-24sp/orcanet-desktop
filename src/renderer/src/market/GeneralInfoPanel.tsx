@@ -1,6 +1,7 @@
 import { CopyIcon } from "lucide-react";
 import { JobDetails, JobID } from "@shared/models";
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 export const GeneralInfoPanel = (props: { jobID: JobID }) => {
   const [jobDetails, setJobDetails] = useState<JobDetails>({
@@ -19,12 +20,24 @@ export const GeneralInfoPanel = (props: { jobID: JobID }) => {
     region: "North America",
     price: 4,
   });
+  const location = useLocation();
+  const shouldUpdate = location.pathname === "/market";
   useEffect(() => {
-    const fn = async () => {
-      const jobDetails = await window.context.jobInfo(props.jobID);
-      setJobDetails(jobDetails);
+    let intervalID: NodeJS.Timeout | null = null;
+    if (shouldUpdate) {
+      const fn = async () => {
+        const jobDetails = await window.context.jobInfo(props.jobID);
+        setJobDetails(jobDetails);
+      };
+      intervalID = setInterval(fn, 100000);
+    }
+    return () => {
+      if (intervalID) {
+        clearInterval(intervalID);
+      }
     };
-  });
+  }, [location.pathname]);
+  console.log("line40: " + JSON.stringify(jobDetails));
   return (
     <div className="rounded-lg border bg-gray-50 dark:bg-gray-900">
       <div className="flex justify-between rounded-t-lg bg-gray-300 text-gray-800">
@@ -47,10 +60,10 @@ export const GeneralInfoPanel = (props: { jobID: JobID }) => {
           <span className="text-blue-600">
             {jobDetails.accumulatedMemory.toString() + " MiB"}
           </span>
-          {jobDetails.fileSize.toString() + " MiB"}
+          {" / " + jobDetails.fileSize.toString() + " MiB"}
         </div>
         <div className="">
-          Running Cost:
+          {"Running Cost: "}
           <span className="text-blue-600">
             {jobDetails.accumulatedCost.toString() + " OC"}
           </span>
@@ -59,7 +72,7 @@ export const GeneralInfoPanel = (props: { jobID: JobID }) => {
           {"Projected Cost: " + jobDetails.projectedCost.toString() + " OC"}
         </div>
         <div>{"ETA: " + jobDetails.eta.toString() + " sec"}</div>
-        <div>{"Peer:" + jobDetails.ipAddress + " | " + jobDetails.region}</div>
+        <div>{"Peer: " + jobDetails.ipAddress + " | " + jobDetails.region}</div>
         <div>{"Price: " + jobDetails.price + " OC / MiB"}</div>
         <svg
           width={80}

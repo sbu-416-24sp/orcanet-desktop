@@ -5,6 +5,7 @@ import { ScrollArea } from "@shadcn/components/ui/scroll-area";
 import { JobDetails, JobID, JobOverview, JobStatus } from "@shared/models";
 import { fetchJobListAtom } from "@renderer/store/market";
 import { useAtom } from "jotai";
+import { useLocation } from "react-router-dom";
 
 interface JobSelectionContext {
   selectedJobs: string[];
@@ -17,13 +18,23 @@ export const MarketPageContext = createContext<JobSelectionContext>(
 const MarketPage = () => {
   const [selectedJobs, setSelectedJobs] = useState<JobID[]>([]);
   const [jobList, setJobList] = useState<JobOverview[]>([]);
+  const location = useLocation();
+  const shouldUpdate = location.pathname === "/market";
   useEffect(() => {
-    const fn = async () => {
-      const jobListData = await window.context.jobList();
-      setJobList(jobListData);
+    let intervalID: NodeJS.Timeout | null = null;
+    if (shouldUpdate) {
+      const fn = async () => {
+        const jobListData = await window.context.jobList();
+        setJobList(jobListData);
+      };
+      intervalID = setInterval(fn, 3000);
+    }
+    return () => {
+      if (intervalID) {
+        clearInterval(intervalID);
+      }
     };
-    fn();
-  });
+  }, [location.pathname]);
 
   const updateJobStatuses = async (newStatus: JobStatus) => {
     if (newStatus === "active") {
