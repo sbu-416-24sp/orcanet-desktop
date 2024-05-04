@@ -29,7 +29,7 @@ const HomePage = () => {
     name: string;
     size: string;
     hash: string;
-    date: Date;
+    date: string;
     type: string,
     status: string;
     showDropdown?: boolean;
@@ -69,6 +69,7 @@ const HomePage = () => {
     try {
       const storedActivities = localStorage.getItem('activities');
       const activities = storedActivities ? JSON.parse(storedActivities) : [];
+      console.log("activities", activities)
       setActivities(activities);
     } catch (error) {
       console.error("Failed to fetch activities from local storage:", error);
@@ -160,7 +161,36 @@ const HomePage = () => {
       .filter((activity) => activity.isSelected)
       .map((activity) => activity);
 
-    console.log("selectedActivities", selectedActivities)
+    // console.log("selectedActivities", selectedActivities)
+    console.log("cvs.png")
+  }
+
+  const downloadFile = async (filePath: string, fileName: string) => {
+    // const selectedActivities = activities
+    // .filter((activity) => activity.isSelected)
+    // .map((activity) => activity);
+
+    // console.log("selectedActivities", selectedActivities)
+    // let filePath = selectedActivities[0].name;
+    // let fileName = selectedActivities[0].name;
+
+    try {
+      const response = await fetch(filePath);
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+  
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = fileName;
+  
+      document.body.appendChild(link);
+      link.click();
+  
+      document.body.removeChild(link);
+      URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error('Error downloading file:', error);
+    }
   }
 
   const updateSelection = (id: number, isSelected: boolean) => {
@@ -210,10 +240,11 @@ const HomePage = () => {
         size: formatFileSize(file.size),
         hash: hash,
         status: Status.UPLOADED,
-        date: new Date(),
+        date: new Date().toLocaleDateString(),
         type: file.type,
         showDropdown: false,
       };
+      console.log("newActivity", newActivity)
       setActivities((currentActivities) => {
         const updatedActivities = [...currentActivities, newActivity];
         localStorage.setItem('activities', JSON.stringify(updatedActivities));
@@ -340,6 +371,7 @@ const HomePage = () => {
           toggleEdit,
           updateSelection,
           updateAllSelections,
+          downloadFile,
           activities
         )}
         data={activities}
@@ -379,7 +411,8 @@ const HomePage = () => {
                 Share link
               </button>
               <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 text-sm rounded transition ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                onClick={downLoadSelected}
+                // onClick={downLoadSelected}
+                // onClick={() => downloadFile()}
               >
                 Download
               </button>

@@ -43,6 +43,7 @@ export function DataTable({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (fileInputRef.current) {
       fileInputRef.current.setAttribute("webkitdirectory", "true");
@@ -92,7 +93,7 @@ export function DataTable({
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    onSortingChange: setSorting,
+    onSortingChange: setSorting, //Ignore this error its cool
   });
 
   return (
@@ -178,6 +179,7 @@ export function DataTable({
                             header.getContext()
                           )}
                         {
+                          //Ignore this error it works
                           {asc: ' ⬆️', desc: ' ⬇️'} [header.column.getIsSorted() ?? null]
                         }
                     </TableHead>

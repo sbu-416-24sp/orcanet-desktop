@@ -8,7 +8,7 @@ export type Activity = {
   name: string;
   size: string;
   hash: string;
-  date: Date;
+  date: string;
   type: string,
   status: string;
   showDropdown?: boolean;
@@ -23,6 +23,7 @@ export const getColumns = (
   toggleEdit: (id: number) => void,
   updateSelection: (id: number, isSelected: boolean) => void,
   updateAllSelections: (isSelected: boolean) => void,
+  downloadFile: (filePath: string, fileName: string) => void,
   activities: Activity[]
 ): ColumnDef<Activity>[] => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -170,7 +171,8 @@ export const getColumns = (
             <div
               className="absolute right-0 mt-2 py-2 w-48 bg-white rounded-md shadow-xl z-20 border border-gray-300 dropdown-menu"
               id={`dropdown-${row.original.id}`}
-              onClick={(e) => e.stopPropagation()}
+              // onClick={(e) => e.stopPropagation()}
+              // onClick={() => downloadFile(row.original.name)}
             >
               <a
                 href="#"
@@ -328,7 +330,7 @@ export const getColumns = (
                         <p className="text-lg font-semibold text-black">
                           Date Created
                         </p>
-                        <p className="text-black">{row.original.date.toLocaleDateString()}</p>
+                        <p className="text-black">{row.original.date}</p>
                       </div>
                       <div className="flex items-center justify-center space-x-4 bg-gray-200 p-4 rounded-b-2xl">
                         <button
