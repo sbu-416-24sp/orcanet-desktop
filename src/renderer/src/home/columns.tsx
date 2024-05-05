@@ -9,6 +9,7 @@ export type Activity = {
   size: string;
   hash: string;
   date: string;
+  path: string;
   type: string,
   status: string;
   showDropdown?: boolean;
@@ -172,14 +173,13 @@ export const getColumns = (
               className="absolute right-0 mt-2 py-2 w-48 bg-white rounded-md shadow-xl z-20 border border-gray-300 dropdown-menu"
               id={`dropdown-${row.original.id}`}
               // onClick={(e) => e.stopPropagation()}
-              // onClick={() => downloadFile(row.original.name)}
             >
-              <a
-                href="#"
+              <div
                 className="block px-4 py-2 text-sm text-black hover:bg-gray-300 border-b border-gray-200"
+                onClick={() => downloadFile(row.original.name, row.original.name)}
               >
                 Download
-              </a>
+              </div>
               <div
                 className="block px-4 py-2 text-sm text-black hover:bg-gray-300 border-b border-gray-200 cursor-pointer"
                 onClick={(e) => {

@@ -30,6 +30,7 @@ const HomePage = () => {
     size: string;
     hash: string;
     date: string;
+    path:string;
     type: string,
     status: string;
     showDropdown?: boolean;
@@ -156,14 +157,6 @@ const HomePage = () => {
     setActivities(selectedActivities);
     localStorage.setItem('activities', JSON.stringify(selectedActivities));
   };
-  const downLoadSelected = async () => {
-    const selectedActivities = activities
-      .filter((activity) => activity.isSelected)
-      .map((activity) => activity);
-
-    // console.log("selectedActivities", selectedActivities)
-    console.log("cvs.png")
-  }
 
   const downloadFile = async (filePath: string, fileName: string) => {
     // const selectedActivities = activities
@@ -175,7 +168,7 @@ const HomePage = () => {
     // let fileName = selectedActivities[0].name;
 
     try {
-      const response = await fetch(filePath);
+      const response = await fetch(`./${filePath}`);
       const blob = await response.blob();
       const blobUrl = URL.createObjectURL(blob);
   
@@ -240,6 +233,7 @@ const HomePage = () => {
         size: formatFileSize(file.size),
         hash: hash,
         status: Status.UPLOADED,
+        path: file.name,
         date: new Date().toLocaleDateString(),
         type: file.type,
         showDropdown: false,
