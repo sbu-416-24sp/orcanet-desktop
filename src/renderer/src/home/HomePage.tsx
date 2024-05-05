@@ -3,7 +3,8 @@ import { DataTable } from "./DataTable";
 import { getColumns } from "./columns";
 import "./HomePage.css";
 import { generateFileHash, formatFileSize, sizeToBytes } from "./sizeUtils";
-
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
 
   // GetActivities,
   // UploadFile,
@@ -158,17 +159,38 @@ const HomePage = () => {
     localStorage.setItem('activities', JSON.stringify(selectedActivities));
   };
 
-  const downloadFile = async (filePath: string, fileName: string) => {
-    // const selectedActivities = activities
-    // .filter((activity) => activity.isSelected)
-    // .map((activity) => activity);
-
-    // console.log("selectedActivities", selectedActivities)
-    // let filePath = selectedActivities[0].name;
-    // let fileName = selectedActivities[0].name;
+  const downloadFilesAsZip = async () => {
+    const selectedActivities = activities
+    .filter((activity) => activity.isSelected)
+    .map((activity) => activity);
 
     try {
-      const response = await fetch(`./${filePath}`);
+      const zip = new JSZip();
+    
+      for (const filePath of selectedActivities) {
+        const response = await fetch(filePath.path);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch file: ${filePath}`);
+        }
+    
+        const fileBlob = await response.blob();
+        zip.file((filePath.path), fileBlob); 
+      }
+    
+      const zipBlob = await zip.generateAsync({ type: 'blob' });
+    
+      saveAs(zipBlob, 'download.zip');
+    } catch (error) {
+      console.error('Error creating zip file:', error);
+    }
+  };
+  
+  const downloadFile = async (filePath: string, fileName: string) => {
+
+    const fileUrl = `${window.location.origin}/${filePath}`;
+
+    try {
+      const response = await fetch(fileUrl);
       const blob = await response.blob();
       const blobUrl = URL.createObjectURL(blob);
   
@@ -405,8 +427,7 @@ const HomePage = () => {
                 Share link
               </button>
               <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 text-sm rounded transition ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                // onClick={downLoadSelected}
-                // onClick={() => downloadFile()}
+                onClick={downloadFilesAsZip}
               >
                 Download
               </button>
